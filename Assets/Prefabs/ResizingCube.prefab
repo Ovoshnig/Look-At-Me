@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 497637372389064747}
   - component: {fileID: 9055269837781523988}
   - component: {fileID: 3610581186146645562}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ResizingCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
