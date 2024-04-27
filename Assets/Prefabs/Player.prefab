@@ -449,3 +449,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rayLength: 5
   _raycastDelay: 0.1
+  _selectableLayer:
+    serializedVersion: 2
+    m_Bits: 8

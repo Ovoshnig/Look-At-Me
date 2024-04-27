@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObjectSelector : MonoBehaviour
@@ -6,14 +9,27 @@ public class ObjectSelector : MonoBehaviour
     [SerializeField] private float _rayLength = 1f;
     [SerializeField, Range(0, 0.5f)] private float _raycastDelay;
 
-    private RaycastHit hit;
+    [SerializeField] private LayerMask _selectableLayer;
+
+    private readonly Dictionary<GameObject, ISelectable> selectableDictionary = new();
+
     private ISelectable _previousSelectable;
     private ISelectable _currentSelectable;
 
-    private void Start()
+    private void Awake()
     {
-        StartCoroutine(Select());
+        var selectables = FindObjectsOfType<MonoBehaviour>().OfType<ISelectable>();
+
+        foreach (var selectableComponent in selectables)
+        {
+            if (selectableComponent is MonoBehaviour monoBehaviour)
+            {
+                selectableDictionary[monoBehaviour.gameObject] = selectableComponent;
+            }
+        }
     }
+
+    private void Start() => StartCoroutine(Select());
 
     private IEnumerator Select()
     {
@@ -23,9 +39,9 @@ public class ObjectSelector : MonoBehaviour
         {
             Ray ray = new(transform.position, transform.forward);
 
-            if (Physics.Raycast(ray, out hit, _rayLength))
+            if (Physics.Raycast(ray, out RaycastHit hit, _rayLength, _selectableLayer))
             {
-                _currentSelectable = hit.collider.GetComponent<ISelectable>();
+                selectableDictionary.TryGetValue(hit.collider.gameObject, out _currentSelectable);
 
                 if (_currentSelectable != null && !_currentSelectable.GetSelected())
                 {
