@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8d57621e869daf441bd3a91fe3fcae50
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _rigidbody: {instanceID: 0}
+  - _audioSource: {instanceID: 0}
+  - _rotatingSound1: {instanceID: 0}
+  - _rotatingSound2: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
