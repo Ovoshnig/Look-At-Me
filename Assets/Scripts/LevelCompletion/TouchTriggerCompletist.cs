@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TouchTrigger—ompletist : MonoBehaviour
+public class TouchTriggerCompletist : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
