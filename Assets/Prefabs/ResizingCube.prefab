@@ -218,7 +218,8 @@ MonoBehaviour:
   _axis: 1
   _resizeCoefficient: 2
   _maxLength: 7.5
-  _soundChangeDelay: 0.02
+  _soundChangeDelay: 0.05
   _oneSoundAtTimeProvider: {fileID: 0}
-  _upSoundClip: {fileID: 8300000, guid: b3fff0453c2655249a35491ff7d6f9e0, type: 3}
-  _downSoundClip: {fileID: 8300000, guid: b9f13672219d25f4283a69553a16f259, type: 3}
+  _upSoundClip: {fileID: 8300000, guid: 32ac7700db690d14f84ad61ee9450056, type: 3}
+  _downSoundClip: {fileID: 8300000, guid: a6a951d9d695ee5488e7cd1f8fc61c64, type: 3}
+  _audioSource: {fileID: 9055269837781523988}

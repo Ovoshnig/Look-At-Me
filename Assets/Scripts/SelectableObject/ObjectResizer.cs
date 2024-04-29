@@ -14,16 +14,13 @@ public class ObjectResizer : SelectableObject
     [SerializeField] private AudioClip _upSoundClip;
     [SerializeField] private AudioClip _downSoundClip;
 
-    private AudioSource _audioSource;
+    [SerializeField] private AudioSource _audioSource;
 
     private Vector3 _initialScale;
     private Vector3 _initialPosition;
 
-    private void Awake()
-    {
-        _audioSource = GetComponent<AudioSource>();
-    }
-
+    private void OnValidate() => _audioSource ??= GetComponent<AudioSource>();
+    
     private void Start()
     {
         _initialScale = transform.localScale;
