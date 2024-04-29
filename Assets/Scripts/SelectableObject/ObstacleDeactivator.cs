@@ -13,9 +13,9 @@ public sealed class ObstacleDeactivator : SelectableObject
 
     private void OnValidate()
     {
-        _renderer = GetComponent<Renderer>();
-        _collider = GetComponent<Collider>();
-        _audioSource = GetComponent<AudioSource>();
+        _renderer ??= GetComponent<Renderer>();
+        _collider ??= GetComponent<Collider>();
+        _audioSource ??= GetComponent<AudioSource>();
 
         _audioSource.clip = _popClip;
     }

@@ -1,5 +1,5 @@
+using Cysharp.Threading.Tasks;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [SelectionBase]
@@ -12,6 +12,16 @@ public sealed class DuringBaseSelector : SelectableObject
 
     private void OnValidate() => _baseSelector ??= FindObjectOfType<BaseSelector>();
 
+    private void OnDisable()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
+    }
+
     public override void SetSelected(bool isSelect)
     {
         IsSelect = isSelect;
@@ -20,7 +30,7 @@ public sealed class DuringBaseSelector : SelectableObject
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
-            _ = SelectingTimer(_cts.Token);
+            SelectingTimer(_cts.Token).Forget();
         }
         else
         {
@@ -33,18 +43,11 @@ public sealed class DuringBaseSelector : SelectableObject
         }
     }
 
-    private async Task SelectingTimer(CancellationToken token)
+    private async UniTaskVoid SelectingTimer(CancellationToken token)
     {
         int delayTime = (int)(1000 * _lookingTime);
-        int stepTime = 100;
-        for (int elapsed = 0; elapsed < delayTime; elapsed += stepTime)
-        {
-            if (token.IsCancellationRequested)
-                return;
-
-            await Task.Delay(stepTime);
-        }
-
+        await UniTask.Delay(delayTime, cancellationToken: token);
+        
         _baseSelector.SelectBase(gameObject.name);
     }
 }

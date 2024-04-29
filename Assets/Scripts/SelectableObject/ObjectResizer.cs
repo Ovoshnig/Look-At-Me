@@ -1,5 +1,6 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -18,8 +19,7 @@ public sealed class ObjectResizer : SelectableObject
     private Vector3 _initialScale;
     private Vector3 _initialPosition;
     private AudioSource _audioSource;
-
-    private CancellationTokenSource _cts = new CancellationTokenSource();
+    private CancellationTokenSource _cts = new();
 
     private void OnValidate()
     {
@@ -27,6 +27,16 @@ public sealed class ObjectResizer : SelectableObject
 
         if (_direction == 0)
             _direction = 1;
+    }
+
+    private void OnDisable()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
     }
 
     private void Awake()
@@ -44,10 +54,10 @@ public sealed class ObjectResizer : SelectableObject
         _cts.Dispose();
         _cts = new CancellationTokenSource();
 
-        Resize(IsSelect, _cts.Token);
+        Resize(IsSelect, _cts.Token).Forget();
     }
 
-    private async void Resize(bool increasing, CancellationToken token)
+    private async UniTaskVoid Resize(bool increasing, CancellationToken token)
     {
         AudioClip targetClip = increasing ? _upSoundClip : _downSoundClip;
         if (_audioSource.clip != targetClip)
@@ -57,27 +67,15 @@ public sealed class ObjectResizer : SelectableObject
             _oneSoundAtTimeProvider.SingleSound(_audioSource);
         }
 
-        try
+        while ((increasing ? transform.localScale[_axis] < _maxLength :
+            transform.localScale[_axis] > _initialScale[_axis]) && 
+            !token.IsCancellationRequested)
         {
-            while ((increasing ? transform.localScale[_axis] < _maxLength :
-                transform.localScale[_axis] > _initialScale[_axis]) && 
-                !token.IsCancellationRequested)
-            {
-                AdjustScaleAndPosition(increasing ? 1 : -1);
-                await Task.Delay(10, token);
-            }
+            AdjustScaleAndPosition(increasing ? 1 : -1);
+            await UniTask.Yield(cancellationToken: token);
+        }
 
-            _audioSource.Stop();
-        }
-        catch (TaskCanceledException)
-        {
-            // Задача была отменена
-            // Вернуть объект в исходное состояние или в состояние, соответствующее текущему выбору, если это необходимо
-        }
-        catch
-        {
-
-        }
+        _audioSource.Stop();
     }
 
     private void AdjustScaleAndPosition(int direction)

@@ -9,7 +9,6 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
     [SerializeField] private GameObject[] _anvils;
     [SerializeField] private GameObject _book;
 
-    private int _randomAnvilIndex;
     private Vector3 _objectSpawnPosition;
 
     public void TimerActivate(DuringPreviewSelector selector)
@@ -26,9 +25,9 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
         }
         else
         {
-            _randomAnvilIndex = Random.Range(0, _anvils.Length);
+            int index = Random.Range(0, _anvils.Length);
             _objectSpawnPosition = _playerTransform.position + new Vector3(0, 10f, 0);
-            Instantiate(_anvils[_randomAnvilIndex], _objectSpawnPosition, Quaternion.Euler(-90f, 0f, 0f));
+            Instantiate(_anvils[index], _objectSpawnPosition, Quaternion.Euler(-90f, 0f, 0f));
         }
     }
 }
