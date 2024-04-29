@@ -4,7 +4,6 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
 {
     [SerializeField] private DuringPreviewSelector _correctSelector;
     [SerializeField] private DuringPreviewSelector _potopSelector;
-
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private GameObject[] _anvils;
     [SerializeField] private GameObject _book;

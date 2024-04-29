@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 public sealed class PauseMenuHandler : MenuHandler
 {
     private FPSController _fpsController;
-
     private bool _isGamePaused;
 
     protected override void InitializeSettings()

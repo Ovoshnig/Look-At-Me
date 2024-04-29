@@ -6,14 +6,15 @@ public class BaseSelector : SelectableObject
 {
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _basesStartSet;
-
     [SerializeField] private CheckersLogic _checkersLogic;
     [SerializeField] private CheckersVisualizer _visualizer;
 
     private void OnValidate()
     {
-        _checkersLogic ??= GetComponent<CheckersLogic>();
-        _visualizer ??= GetComponent<CheckersVisualizer>();
+        if (_checkersLogic == null)
+            _checkersLogic = GetComponent<CheckersLogic>();
+        if (_visualizer == null)
+            _visualizer = GetComponent<CheckersVisualizer>();
     }
 
     private void Start()

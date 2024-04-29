@@ -7,7 +7,11 @@ public class FallingObject : MonoBehaviour
 
     private float _randomPitch;
 
-    private void OnValidate() => _audioSource ??= GetComponent<AudioSource>();
+    private void OnValidate()
+    {
+        if (_audioSource == null)
+            _audioSource = GetComponent<AudioSource>();
+    }
     
     private void OnCollisionEnter(Collision collision)
     {
