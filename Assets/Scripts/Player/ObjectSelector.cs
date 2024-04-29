@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class ObjectSelector : MonoBehaviour
@@ -24,11 +24,14 @@ public class ObjectSelector : MonoBehaviour
                 _selectableDictionary[monoBehaviour.gameObject] = selectableComponent;
     }
 
-    private void Start() => StartCoroutine(Select());
-
-    private IEnumerator Select()
+    private void Start()
     {
-        var waitRaycastDelay = new WaitForSeconds(_raycastDelay);
+        Task _ = Select();
+    }
+
+    private async Task Select()
+    {
+        int delay = (int)(1000 * _raycastDelay);
 
         while (true)
         {
@@ -57,7 +60,7 @@ public class ObjectSelector : MonoBehaviour
                 _previousSelectable.SetSelected(false);
             }
 
-            yield return waitRaycastDelay;
+            await Task.Delay(delay);
         }
     }
 }

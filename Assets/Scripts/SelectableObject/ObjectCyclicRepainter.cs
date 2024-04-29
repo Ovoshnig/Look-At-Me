@@ -1,7 +1,8 @@
-using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
-public class ObjectCyclicRepainter : SelectableObject
+public sealed class ObjectCyclicRepainter : SelectableObject
 {
     [SerializeField] private float _repaintDelay;
 
@@ -9,17 +10,14 @@ public class ObjectCyclicRepainter : SelectableObject
     [SerializeField] private Material[] _materials;
     [SerializeField] private Material _correctMaterial;
 
-    private ObjectsInCorrectStatesCounter _repaintObjects—ompletist;
+    [SerializeField] private ObjectsInCorrectStatesCounter _repaintObjectsCompletist;
 
     private int _index;
+    private bool _isDecreaseAllowed = false;
+    private CancellationTokenSource _cts;
 
-    bool _isDecreaseAllowed = false;
-
-    private void Awake()
-    {
-        _repaintObjects—ompletist = GameObject.Find("LevelManager").GetComponent<ObjectsInCorrectStatesCounter>();
-    }
-
+    private void OnValidate() => _repaintObjectsCompletist = FindObjectOfType<ObjectsInCorrectStatesCounter>();
+    
     private void Start()
     {
         _index = Random.Range(0, _materials.Length);
@@ -27,44 +25,58 @@ public class ObjectCyclicRepainter : SelectableObject
 
         if (_materials[_index] == _correctMaterial)
         {
-            _repaintObjects—ompletist.IncreaseNumberOfCorrectObjects();
+            _repaintObjectsCompletist.IncreaseNumberOfCorrectObjects();
             _isDecreaseAllowed = true;
         }
     }
 
     public override void SetSelected(bool isSelect)
     {
-        _isSelect = isSelect;
-        if (_isSelect && _isStartCoroutineAllowed)
+        IsSelect = isSelect;
+
+        if (IsSelect)
         {
-            StartCoroutine(RepaintRoutine());
-            _isStartCoroutineAllowed = false;
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            _ = Repaint(_cts.Token);
+        }
+        else
+        {
+            if (_cts != null)
+            {
+                _cts.Cancel();
+                _cts.Dispose();
+                _cts = null;
+            }
         }
     }
 
-    public IEnumerator RepaintRoutine()
+    private async Task Repaint(CancellationToken token)
     {
-        var waitRepaintDelay = new WaitForSeconds(_repaintDelay);
+        int delayTime = (int)(1000 * _repaintDelay);
+        int stepTime = 100;
 
-        while (_isSelect)
+        while (IsSelect)
         {
             _renderer.material = _materials[_index];
+            bool isCorrectMaterial = _materials[_index] == _correctMaterial;
 
-            if (_materials[_index] == _correctMaterial)
-            {
-                _repaintObjects—ompletist.IncreaseNumberOfCorrectObjects();
-                _isDecreaseAllowed = true;
-            }
+            if (isCorrectMaterial)
+                _repaintObjectsCompletist.IncreaseNumberOfCorrectObjects();
             else if (_isDecreaseAllowed)
-            {
-                _repaintObjects—ompletist.DecreaseNumberOfCorrectObjects();
-                _isDecreaseAllowed = false;
-            }
+                _repaintObjectsCompletist.DecreaseNumberOfCorrectObjects();
+
+            _isDecreaseAllowed = isCorrectMaterial;
 
             _index = (_index + 1) % _materials.Length;
-            yield return waitRepaintDelay;
-        }
 
-        _isStartCoroutineAllowed = true;
+            for (int elapsed = 0; elapsed < delayTime; elapsed += stepTime)
+            {
+                if (token.IsCancellationRequested)
+                    return;
+
+                await Task.Delay(stepTime);
+            }
+        }
     }
 }

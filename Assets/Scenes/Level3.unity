@@ -294,6 +294,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &174489106
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,6 +343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &174489109
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1053,6 +1057,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &385671901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1278,6 +1284,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &459999749
 GameObject:
   m_ObjectHideFlags: 0
@@ -2083,6 +2091,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &829290849
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2202,6 +2212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &969388677
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2604,6 +2616,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &1316771574
 GameObject:
   m_ObjectHideFlags: 0
@@ -3213,6 +3227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &1718428914
 GameObject:
   m_ObjectHideFlags: 0
@@ -3332,6 +3348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &1719661545
 GameObject:
   m_ObjectHideFlags: 0
@@ -3379,6 +3397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &1719661548
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3638,6 +3658,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &1787406310
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4147,6 +4169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f9938da8b292842bb445a55df170b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lookingTime: 5
+  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &2049982831
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -7,13 +7,13 @@ public class BaseSelector : SelectableObject
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _basesStartSet;
 
-    private CheckersLogic _checkersLogic;
-    private CheckersVisualizer _visualizer;
+    [SerializeField] private CheckersLogic _checkersLogic;
+    [SerializeField] private CheckersVisualizer _visualizer;
 
-    private void Awake()
+    private void OnValidate()
     {
-        _checkersLogic = GetComponent<CheckersLogic>();
-        _visualizer = GetComponent<CheckersVisualizer>();
+        _checkersLogic ??= GetComponent<CheckersLogic>();
+        _visualizer ??= GetComponent<CheckersVisualizer>();
     }
 
     private void Start()
@@ -22,9 +22,9 @@ public class BaseSelector : SelectableObject
         _basesStartSet.SetActive(true);
     }
 
-    public void SelectBase(string choosenBaseName)
+    public void SelectBase(string chosenBaseName)
     {
-        _visualizer.ChooseFigure(choosenBaseName);
+        _visualizer.ChooseFigure(chosenBaseName);
         StartCoroutine(_checkersLogic.StartPlacement());
 
         _canvas.SetActive(false);

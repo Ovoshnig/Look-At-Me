@@ -5,8 +5,8 @@ public class OneSoundAtTimeProvider : MonoBehaviour
 {
     [SerializeField] private Transform _objectsTransform;
 
-    private readonly List<AudioSource> _audioSources = new();
-    private readonly List<ObjectResizer> _objectResizers = new();
+    [SerializeField] private List<AudioSource> _audioSources = new();
+    [SerializeField] private List<ObjectResizer> _objectResizers = new();
 
     private void Awake()
     {
@@ -24,6 +24,6 @@ public class OneSoundAtTimeProvider : MonoBehaviour
     {
         for (int i = 0; i < _audioSources.Count; i++)
             if (_audioSources[i].isPlaying && _audioSources[i] != audioSource)
-                StartCoroutine(_objectResizers[i].SoftStopSound());
+                _audioSources[i].Stop();
     }
 }

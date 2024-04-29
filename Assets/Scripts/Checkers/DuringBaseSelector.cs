@@ -1,40 +1,50 @@
-using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [SelectionBase]
-public class DuringBaseSelector : SelectableObject
+public sealed class DuringBaseSelector : SelectableObject
 {
-    [SerializeField] private BaseSelector _baseChoice;
+    [SerializeField] private float _lookingTime = 1;
+    [SerializeField] private BaseSelector _baseSelector;
 
-    private float _lookingTime = 0f;
+    private CancellationTokenSource _cts;
+
+    private void OnValidate() => _baseSelector ??= FindObjectOfType<BaseSelector>();
 
     public override void SetSelected(bool isSelect)
     {
-        _isSelect = isSelect;
-        if (_isSelect && _isStartCoroutineAllowed)
+        IsSelect = isSelect;
+
+        if (IsSelect)
         {
-            StartCoroutine(SelectingTimer());
-            _isStartCoroutineAllowed = false;
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            _ = SelectingTimer(_cts.Token);
         }
-        else 
+        else
         {
-            _lookingTime = 0;
+            if (_cts != null)
+            {
+                _cts.Cancel();
+                _cts.Dispose();
+                _cts = null;
+            }
         }
     }
 
-    private IEnumerator SelectingTimer()
+    private async Task SelectingTimer(CancellationToken token)
     {
-        while (_isSelect)
+        int delayTime = (int)(1000 * _lookingTime);
+        int stepTime = 100;
+        for (int elapsed = 0; elapsed < delayTime; elapsed += stepTime)
         {
-            _lookingTime += Time.deltaTime;
-            if (_lookingTime > 5f)
-            {
-                _baseChoice.SelectBase(gameObject.name);
-            }
+            if (token.IsCancellationRequested)
+                return;
 
-            yield return null;
+            await Task.Delay(stepTime);
         }
 
-        _isStartCoroutineAllowed = true;
+        _baseSelector.SelectBase(gameObject.name);
     }
 }

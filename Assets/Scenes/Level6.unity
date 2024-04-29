@@ -780,9 +780,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd52c85d09ef4bd43b498341aa9bf1f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swapDelay: 1
+  _switchDelay: 1
   _dropdown: {fileID: 148596102}
   _correctIndex: 0
+  _completist: {fileID: 31337890}
 --- !u!114 &148596102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1212,6 +1213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 174489112}
+  _audioSource: {fileID: 174489114}
 --- !u!82 &174489114
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2862,6 +2865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 410894924}
+  _audioSource: {fileID: 410894926}
 --- !u!82 &410894926
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4418,9 +4423,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd52c85d09ef4bd43b498341aa9bf1f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swapDelay: 1
+  _switchDelay: 1
   _dropdown: {fileID: 640522202}
   _correctIndex: 2
+  _completist: {fileID: 31337890}
 --- !u!65 &640522206
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5660,6 +5666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 969388680}
+  _audioSource: {fileID: 969388682}
 --- !u!82 &969388682
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5832,9 +5840,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd52c85d09ef4bd43b498341aa9bf1f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swapDelay: 1
+  _switchDelay: 1
   _dropdown: {fileID: 979720584}
   _correctIndex: 1
+  _completist: {fileID: 31337890}
 --- !u!114 &979720584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6441,9 +6450,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd52c85d09ef4bd43b498341aa9bf1f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swapDelay: 1
+  _switchDelay: 1
   _dropdown: {fileID: 1155470457}
   _correctIndex: 1
+  _completist: {fileID: 31337890}
 --- !u!114 &1155470457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7199,6 +7209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 1254112010}
+  _audioSource: {fileID: 1254112012}
 --- !u!82 &1254112012
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7688,9 +7700,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd52c85d09ef4bd43b498341aa9bf1f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swapDelay: 1
+  _switchDelay: 1
   _dropdown: {fileID: 1424527764}
   _correctIndex: 3
+  _completist: {fileID: 31337890}
 --- !u!114 &1424527764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8898,6 +8911,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 1660126134}
+  _audioSource: {fileID: 1660126136}
 --- !u!82 &1660126136
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9226,6 +9241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 1718428919}
+  _audioSource: {fileID: 1718428921}
 --- !u!82 &1718428921
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9891,6 +9908,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 1787406313}
+  _audioSource: {fileID: 1787406315}
 --- !u!82 &1787406315
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11111,6 +11130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcc6a0fa7cea4740b64299e1938ff40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 2049982834}
+  _audioSource: {fileID: 2049982836}
 --- !u!82 &2049982836
 AudioSource:
   m_ObjectHideFlags: 0

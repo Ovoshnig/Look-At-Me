@@ -8,10 +8,11 @@ public interface ISelectable
 
 public class SelectableObject : MonoBehaviour, ISelectable
 {
-    protected bool _isSelect = false;
-    protected bool _isStartCoroutineAllowed = true;
+    protected int delayTime;
 
-    public virtual void SetSelected(bool isSelect) => _isSelect = isSelect;
+    protected bool IsSelect = false;
+
+    public virtual void SetSelected(bool isSelect) => IsSelect = isSelect;
     
-    public bool GetSelected() => _isSelect;
+    public bool GetSelected() => IsSelect;
 }

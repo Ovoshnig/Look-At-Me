@@ -1,24 +1,22 @@
-using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
-public class DropdownSwitch : SelectableObject
+public sealed class DropdownSwitch : SelectableObject
 {
-    [SerializeField] private float _swapDelay;
+    [SerializeField] private float _switchDelay;
 
     [SerializeField] TMP_Dropdown _dropdown;
     [SerializeField] private int _correctIndex;
 
-    private ObjectsInCorrectStatesCounter _completist;
+    [SerializeField] private ObjectsInCorrectStatesCounter _completist;
 
     private int _index = 0;
+    private bool _isDecreaseAllowed = false;
+    private CancellationTokenSource _cts;
 
-    bool _isDecreaseAllowed = false;
-
-    private void Awake()
-    {
-        _completist = GameObject.Find("LevelManager").GetComponent<ObjectsInCorrectStatesCounter>();
-    }
+    private void OnValidate() => _completist = FindObjectOfType<ObjectsInCorrectStatesCounter>();
 
     private void Start()
     {
@@ -31,38 +29,51 @@ public class DropdownSwitch : SelectableObject
 
     public override void SetSelected(bool isSelect)
     {
-        _isSelect = isSelect;
+        IsSelect = isSelect;
 
-        if (_isSelect && _isStartCoroutineAllowed)
+        if (IsSelect)
         {
-            StartCoroutine(SwapRoutine());
-            _isStartCoroutineAllowed = false;
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            _ = SwitchDropdown(_cts.Token);
+        }
+        else
+        {
+            if (_cts != null)
+            {
+                _cts.Cancel();
+                _cts.Dispose();
+                _cts = null;
+            }
         }
     }
 
-    public IEnumerator SwapRoutine()
+    private async Task SwitchDropdown(CancellationToken token)
     {
-        var waitSwapDelay = new WaitForSeconds(_swapDelay);
+        int delayTime = (int)(1000 * _switchDelay);
+        int stepTime = 100;
 
-        while (_isSelect)
+        while (IsSelect)
         {
             _index = (_index + 1) % _dropdown.options.Count;
             _dropdown.value = _index;
 
-            if (_index == _correctIndex)
-            {
+            bool isCorrect = _index == _correctIndex;
+
+            if (isCorrect)
                 _completist.IncreaseNumberOfCorrectObjects();
-                _isDecreaseAllowed = true;
-            }
             else if (_isDecreaseAllowed)
-            {
                 _completist.DecreaseNumberOfCorrectObjects();
-                _isDecreaseAllowed = false;
+
+            _isDecreaseAllowed = isCorrect;
+
+            for (int elapsed = 0; elapsed < delayTime; elapsed += stepTime)
+            {
+                if (token.IsCancellationRequested)
+                    return;
+
+                await Task.Delay(stepTime);
             }
-
-            yield return waitSwapDelay;
         }
-
-        _isStartCoroutineAllowed = true;
     }
 }
