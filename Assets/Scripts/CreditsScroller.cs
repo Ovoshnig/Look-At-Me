@@ -13,12 +13,20 @@ public class CreditsScroller : MonoBehaviour
     [SerializeField] private float _startDelay;
     [SerializeField] private float _endDelay;
     [SerializeField] private float _scrollSpeed;
+    [SerializeField] private TMP_Text _TMP_Text;
+    [SerializeField] private RectTransform _rectTransform;
 
-    private TMP_Text _TMP_Text;
-    private RectTransform _rectTransform;
     private readonly string _filePath = "Assets/Resources/Documents/Credits.txt";
     private string[] _lines;
     private CancellationTokenSource _cts = new();
+
+    private void OnValidate()
+    {
+        if (_TMP_Text == null)
+            _TMP_Text = GetComponent<TMP_Text>();
+        if (_rectTransform == null)
+            _rectTransform = GetComponent<RectTransform>();
+    }
 
     private void OnDisable()
     {
@@ -28,11 +36,6 @@ public class CreditsScroller : MonoBehaviour
             _cts.Dispose();
             _cts = null;
         }
-    }
-    private void Awake()
-    {
-        _TMP_Text = GetComponent<TMP_Text>();
-        _rectTransform = GetComponent<RectTransform>();
     }
 
     private void Start()

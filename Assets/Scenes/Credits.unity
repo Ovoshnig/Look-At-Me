@@ -344,7 +344,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startDelay: 2
   _endDelay: 2
-  _scrollSpeed: 100
+  _scrollSpeed: 140
+  _TMP_Text: {fileID: 1006329739}
+  _rectTransform: {fileID: 1006329737}
 --- !u!114 &1006329739
 MonoBehaviour:
   m_ObjectHideFlags: 0
