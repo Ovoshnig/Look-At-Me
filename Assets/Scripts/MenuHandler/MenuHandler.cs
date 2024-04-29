@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class MenuHandler : MonoBehaviour
 {
     [SerializeField] protected GameObject _optionsPanel;
-
     [SerializeField] protected Slider _sensitivitySlider;
     [SerializeField] protected Slider _volumeSlider;
 

@@ -1,22 +1,18 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 [SelectionBase]
+[RequireComponent(typeof(CharacterController))]
 public class FPSController : MonoBehaviour
 {
     [SerializeField] private float _walkSpeed;
     [SerializeField] private float _runSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _gravityForce;
-
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _xRotationLimit;
-
     [SerializeField] private bool _isCanMove = true;
-
     [SerializeField] private Camera _playerCamera;
-
-    private CharacterController _characterController;
+    [SerializeField] private CharacterController _characterController;
 
     private Vector3 _moveDirection = Vector3.zero;
     private float _rotationX = 0;
@@ -29,9 +25,10 @@ public class FPSController : MonoBehaviour
     public float RotationSpeed { set => _rotationSpeed = value; }
     public bool IsCanMove { get => _isCanMove; set => _isCanMove = value; }
 
-    private void Awake()
+    private void OnValidate()
     {
-        _characterController = GetComponent<CharacterController>();
+        if (_characterController == null)
+            _characterController = GetComponent<CharacterController>();
     }
 
     private void Start()

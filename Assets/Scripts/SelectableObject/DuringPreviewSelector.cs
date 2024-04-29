@@ -9,7 +9,11 @@ public sealed class DuringPreviewSelector : SelectableObject
 
     private CancellationTokenSource _cts;
 
-    private void OnValidate() => _duringLookingAtPreviewCompletion ??= FindObjectOfType<DuringObjectSelectionCompletist>();
+    private void OnValidate()
+    {
+        if (_duringLookingAtPreviewCompletion == null)
+            _duringLookingAtPreviewCompletion = FindObjectOfType<DuringObjectSelectionCompletist>();
+    }
 
     private void OnDisable()
     {

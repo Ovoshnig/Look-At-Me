@@ -6,17 +6,19 @@ using UnityEngine;
 public sealed class DropdownSwitch : SelectableObject
 {
     [SerializeField] private float _switchDelay;
-
     [SerializeField] TMP_Dropdown _dropdown;
     [SerializeField] private int _correctIndex;
-
     [SerializeField] private ObjectsInCorrectStatesCounter _completist;
 
     private int _index = 0;
     private bool _isDecreaseAllowed = false;
     private CancellationTokenSource _cts;
 
-    private void OnValidate() => _completist ??= FindObjectOfType<ObjectsInCorrectStatesCounter>();
+    private void OnValidate()
+    {
+        if (_completist == null)
+            _completist = FindObjectOfType<ObjectsInCorrectStatesCounter>();
+    }
 
     private void OnDisable()
     {

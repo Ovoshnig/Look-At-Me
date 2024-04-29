@@ -1,19 +1,29 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 public class ObjectSelector : MonoBehaviour
 {
     [SerializeField] private float _rayLength = 1f;
     [SerializeField, Range(0, 0.5f)] private float _raycastDelay;
-
     [SerializeField] private LayerMask _selectableLayer;
 
     private readonly Dictionary<GameObject, ISelectable> _selectableDictionary = new();
-
     private ISelectable _previousSelectable;
     private ISelectable _currentSelectable;
+    private CancellationTokenSource _cts = new();
+
+    private void OnDisable()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
+    }
 
     private void Awake()
     {
@@ -26,12 +36,13 @@ public class ObjectSelector : MonoBehaviour
 
     private void Start()
     {
-        Task _ = Select();
+        Select().Forget();
     }
 
-    private async Task Select()
+    private async UniTaskVoid Select()
     {
         int delay = (int)(1000 * _raycastDelay);
+        var token = _cts.Token;
 
         while (true)
         {
@@ -60,7 +71,7 @@ public class ObjectSelector : MonoBehaviour
                 _previousSelectable.SetSelected(false);
             }
 
-            await Task.Delay(delay);
+            await UniTask.Delay(delay, cancellationToken: token);
         }
     }
 }

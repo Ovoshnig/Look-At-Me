@@ -7,9 +7,7 @@ public sealed class ObjectRotator : SelectableObject
     [SerializeField, Range(0, 2)] private int _axis;
     [SerializeField, Range(-1, 1)] private int _direction;
     [SerializeField] private float _rotationSpeed;
-
     [SerializeField] private AudioClip[] _rotationClips;
-
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private AudioSource _audioSource;
 
@@ -17,8 +15,10 @@ public sealed class ObjectRotator : SelectableObject
 
     private void OnValidate()
     {
-        _rigidbody ??= GetComponent<Rigidbody>();
-        _audioSource ??= GetComponent<AudioSource>();
+        if (_rigidbody == null)
+            _rigidbody = GetComponent<Rigidbody>();
+        if (_audioSource == null)
+            _audioSource = GetComponent<AudioSource>();
 
         if (_direction == 0)
             _direction = 1;

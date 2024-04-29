@@ -4,7 +4,6 @@ using UnityEngine;
 public class OneSoundAtTimeProvider : MonoBehaviour
 {
     [SerializeField] private Transform _objectsTransform;
-
     [SerializeField] private List<AudioSource> _audioSources = new();
     [SerializeField] private List<ObjectResizer> _objectResizers = new();
 

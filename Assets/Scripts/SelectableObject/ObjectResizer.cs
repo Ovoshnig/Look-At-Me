@@ -10,10 +10,8 @@ public sealed class ObjectResizer : SelectableObject
     [SerializeField, Range(-1, 1)] private int _direction;
     [SerializeField] private float _resizeSpeed;
     [SerializeField] private float _maxLength;
-
     [SerializeField] private AudioClip _upSoundClip;
     [SerializeField] private AudioClip _downSoundClip;
-
     [SerializeField] private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
 
     private Vector3 _initialScale;
@@ -23,7 +21,8 @@ public sealed class ObjectResizer : SelectableObject
 
     private void OnValidate()
     {
-        _oneSoundAtTimeProvider ??= FindObjectOfType<OneSoundAtTimeProvider>();
+        if (_oneSoundAtTimeProvider == null)
+            _oneSoundAtTimeProvider = FindObjectOfType<OneSoundAtTimeProvider>();
 
         if (_direction == 0)
             _direction = 1;

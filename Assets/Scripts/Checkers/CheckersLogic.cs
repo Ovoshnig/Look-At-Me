@@ -7,17 +7,18 @@ public class CheckersLogic : MonoBehaviour
 {
     [SerializeField] private float _placementDelay;
     [SerializeField] private float _finishDelay;
-
     [SerializeField] private CheckersVisualizer _visualizer;
 
     private readonly int[,] _board = new int[8, 8];
-
     private uint _player1Count = 12;
     private uint _player2Count = 12;
-
     private int _turn = 1;
 
-    private void OnValidate() => _visualizer ??= GetComponent<CheckersVisualizer>();
+    private void OnValidate()
+    { 
+        if (_visualizer == null)
+            _visualizer = GetComponent<CheckersVisualizer>(); 
+    }
 
     public IEnumerator StartPlacement()
     {

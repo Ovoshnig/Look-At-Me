@@ -6,38 +6,36 @@ using UnityEngine;
 public class CheckersVisualizer : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
-
     [SerializeField] private float _figureSize;
-
     [SerializeField] private List<GameObject> _figurePrefabs;
     [SerializeField] private GameObject _crownPrefab;
-
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip[] _putClips;
     [SerializeField] private AudioClip[] _dragClips;
     [SerializeField] private AudioClip _winClip;
     [SerializeField] private AudioClip _lossClip;
-
     [SerializeField] private AnimationCurve _jumpCurve;
     [SerializeField] private float _jumpDuration;
     [SerializeField] private float _jumpHeigh;
 
     private readonly GameObject[] _playerFigures = new GameObject[2];
     private readonly Transform[,] _figureTransforms = new Transform[8, 8];
-
-    private Transform figureTransform;
-
     private const float _cellSize = 2.5f;
-
+    private Transform figureTransform;
     private Vector3 startPosition;
     private Vector3 endPosition;
-
     private bool _isMovementFinish = false;
 
     public bool IsMovementFinish 
     { 
         get => _isMovementFinish; 
         set => _isMovementFinish = value; 
+    }
+
+    private void OnValidate()
+    {
+        if (_audioSource == null)
+            _audioSource = GetComponent<AudioSource>();
     }
 
     public void ChooseFigure(string playerFigureName)

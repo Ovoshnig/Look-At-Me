@@ -6,11 +6,10 @@ using UnityEngine;
 public sealed class ObjectCyclicRepainter : SelectableObject
 {
     [SerializeField] private float _repaintDelay;
-
     [SerializeField] private Renderer _renderer;
     [SerializeField] private Material[] _materials;
     [SerializeField] private Material _correctMaterial;
-    [SerializeField] private ObjectsInCorrectStatesCounter _repaintObjectsCompletist;
+    [SerializeField] private ObjectsInCorrectStatesCounter _objectsInCorrectStatesCounter;
 
     private int _index;
     private bool _isDecreaseAllowed = false;
@@ -18,8 +17,10 @@ public sealed class ObjectCyclicRepainter : SelectableObject
 
     private void OnValidate()
     {
-        _renderer ??= GetComponent<Renderer>();
-        _repaintObjectsCompletist ??= FindObjectOfType<ObjectsInCorrectStatesCounter>();
+        if (_renderer == null)
+            _renderer = GetComponent<Renderer>();
+        if (_objectsInCorrectStatesCounter == null)
+            _objectsInCorrectStatesCounter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
     }
 
     private void OnDisable()
@@ -39,7 +40,7 @@ public sealed class ObjectCyclicRepainter : SelectableObject
 
         if (_materials[_index] == _correctMaterial)
         {
-            _repaintObjectsCompletist.IncreaseNumberOfCorrectObjects();
+            _objectsInCorrectStatesCounter.IncreaseNumberOfCorrectObjects();
             _isDecreaseAllowed = true;
         }
     }
@@ -75,9 +76,9 @@ public sealed class ObjectCyclicRepainter : SelectableObject
             bool isCorrectMaterial = _materials[_index] == _correctMaterial;
 
             if (isCorrectMaterial)
-                _repaintObjectsCompletist.IncreaseNumberOfCorrectObjects();
+                _objectsInCorrectStatesCounter.IncreaseNumberOfCorrectObjects();
             else if (_isDecreaseAllowed)
-                _repaintObjectsCompletist.DecreaseNumberOfCorrectObjects();
+                _objectsInCorrectStatesCounter.DecreaseNumberOfCorrectObjects();
 
             _isDecreaseAllowed = isCorrectMaterial;
 
