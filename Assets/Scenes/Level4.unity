@@ -181,6 +181,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &77567439
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -222,7 +223,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -657,6 +658,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &487655642
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -891,6 +893,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &580478750
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -932,7 +935,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1020,6 +1023,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &614047024
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1061,7 +1065,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1288,6 +1292,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &808164067
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1417,6 +1422,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &1014280878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1651,6 +1657,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &1153789797
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1780,6 +1787,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &1219425080
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2251,6 +2259,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   - {fileID: 2100000, guid: 3f90004c1b0d3d94ba2608deb2962fef, type: 2}
   _correctMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
+  _repaintObjectsCompletist: {fileID: 663113815}
 --- !u!65 &1817676395
 BoxCollider:
   m_ObjectHideFlags: 0

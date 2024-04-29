@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenuHandler : MenuHandler
+public sealed class MainMenuHandler : MenuHandler
 {
     protected override void InitializeSettings()
     {

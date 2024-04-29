@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseMenuHandler : MenuHandler
+public sealed class PauseMenuHandler : MenuHandler
 {
     private FPSController _fpsController;
 
@@ -20,8 +20,7 @@ public class PauseMenuHandler : MenuHandler
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        GameObject player = GameObject.FindWithTag("Player");
-        _fpsController = player.GetComponent<FPSController>();
+        _fpsController = FindObjectOfType<FPSController>();
         _fpsController.RotationSpeed = _sensitivity;
 
         ProgressSaver.UpdateCurrentLevel();

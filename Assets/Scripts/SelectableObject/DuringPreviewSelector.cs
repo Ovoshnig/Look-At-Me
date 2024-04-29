@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 
@@ -9,8 +9,18 @@ public sealed class DuringPreviewSelector : SelectableObject
 
     private CancellationTokenSource _cts;
 
-    private void OnValidate() => _duringLookingAtPreviewCompletion = FindObjectOfType<DuringObjectSelectionCompletist>();
-    
+    private void OnValidate() => _duringLookingAtPreviewCompletion ??= FindObjectOfType<DuringObjectSelectionCompletist>();
+
+    private void OnDisable()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
+    }
+
     public override void SetSelected(bool isSelect)
     {
         IsSelect = isSelect;
@@ -19,7 +29,7 @@ public sealed class DuringPreviewSelector : SelectableObject
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
-            _ = ActivateDelayed(_cts.Token);
+            ActivateDelayed(_cts.Token).Forget();
         }
         else
         {
@@ -32,17 +42,10 @@ public sealed class DuringPreviewSelector : SelectableObject
         }
     }
 
-    private async Task ActivateDelayed(CancellationToken token)
+    private async UniTask ActivateDelayed(CancellationToken token)
     {
         int delayTime = (int)(1000 * _lookingTime);
-        int stepTime = 100;
-        for (int elapsed = 0; elapsed < delayTime; elapsed += stepTime)
-        {
-            if (token.IsCancellationRequested)
-                return;
-            
-            await Task.Delay(stepTime);
-        }
+        await UniTask.Delay(delayTime, cancellationToken: token);
 
         _duringLookingAtPreviewCompletion.TimerActivate(this);
     }

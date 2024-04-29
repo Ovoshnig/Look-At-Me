@@ -1,6 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.IO;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,11 +16,19 @@ public class CreditsScroller : MonoBehaviour
 
     private TMP_Text _TMP_Text;
     private RectTransform _rectTransform;
-
     private readonly string _filePath = "Assets/Resources/Documents/Credits.txt";
-
     private string[] _lines;
+    private CancellationTokenSource _cts = new();
 
+    private void OnDisable()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
+    }
     private void Awake()
     {
         _TMP_Text = GetComponent<TMP_Text>();
@@ -32,7 +41,7 @@ public class CreditsScroller : MonoBehaviour
         {
             _lines = File.ReadAllLines(_filePath);
 
-            StartCoroutine(ScrollText());
+            ScrollText(_cts.Token).Forget();
         }
         catch (FileNotFoundException e)
         {
@@ -44,7 +53,7 @@ public class CreditsScroller : MonoBehaviour
         }
     }
 
-    private IEnumerator ScrollText()
+    private async UniTaskVoid ScrollText(CancellationToken token)
     {
         Vector3 position = transform.localPosition;
         position.z = 1000f;
@@ -52,26 +61,25 @@ public class CreditsScroller : MonoBehaviour
 
         _TMP_Text.text = string.Join("\n", _lines);
 
-        yield return new WaitForSeconds(_startDelay);
+        int startDelayTime = (int)(1000 * _startDelay);
+        await UniTask.Delay(startDelayTime, cancellationToken: token);
 
         float yDelta = 1080f + 0.5f * _rectTransform.sizeDelta.y;
         position.y = -yDelta;
         position.z = 0f;
         transform.localPosition = position;
 
-        while (true)
+        while (transform.localPosition.y < yDelta)
         {
             Vector3 positionDifference = new(0, _scrollSpeed * Time.deltaTime, 0);
             transform.localPosition += positionDifference;
 
-            if (transform.localPosition.y > yDelta)
-            {
-                yield return new WaitForSeconds(_endDelay);
-
-                SceneManager.LoadScene(0);
-            }
-
-            yield return null;
+            await UniTask.Yield(cancellationToken: token);
         }
+
+        int endDelayTime = (int)(1000 * _endDelay);
+        await UniTask.Delay(endDelayTime, cancellationToken: token);
+
+        SceneManager.LoadScene(0);
     }
 }

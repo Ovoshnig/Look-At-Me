@@ -17,8 +17,8 @@ public sealed class ObjectRotator : SelectableObject
 
     private void OnValidate()
     {
-        _rigidbody = GetComponent<Rigidbody>();
-        _audioSource = GetComponent<AudioSource>();
+        _rigidbody ??= GetComponent<Rigidbody>();
+        _audioSource ??= GetComponent<AudioSource>();
 
         if (_direction == 0)
             _direction = 1;
