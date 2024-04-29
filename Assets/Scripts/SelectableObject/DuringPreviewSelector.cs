@@ -1,17 +1,16 @@
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
-[SelectionBase]
-public sealed class DuringBaseSelector : SelectableObject
+public sealed class DuringPreviewSelector : SelectableObject
 {
-    [SerializeField] private float _lookingTime = 1;
-    [SerializeField] private BaseSelector _baseSelector;
+    [SerializeField] private float _lookingTime;
+    [SerializeField] private DuringObjectSelectionCompletist _duringLookingAtPreviewCompletion;
 
     private CancellationTokenSource _cts;
 
-    private void OnValidate() => _baseSelector ??= FindObjectOfType<BaseSelector>();
-
+    private void OnValidate() => _duringLookingAtPreviewCompletion = FindObjectOfType<DuringObjectSelectionCompletist>();
+    
     public override void SetSelected(bool isSelect)
     {
         IsSelect = isSelect;
@@ -20,7 +19,7 @@ public sealed class DuringBaseSelector : SelectableObject
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
-            _ = SelectingTimer(_cts.Token);
+            _ = ActivateDelayed(_cts.Token);
         }
         else
         {
@@ -33,7 +32,7 @@ public sealed class DuringBaseSelector : SelectableObject
         }
     }
 
-    private async Task SelectingTimer(CancellationToken token)
+    private async Task ActivateDelayed(CancellationToken token)
     {
         int delayTime = (int)(1000 * _lookingTime);
         int stepTime = 100;
@@ -41,10 +40,10 @@ public sealed class DuringBaseSelector : SelectableObject
         {
             if (token.IsCancellationRequested)
                 return;
-
+            
             await Task.Delay(stepTime);
         }
 
-        _baseSelector.SelectBase(gameObject.name);
+        _duringLookingAtPreviewCompletion.TimerActivate(this);
     }
 }

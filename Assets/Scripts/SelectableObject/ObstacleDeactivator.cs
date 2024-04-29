@@ -3,29 +3,28 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(AudioSource))]
-public class ObstacleDeactivator : SelectableObject
+public sealed class ObstacleDeactivator : SelectableObject
 {
     [SerializeField] private AudioClip _popClip;
 
-    private Renderer _renderer;
-    private Collider _collider;
+    [SerializeField] private Renderer _renderer;
+    [SerializeField] private Collider _collider;
+    [SerializeField] private AudioSource _audioSource;
 
-    private AudioSource _audioSource;
-
-    private void Awake()
+    private void OnValidate()
     {
         _renderer = GetComponent<Renderer>();
-        _renderer.enabled = true;
-
         _collider = GetComponent<Collider>();
-
         _audioSource = GetComponent<AudioSource>();
+
         _audioSource.clip = _popClip;
     }
 
+    private void Awake() => _renderer.enabled = true;
+    
     public override void SetSelected(bool isSelect)
     {
-        _isSelect = false;
+        IsSelect = false;
 
         _audioSource.Play();
 

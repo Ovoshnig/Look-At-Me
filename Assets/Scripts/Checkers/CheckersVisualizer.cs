@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class CheckersVisualizer : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
@@ -143,6 +144,12 @@ public class CheckersVisualizer : MonoBehaviour
 
         GameObject crown = Instantiate(_crownPrefab, crownPosition, Quaternion.Euler(-90, 0, 0));
         crown.transform.parent = childFigureTransform;
+    }
+
+    public void PlayEndSound(int winnerTurn)
+    {
+        _audioSource.clip = winnerTurn == 1 ? _winClip : _lossClip;
+        _audioSource.Play();
     }
 
     public IEnumerator PlayFigureAnimation(int i, int j, float startDelay)

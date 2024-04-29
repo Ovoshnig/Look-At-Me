@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class DuringObjectSelectionCompletist : MonoBehaviour
 {
-    [SerializeField] private DuringPrewievSelector _correctSelector;
-    [SerializeField] private DuringPrewievSelector _potopSelector;
+    [SerializeField] private DuringPreviewSelector _correctSelector;
+    [SerializeField] private DuringPreviewSelector _potopSelector;
 
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private GameObject[] _anvils;
@@ -12,7 +12,7 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
     private int _randomAnvilIndex;
     private Vector3 _objectSpawnPosition;
 
-    public void TimerActivate(DuringPrewievSelector selector)
+    public void TimerActivate(DuringPreviewSelector selector)
     {
         if (selector == _correctSelector)
         {

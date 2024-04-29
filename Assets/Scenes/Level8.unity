@@ -286,6 +286,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
+      propertyPath: _direction
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _resizeCoefficient
       value: -2
       objectReference: {fileID: 0}
@@ -953,6 +957,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
+      propertyPath: _direction
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _maxLength
       value: 13
       objectReference: {fileID: 0}
@@ -1043,6 +1051,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _objectsTransform: {fileID: 1784980014}
+  _audioSources: []
+  _objectResizers: []
 --- !u!4 &971178874
 Transform:
   m_ObjectHideFlags: 0
@@ -1109,6 +1119,10 @@ PrefabInstance:
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _axis
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
+      propertyPath: _direction
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _maxLength
@@ -1191,6 +1205,10 @@ PrefabInstance:
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _axis
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
+      propertyPath: _direction
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _maxLength

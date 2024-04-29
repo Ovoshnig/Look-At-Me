@@ -1,127 +1,95 @@
-using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class ObjectResizer : SelectableObject
+public sealed class ObjectResizer : SelectableObject
 {
     [SerializeField, Range(0, 2)] private int _axis;
-    [SerializeField] private float _resizeCoefficient;
+    [SerializeField, Range(-1, 1)] private int _direction;
+    [SerializeField] private float _resizeSpeed;
     [SerializeField] private float _maxLength;
 
-    [SerializeField] private float _soundChangeDelay;
-
-    [SerializeField] private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
     [SerializeField] private AudioClip _upSoundClip;
     [SerializeField] private AudioClip _downSoundClip;
 
-    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
 
     private Vector3 _initialScale;
     private Vector3 _initialPosition;
+    private AudioSource _audioSource;
 
-    private void OnValidate() => _audioSource ??= GetComponent<AudioSource>();
-    
-    private void Start()
+    private CancellationTokenSource _cts = new CancellationTokenSource();
+
+    private void OnValidate()
     {
+        _oneSoundAtTimeProvider ??= FindObjectOfType<OneSoundAtTimeProvider>();
+
+        if (_direction == 0)
+            _direction = 1;
+    }
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
         _initialScale = transform.localScale;
         _initialPosition = transform.localPosition;
     }
 
     public override void SetSelected(bool isSelect)
     {
-        _isSelect = isSelect;
+        IsSelect = isSelect;
 
-        if (_isStartCoroutineAllowed)
+        _cts.Cancel();
+        _cts.Dispose();
+        _cts = new CancellationTokenSource();
+
+        Resize(IsSelect, _cts.Token);
+    }
+
+    private async void Resize(bool increasing, CancellationToken token)
+    {
+        AudioClip targetClip = increasing ? _upSoundClip : _downSoundClip;
+        if (_audioSource.clip != targetClip)
         {
-            StartCoroutine(Resize());
-            _isStartCoroutineAllowed = false;
+            _audioSource.clip = targetClip;
+            _audioSource.Play();
+            _oneSoundAtTimeProvider.SingleSound(_audioSource);
+        }
+
+        try
+        {
+            while ((increasing ? transform.localScale[_axis] < _maxLength :
+                transform.localScale[_axis] > _initialScale[_axis]) && 
+                !token.IsCancellationRequested)
+            {
+                AdjustScaleAndPosition(increasing ? 1 : -1);
+                await Task.Delay(10, token);
+            }
+
+            _audioSource.Stop();
+        }
+        catch (TaskCanceledException)
+        {
+            // Задача была отменена
+            // Вернуть объект в исходное состояние или в состояние, соответствующее текущему выбору, если это необходимо
+        }
+        catch
+        {
+
         }
     }
 
-    private IEnumerator Resize()
+    private void AdjustScaleAndPosition(int direction)
     {
-        int sign = default;
+        float scaleChange = direction * Mathf.Abs(_resizeSpeed * Time.deltaTime);
+        Vector3 scale = transform.localScale;
+        scale[_axis] += scaleChange;
+        transform.localScale = scale;
 
-        while (true) 
-        {
-            if (_isSelect && transform.localScale[_axis] < _maxLength)
-            {
-                if (sign != 1)
-                {
-                    sign = 1;
-
-                    StartCoroutine(SoftStopSound());
-                    yield return new WaitForSeconds(3 * _soundChangeDelay);
-
-                    _audioSource.clip = _upSoundClip;
-                    _audioSource.Play();
-
-                    _oneSoundAtTimeProvider.SingleSound(_audioSource);
-                }
-            }
-            else if (!_isSelect && transform.localScale[_axis] > _initialScale[_axis])
-            {
-                if (sign != -1)
-                {
-                    sign = -1;
-
-                    StartCoroutine(SoftStopSound());
-                    yield return new WaitForSeconds(3 * _soundChangeDelay);
-
-                    _audioSource.clip = _downSoundClip;
-                    _audioSource.Play();
-
-                    _oneSoundAtTimeProvider.SingleSound(_audioSource);
-                }
-            }
-            else
-            {
-                if (_isSelect)
-                {
-                    Vector3 scale = _initialScale;
-                    scale[_axis] = _maxLength;
-                    transform.localScale = scale;
-
-                    Vector3 position = _initialPosition;
-                    position[_axis] += 0.5f * Mathf.Sign(_resizeCoefficient) * (_maxLength - _initialScale[_axis]);
-                    transform.localPosition = position;
-                }
-                else
-                {
-                    transform.localScale = _initialScale;
-
-                    transform.localPosition = _initialPosition;
-                }
-
-                StartCoroutine(SoftStopSound());
-
-                _isStartCoroutineAllowed = true;
-
-                yield break;
-            }
-
-            float difference = _resizeCoefficient * Time.deltaTime;
-
-            Vector3 currentScale = transform.localScale;
-            currentScale[_axis] += sign * Mathf.Abs(difference);
-            transform.localScale = currentScale;
-
-            Vector3 currentPosition = transform.localPosition;
-            currentPosition[_axis] += sign * 0.5f * difference;
-            transform.localPosition = currentPosition;
-
-            yield return null;
-        }
-    }
-
-    public IEnumerator SoftStopSound()
-    {
-        var waitSoundChangeDelay = new WaitForSeconds(_soundChangeDelay);
-
-        _audioSource.volume = 0;
-        yield return waitSoundChangeDelay;
-        _audioSource.Stop();
-        yield return waitSoundChangeDelay;
-        _audioSource.volume = 1;
+        float positionChange = _direction * direction * 0.5f * _resizeSpeed * Time.deltaTime;
+        Vector3 position = transform.localPosition;
+        position[_axis] += positionChange;
+        transform.localPosition = position;
     }
 }
