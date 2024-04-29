@@ -1115,6 +1115,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
+      propertyPath: _soundChangeDelay
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3610581186146645562, guid: 47629c08cd1dc6a4fb105d72d5bc40a3, type: 3}
       propertyPath: _resizeCoefficient
       value: -2
       objectReference: {fileID: 0}
