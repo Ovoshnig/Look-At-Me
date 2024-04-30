@@ -3,7 +3,6 @@ using System.Threading;
 using UnityEngine;
 
 [SelectionBase]
-[RequireComponent(typeof(BaseSelector))]
 public sealed class DuringBaseSelector : SelectableObject
 {
     [SerializeField] private float _lookingTime = 1;
@@ -11,7 +10,7 @@ public sealed class DuringBaseSelector : SelectableObject
 
     private CancellationTokenSource _cts;
 
-    private void OnValidate()
+    private void Awake()
     {
         if (_baseSelector == null)
             _baseSelector = FindObjectOfType<BaseSelector>();

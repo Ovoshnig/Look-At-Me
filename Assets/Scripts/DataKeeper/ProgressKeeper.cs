@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
-public static class ProgressSaver
+public static class ProgressKeeper
 {
     private static int s_achievedLevel;
     private static int s_currentLevel;
     private const string _achievedLevelKey = "AchievedLevel";
 
-    static ProgressSaver()
+    static ProgressKeeper()
     {
         s_achievedLevel = PlayerPrefs.GetInt(_achievedLevelKey, 1);
         s_currentLevel = 0;
@@ -21,6 +22,10 @@ public static class ProgressSaver
         {
             s_achievedLevel = level; 
             PlayerPrefs.SetInt(_achievedLevelKey, level);
+        }
+        else 
+        { 
+            throw new InvalidOperationException();
         }
     }
 

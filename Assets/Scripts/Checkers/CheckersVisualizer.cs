@@ -125,9 +125,9 @@ public class CheckersVisualizer : MonoBehaviour
         figureTransform.position = endPosition;
     }
 
-    public IEnumerator RemoveFigure(Transform figureTransform, float dutarion)
+    public IEnumerator RemoveFigure(Transform figureTransform, float durarion)
     {
-        yield return new WaitForSeconds(dutarion);
+        yield return new WaitForSeconds(durarion);
 
         Destroy(figureTransform.gameObject);
     }

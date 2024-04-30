@@ -243,6 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 86104866}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &137150584
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,6 +364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 137150587}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &329913305
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,6 +590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 338782570}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &362620819
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,6 +711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 362620822}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &402952892
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,6 +832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 402952895}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &435121956
 GameObject:
   m_ObjectHideFlags: 0
@@ -948,6 +953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 435121959}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &470532798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,6 +1446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 804770984}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &1067063285
 GameObject:
   m_ObjectHideFlags: 0
@@ -2103,6 +2110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 1590295967}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &1650725406
 GameObject:
   m_ObjectHideFlags: 0
@@ -2223,6 +2231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 1650725409}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &1675194840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2388,6 +2397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 1706189368}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &1718843144
 GameObject:
   m_ObjectHideFlags: 0
@@ -2508,6 +2518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 1718843147}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &1821094200
 GameObject:
   m_ObjectHideFlags: 0
@@ -2724,6 +2735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paintMaterial: {fileID: 2100000, guid: 305916f33dfd80c418b22cf51534cd7c, type: 2}
   _renderer: {fileID: 1984282311}
+  _objectsInCorrectStatesCounter: {fileID: 1675194843}
 --- !u!1 &2051012360
 GameObject:
   m_ObjectHideFlags: 0
