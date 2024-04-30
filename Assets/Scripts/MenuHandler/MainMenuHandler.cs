@@ -5,12 +5,6 @@ public sealed class MainMenuHandler : MenuHandler
 {
     protected override void InitializeSettings()
     {
-        _sensitivity = PlayerPrefs.GetFloat(SensitivityKey, _sensitivitySlider.maxValue / 2);
-        _sensitivitySlider.value = _sensitivity;
-
-        _volume = PlayerPrefs.GetFloat(VolumeKey, _volumeSlider.maxValue / 2);
-        _volumeSlider.value = _volume;
-
         _optionsPanel.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
@@ -19,18 +13,18 @@ public sealed class MainMenuHandler : MenuHandler
 
     public void LoadAchievedLevel()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
-        int achievedLevel = ProgressSaver.GetAchievedLevel();
+        int achievedLevel = ProgressKeeper.GetAchievedLevel();
         SceneManager.LoadScene(achievedLevel);
     }
 
     public void LoadFirstLevel()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
         int achievedLevel = 1;
-        ProgressSaver.SetAchievedLevel(achievedLevel);
+        ProgressKeeper.SetAchievedLevel(achievedLevel);
         SceneManager.LoadScene(achievedLevel);
     }
 
@@ -41,7 +35,7 @@ public sealed class MainMenuHandler : MenuHandler
 
     public void Resume()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
         _optionsPanel.SetActive(false);
     }
@@ -49,13 +43,12 @@ public sealed class MainMenuHandler : MenuHandler
     public void ResetProgress()
     {
         int achievedLevel = 1;
-
-        ProgressSaver.SetAchievedLevel(achievedLevel);
+        ProgressKeeper.SetAchievedLevel(achievedLevel);
     }
 
     public void QuitGame()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
         Application.Quit();
     }
 }

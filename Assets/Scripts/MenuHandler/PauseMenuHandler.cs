@@ -8,21 +8,15 @@ public sealed class PauseMenuHandler : MenuHandler
 
     protected override void InitializeSettings()
     {
-        _sensitivity = PlayerPrefs.GetFloat(SensitivityKey);
-        _sensitivitySlider.value = _sensitivity;
-
-        _volume = PlayerPrefs.GetFloat(VolumeKey);
-        _volumeSlider.value = _volume;
-
         _optionsPanel.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         _fpsController = FindObjectOfType<FPSController>();
-        _fpsController.RotationSpeed = _sensitivity;
+        _fpsController.RotationSpeed = SensitivityKeeper.Get();
 
-        ProgressSaver.UpdateCurrentLevel();
+        ProgressKeeper.UpdateCurrentLevel();
     }
 
     private void Update()
@@ -43,22 +37,22 @@ public sealed class PauseMenuHandler : MenuHandler
         _fpsController.IsCanMove = !_isGamePaused;
 
         if (!shouldBePaused)
-            _fpsController.RotationSpeed = _sensitivity;
+            _fpsController.RotationSpeed = SensitivityKeeper.Get();
     }
 
     public void ResetLevel()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
-        int currentLevel = ProgressSaver.GetCurrentLevel();
+        int currentLevel = ProgressKeeper.GetCurrentLevel();
         SceneManager.LoadScene(currentLevel);
     }
 
     public void LoadPreviousLevel()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
-        int currentLevel = ProgressSaver.GetCurrentLevel();
+        int currentLevel = ProgressKeeper.GetCurrentLevel();
 
         if (currentLevel > 1)
             SceneManager.LoadScene(currentLevel - 1);
@@ -66,19 +60,19 @@ public sealed class PauseMenuHandler : MenuHandler
 
     public void LoadNextLevel(bool isLevelComplete)
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
-        int achievedLevel = ProgressSaver.GetAchievedLevel();
-        int currentLevel = ProgressSaver.GetCurrentLevel();
+        int achievedLevel = ProgressKeeper.GetAchievedLevel();
+        int currentLevel = ProgressKeeper.GetCurrentLevel();
 
         if (isLevelComplete && currentLevel + 1 > achievedLevel)
         {
             currentLevel++;
-            ProgressSaver.SetCurrentLevel(currentLevel);
+            ProgressKeeper.SetCurrentLevel(currentLevel);
             if (achievedLevel < SceneManager.sceneCountInBuildSettings - 2)
             {
                 achievedLevel++;
-                ProgressSaver.SetAchievedLevel(achievedLevel);
+                ProgressKeeper.SetAchievedLevel(achievedLevel);
             }
 
             SceneManager.LoadScene(currentLevel);
@@ -93,7 +87,7 @@ public sealed class PauseMenuHandler : MenuHandler
 
     public void LoadMenu()
     {
-        SaveSensitivityAndVolume();
+        SaveData();
 
         SceneManager.LoadScene(0);
     }

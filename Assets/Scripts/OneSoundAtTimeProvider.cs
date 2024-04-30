@@ -11,7 +11,7 @@ public class OneSoundAtTimeProvider : MonoBehaviour
     {
         foreach (Transform childTransform in _objectsTransform)
         {
-            var audioSource = childTransform.gameObject.GetComponent<AudioSource>();
+            var audioSource = childTransform.GetComponent<AudioSource>();
             _audioSources.Add(audioSource);
 
             var objectResizer = childTransform.GetComponent<ObjectResizer>();
