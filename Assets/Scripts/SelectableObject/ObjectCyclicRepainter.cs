@@ -9,7 +9,7 @@ public sealed class ObjectCyclicRepainter : SelectableObject
     [SerializeField] private Renderer _renderer;
     [SerializeField] private Material[] _materials;
     [SerializeField] private Material _correctMaterial;
-    [SerializeField] private ObjectsInCorrectStatesCounter _objectsInCorrectStatesCounter;
+    [SerializeField] private ObjectsInCorrectStatesCounter _counter;
 
     private int _index;
     private bool _isDecreaseAllowed = false;
@@ -19,8 +19,8 @@ public sealed class ObjectCyclicRepainter : SelectableObject
     {
         if (_renderer == null)
             _renderer = GetComponent<Renderer>();
-        if (_objectsInCorrectStatesCounter == null)
-            _objectsInCorrectStatesCounter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
+        if (_counter == null)
+            _counter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
     }
 
     private void OnDisable()
@@ -40,7 +40,7 @@ public sealed class ObjectCyclicRepainter : SelectableObject
 
         if (_materials[_index] == _correctMaterial)
         {
-            _objectsInCorrectStatesCounter.IncreaseNumberOfCorrectObjects();
+            _counter.IncreaseNumberOfCorrectObjects();
             _isDecreaseAllowed = true;
         }
     }
@@ -76,9 +76,9 @@ public sealed class ObjectCyclicRepainter : SelectableObject
             bool isCorrectMaterial = _materials[_index] == _correctMaterial;
 
             if (isCorrectMaterial)
-                _objectsInCorrectStatesCounter.IncreaseNumberOfCorrectObjects();
+                _counter.IncreaseNumberOfCorrectObjects();
             else if (_isDecreaseAllowed)
-                _objectsInCorrectStatesCounter.DecreaseNumberOfCorrectObjects();
+                _counter.DecreaseNumberOfCorrectObjects();
 
             _isDecreaseAllowed = isCorrectMaterial;
 

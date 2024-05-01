@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.Video;
 
-[RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(VideoPlayer))]
+[RequireComponent(typeof(AudioSource),
+                  typeof(VideoPlayer))]
 public sealed class VideoPlayerSwitch : SelectableObject
 {
     [SerializeField] private VideoPlayer _videoPlayer;

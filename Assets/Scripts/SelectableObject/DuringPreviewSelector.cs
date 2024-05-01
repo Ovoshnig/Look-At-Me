@@ -5,14 +5,14 @@ using UnityEngine;
 public sealed class DuringPreviewSelector : SelectableObject
 {
     [SerializeField] private float _lookingTime;
-    [SerializeField] private DuringObjectSelectionCompletist _duringLookingAtPreviewCompletion;
+    [SerializeField] private DuringObjectSelectionCompletist _completist;
 
     private CancellationTokenSource _cts;
 
     private void OnValidate()
     {
-        if (_duringLookingAtPreviewCompletion == null)
-            _duringLookingAtPreviewCompletion = FindObjectOfType<DuringObjectSelectionCompletist>();
+        if (_completist == null)
+            _completist = FindObjectOfType<DuringObjectSelectionCompletist>();
     }
 
     private void OnDisable()
@@ -51,6 +51,6 @@ public sealed class DuringPreviewSelector : SelectableObject
         int delayTime = (int)(1000 * _lookingTime);
         await UniTask.Delay(delayTime, cancellationToken: token);
 
-        _duringLookingAtPreviewCompletion.TimerActivate(this);
+        _completist.TimerActivate(this);
     }
 }

@@ -5,7 +5,6 @@ public class OneSoundAtTimeProvider : MonoBehaviour
 {
     [SerializeField] private Transform _objectsTransform;
     [SerializeField] private List<AudioSource> _audioSources = new();
-    [SerializeField] private List<ObjectResizer> _objectResizers = new();
 
     private void Awake()
     {
@@ -13,16 +12,13 @@ public class OneSoundAtTimeProvider : MonoBehaviour
         {
             var audioSource = childTransform.GetComponent<AudioSource>();
             _audioSources.Add(audioSource);
-
-            var objectResizer = childTransform.GetComponent<ObjectResizer>();
-            _objectResizers.Add(objectResizer);
         }
     }
 
     public void SingleSound(AudioSource audioSource)
     {
-        for (int i = 0; i < _audioSources.Count; i++)
-            if (_audioSources[i].isPlaying && _audioSources[i] != audioSource)
-                _audioSources[i].Stop();
+        foreach (var currentAudioSource in _audioSources)
+            if (currentAudioSource.isPlaying && currentAudioSource != audioSource)
+                currentAudioSource.Stop();
     }
 }
