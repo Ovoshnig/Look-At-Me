@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Rigidbody),
+                  typeof(AudioSource))]
 public sealed class ObjectRotator : SelectableObject
 {
     [SerializeField, Range(0, 2)] private int _axis;

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
-[RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Renderer),
+                  typeof(Collider),
+                  typeof(AudioSource))]
 public sealed class ObstacleDeactivator : SelectableObject
 {
     [SerializeField] private AudioClip _popClip;

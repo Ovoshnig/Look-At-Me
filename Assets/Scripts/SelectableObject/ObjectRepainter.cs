@@ -4,12 +4,12 @@ public sealed class ObjectRepainter : SelectableObject
 {
     [SerializeField] private Material _paintMaterial;
     [SerializeField] private Renderer _renderer;
-    [SerializeField] private ObjectsInCorrectStatesCounter _objectsInCorrectStatesCounter;
+    [SerializeField] private ObjectsInCorrectStatesCounter _counter;
 
     private void OnValidate()
     {
-        if (_objectsInCorrectStatesCounter == null)
-            _objectsInCorrectStatesCounter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
+        if (_counter == null)
+            _counter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
     }
     
     public override void SetSelected(bool isSelect)
@@ -20,7 +20,7 @@ public sealed class ObjectRepainter : SelectableObject
         {
             _renderer.material = _paintMaterial;
 
-            _objectsInCorrectStatesCounter.IncreaseNumberOfCorrectObjects();
+            _counter.IncreaseNumberOfCorrectObjects();
         }
     }
 }

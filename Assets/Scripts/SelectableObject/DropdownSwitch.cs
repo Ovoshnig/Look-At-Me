@@ -8,7 +8,7 @@ public sealed class DropdownSwitch : SelectableObject
     [SerializeField] private float _switchDelay;
     [SerializeField] TMP_Dropdown _dropdown;
     [SerializeField] private int _correctIndex;
-    [SerializeField] private ObjectsInCorrectStatesCounter _completist;
+    [SerializeField] private ObjectsInCorrectStatesCounter _counter;
 
     private int _index = 0;
     private bool _isDecreaseAllowed = false;
@@ -16,8 +16,8 @@ public sealed class DropdownSwitch : SelectableObject
 
     private void OnValidate()
     {
-        if (_completist == null)
-            _completist = FindObjectOfType<ObjectsInCorrectStatesCounter>();
+        if (_counter == null)
+            _counter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
     }
 
     private void OnDisable()
@@ -34,7 +34,7 @@ public sealed class DropdownSwitch : SelectableObject
     {
         if (_dropdown.value == _correctIndex)
         {
-            _completist.IncreaseNumberOfCorrectObjects();
+            _counter.IncreaseNumberOfCorrectObjects();
             _isDecreaseAllowed = true;
         }
     }
@@ -74,9 +74,9 @@ public sealed class DropdownSwitch : SelectableObject
             bool isCorrect = _index == _correctIndex;
 
             if (isCorrect)
-                _completist.IncreaseNumberOfCorrectObjects();
+                _counter.IncreaseNumberOfCorrectObjects();
             else if (_isDecreaseAllowed)
-                _completist.DecreaseNumberOfCorrectObjects();
+                _counter.DecreaseNumberOfCorrectObjects();
 
             _isDecreaseAllowed = isCorrect;
         }

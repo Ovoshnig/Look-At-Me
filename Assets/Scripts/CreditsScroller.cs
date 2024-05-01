@@ -6,8 +6,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(TMP_Text))]
-[RequireComponent (typeof(RectTransform))]
+[RequireComponent(typeof(TMP_Text),
+                  typeof(RectTransform))]
 public class CreditsScroller : MonoBehaviour
 {
     [SerializeField] private float _startDelay;
