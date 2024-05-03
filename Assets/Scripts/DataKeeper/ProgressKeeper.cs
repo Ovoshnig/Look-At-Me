@@ -2,40 +2,46 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
-public static class ProgressKeeper
+public class ProgressKeeper
 {
-    private static int s_achievedLevel;
-    private static int s_currentLevel;
+    private int _achievedLevel;
+    private int _currentLevel;
     private const string _achievedLevelKey = "AchievedLevel";
 
-    static ProgressKeeper()
+    private ProgressKeeper()
     {
-        s_achievedLevel = PlayerPrefs.GetInt(_achievedLevelKey, 1);
-        s_currentLevel = 0;
+        _achievedLevel = PlayerPrefs.GetInt(_achievedLevelKey, 1);
+        _currentLevel = 0;
     }
 
-    public static int GetAchievedLevel() => s_achievedLevel;
+    public int GetAchievedLevel() => _achievedLevel;
 
-    public static void SetAchievedLevel(int level)
+    public void SetAchievedLevel(int level)
     {
         if (level > 0 && level < SceneManager.sceneCountInBuildSettings)
         {
-            s_achievedLevel = level; 
+            _achievedLevel = level;
             PlayerPrefs.SetInt(_achievedLevelKey, level);
         }
-        else 
-        { 
-            throw new InvalidOperationException();
+        else
+        {
+            throw new InvalidOperationException("Invalid level");
         }
     }
 
-    public static void UpdateCurrentLevel() => s_currentLevel = SceneManager.GetActiveScene().buildIndex;
-    
-    public static int GetCurrentLevel() => s_currentLevel;
+    public void UpdateCurrentLevel() => _currentLevel = SceneManager.GetActiveScene().buildIndex;
 
-    public static void SetCurrentLevel(int level) 
+    public int GetCurrentLevel() => _currentLevel;
+
+    public void SetCurrentLevel(int level)
     {
-        if (level >= 0 && level <= s_achievedLevel) 
-            s_currentLevel = level;
+        if (level >= 0 && level <= _achievedLevel)
+        {
+            _currentLevel = level;
+        }
+        else
+        {
+            throw new InvalidOperationException("Invalid level");
+        }
     }
 }

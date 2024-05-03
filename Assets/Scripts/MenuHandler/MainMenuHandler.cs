@@ -15,7 +15,7 @@ public sealed class MainMenuHandler : MenuHandler
     {
         SaveData();
 
-        int achievedLevel = ProgressKeeper.GetAchievedLevel();
+        int achievedLevel = _progressKeeper.GetAchievedLevel();
         SceneManager.LoadScene(achievedLevel);
     }
 
@@ -24,7 +24,7 @@ public sealed class MainMenuHandler : MenuHandler
         SaveData();
 
         int achievedLevel = 1;
-        ProgressKeeper.SetAchievedLevel(achievedLevel);
+        _progressKeeper.SetAchievedLevel(achievedLevel);
         SceneManager.LoadScene(achievedLevel);
     }
 
@@ -43,7 +43,7 @@ public sealed class MainMenuHandler : MenuHandler
     public void ResetProgress()
     {
         int achievedLevel = 1;
-        ProgressKeeper.SetAchievedLevel(achievedLevel);
+        _progressKeeper.SetAchievedLevel(achievedLevel);
     }
 
     public void QuitGame()

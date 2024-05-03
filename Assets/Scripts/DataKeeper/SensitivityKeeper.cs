@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public static class SensitivityKeeper
+public class SensitivityKeeper
 {
-    private static float s_sensitivity;
+    private float _sensitivity;
     private const string _sensitivity_key = "Sensitivity";
 
-    static SensitivityKeeper() => s_sensitivity = PlayerPrefs.GetFloat(_sensitivity_key, 5f);
+    private SensitivityKeeper() => _sensitivity = PlayerPrefs.GetFloat(_sensitivity_key, 5f);
 
-    public static float Get() => s_sensitivity;
+    public float Get() => _sensitivity;
 
-    public static void Set(float sensitivity) => s_sensitivity = Mathf.Clamp(sensitivity, 0f, 10f);
+    public void Set(float sensitivity) => _sensitivity = Mathf.Clamp(sensitivity, 0f, 10f);
 
-    public static void Save() => PlayerPrefs.SetFloat(_sensitivity_key, s_sensitivity);
+    public void Save() => PlayerPrefs.SetFloat(_sensitivity_key, _sensitivity);
 }

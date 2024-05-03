@@ -14,9 +14,9 @@ public sealed class PauseMenuHandler : MenuHandler
         Cursor.visible = false;
 
         _fpsController = FindObjectOfType<FPSController>();
-        _fpsController.RotationSpeed = SensitivityKeeper.Get();
+        _fpsController.RotationSpeed = _sensitivityKeeper.Get();
 
-        ProgressKeeper.UpdateCurrentLevel();
+        _progressKeeper.UpdateCurrentLevel();
     }
 
     private void Update()
@@ -37,14 +37,14 @@ public sealed class PauseMenuHandler : MenuHandler
         _fpsController.IsCanMove = !_isGamePaused;
 
         if (!shouldBePaused)
-            _fpsController.RotationSpeed = SensitivityKeeper.Get();
+            _fpsController.RotationSpeed = _sensitivityKeeper.Get();
     }
 
     public void ResetLevel()
     {
         SaveData();
 
-        int currentLevel = ProgressKeeper.GetCurrentLevel();
+        int currentLevel = _progressKeeper.GetCurrentLevel();
         SceneManager.LoadScene(currentLevel);
     }
 
@@ -52,7 +52,7 @@ public sealed class PauseMenuHandler : MenuHandler
     {
         SaveData();
 
-        int currentLevel = ProgressKeeper.GetCurrentLevel();
+        int currentLevel = _progressKeeper.GetCurrentLevel();
 
         if (currentLevel > 1)
             SceneManager.LoadScene(currentLevel - 1);
@@ -62,17 +62,17 @@ public sealed class PauseMenuHandler : MenuHandler
     {
         SaveData();
 
-        int achievedLevel = ProgressKeeper.GetAchievedLevel();
-        int currentLevel = ProgressKeeper.GetCurrentLevel();
+        int achievedLevel = _progressKeeper.GetAchievedLevel();
+        int currentLevel = _progressKeeper.GetCurrentLevel();
 
         if (isLevelComplete && currentLevel + 1 > achievedLevel)
         {
             currentLevel++;
-            ProgressKeeper.SetCurrentLevel(currentLevel);
+            _progressKeeper.SetCurrentLevel(currentLevel);
             if (achievedLevel < SceneManager.sceneCountInBuildSettings - 2)
             {
                 achievedLevel++;
-                ProgressKeeper.SetAchievedLevel(achievedLevel);
+                _progressKeeper.SetAchievedLevel(achievedLevel);
             }
 
             SceneManager.LoadScene(currentLevel);

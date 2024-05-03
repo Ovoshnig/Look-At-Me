@@ -295,7 +295,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &174489106
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +343,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &174489109
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1058,7 +1056,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &385671901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1285,7 +1282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &459999749
 GameObject:
   m_ObjectHideFlags: 0
@@ -2092,7 +2088,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &829290849
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2213,7 +2208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &969388677
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2617,7 +2611,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &1316771574
 GameObject:
   m_ObjectHideFlags: 0
@@ -2902,6 +2895,9 @@ GameObject:
   - component: {fileID: 1506360175}
   - component: {fileID: 1506360174}
   - component: {fileID: 1506360173}
+  - component: {fileID: 1506360176}
+  - component: {fileID: 1506360178}
+  - component: {fileID: 1506360177}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -2959,6 +2955,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1506360176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506360172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 1506360178}
+  - {fileID: 1506360177}
+  _installerPrefabs: []
+  _autoRun: 1
+  OnPreInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPreResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  _parentNewObjectsUnderSceneContext: 0
+  _contractNames: []
+  _parentContractNames: []
+--- !u!114 &1506360177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506360172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d36fac2fe562274982b81d01b1c254a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1506360178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506360172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4cb69c52c1392a498dfa6c9710e57c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1537304191
 GameObject:
   m_ObjectHideFlags: 0
@@ -3228,7 +3281,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &1718428914
 GameObject:
   m_ObjectHideFlags: 0
@@ -3349,7 +3401,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!1 &1719661545
 GameObject:
   m_ObjectHideFlags: 0
@@ -3398,7 +3449,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &1719661548
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3659,7 +3709,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &1787406310
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4170,7 +4219,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookingTime: 5
-  _duringLookingAtPreviewCompletion: {fileID: 31337890}
 --- !u!64 &2049982831
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4538,6 +4586,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1386990553}
   - {fileID: 1821094201}
-  - {fileID: 1506360175}
   - {fileID: 31337889}
   - {fileID: 2102608716}
+  - {fileID: 1506360175}

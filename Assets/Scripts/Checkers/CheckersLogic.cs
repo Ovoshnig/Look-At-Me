@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(CheckersVisualizer))]
 public class CheckersLogic : MonoBehaviour
@@ -8,6 +9,8 @@ public class CheckersLogic : MonoBehaviour
     [SerializeField] private float _placementDelay;
     [SerializeField] private float _finishDelay;
     [SerializeField] private CheckersVisualizer _visualizer;
+
+    [Inject] private readonly PauseMenuHandler _pauseMenuHandler;
 
     private readonly int[,] _board = new int[8, 8];
     private uint _player1Count = 12;
@@ -417,7 +420,6 @@ public class CheckersLogic : MonoBehaviour
 
         yield return new WaitForSeconds(_finishDelay);
 
-        PauseMenuHandler pauseMenuHandler = FindObjectOfType<PauseMenuHandler>();
-        pauseMenuHandler.LoadNextLevel(true);
+        _pauseMenuHandler.LoadNextLevel(true);
     }
 }

@@ -1,24 +1,25 @@
 using UnityEngine;
+using Zenject;
 
-public class ObjectsInCorrectStatesCounter : MonoBehaviour
+public class ObjectsInCorrectStatesCounter
 {
-    [SerializeField] private Transform _objectsTransform;
+    [Inject] private readonly PauseMenuHandler _menuHandler;
 
-    private uint _objectsCount;
+    private uint _objectsCount = 0;
     private uint _correctObjectsCount = 0;
 
-    private void Start()
+    public void IncreaseObjectsCount()
     {
-        _objectsCount = (uint)_objectsTransform.childCount;
+        _objectsCount++;
     }
 
-    public void IncreaseNumberOfCorrectObjects()
+    public void IncreaseCorrectObjectsCount()
     {
         _correctObjectsCount++;
         CheckIsComplete();
     }
 
-    public void DecreaseNumberOfCorrectObjects()
+    public void DecreaseCorrectObjectsCount()
     {
         _correctObjectsCount--;
     }
@@ -26,9 +27,6 @@ public class ObjectsInCorrectStatesCounter : MonoBehaviour
     private void CheckIsComplete() 
     {
         if (_correctObjectsCount == _objectsCount)
-        {
-            PauseMenuHandler pauseMenuHandler = FindObjectOfType<PauseMenuHandler>();
-            pauseMenuHandler.LoadNextLevel(true);
-        }
+            _menuHandler.LoadNextLevel(true);
     }
 }

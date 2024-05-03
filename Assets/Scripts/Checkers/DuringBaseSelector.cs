@@ -10,7 +10,7 @@ public sealed class DuringBaseSelector : SelectableObject
 
     private CancellationTokenSource _cts;
 
-    private void Awake()
+    private void OnValidate()
     {
         if (_baseSelector == null)
             _baseSelector = FindObjectOfType<BaseSelector>();
