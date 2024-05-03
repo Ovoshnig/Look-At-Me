@@ -1,19 +1,15 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
+using Zenject;
 
 public sealed class DuringPreviewSelector : SelectableObject
 {
     [SerializeField] private float _lookingTime;
-    [SerializeField] private DuringObjectSelectionCompletist _completist;
+
+    [Inject] private readonly DuringObjectSelectionCompletist _completist;
 
     private CancellationTokenSource _cts;
-
-    private void OnValidate()
-    {
-        if (_completist == null)
-            _completist = FindObjectOfType<DuringObjectSelectionCompletist>();
-    }
 
     private void OnDisable()
     {

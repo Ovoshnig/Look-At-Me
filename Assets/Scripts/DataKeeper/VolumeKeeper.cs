@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public static class VolumeKeeper
+public class VolumeKeeper
 {
-    private static float s_volume;
+    private float _volume;
     private const string _volume_key = "Volume";
 
-    static VolumeKeeper() => s_volume = PlayerPrefs.GetFloat(_volume_key, 0.5f);
+    private VolumeKeeper() => _volume = PlayerPrefs.GetFloat(_volume_key, 0.5f);
 
-    public static float Get() => s_volume;
+    public float Get() => _volume;
 
-    public static void Set(float volume) => s_volume = Mathf.Clamp01(volume);
+    public void Set(float volume) => _volume = Mathf.Clamp01(volume);
     
-    public static void Save() => PlayerPrefs.SetFloat(_volume_key, s_volume);
+    public void Save() => PlayerPrefs.SetFloat(_volume_key, _volume);
 }

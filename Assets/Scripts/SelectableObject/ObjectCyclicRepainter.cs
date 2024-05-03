@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(Renderer))]
 public sealed class ObjectCyclicRepainter : SelectableObject
@@ -9,19 +10,12 @@ public sealed class ObjectCyclicRepainter : SelectableObject
     [SerializeField] private Renderer _renderer;
     [SerializeField] private Material[] _materials;
     [SerializeField] private Material _correctMaterial;
-    [SerializeField] private ObjectsInCorrectStatesCounter _counter;
+
+    [Inject] private readonly ObjectsInCorrectStatesCounter _counter;
 
     private int _index;
     private bool _isDecreaseAllowed = false;
     private CancellationTokenSource _cts;
-
-    private void OnValidate()
-    {
-        if (_renderer == null)
-            _renderer = GetComponent<Renderer>();
-        if (_counter == null)
-            _counter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
-    }
 
     private void OnDisable()
     {
@@ -33,6 +27,8 @@ public sealed class ObjectCyclicRepainter : SelectableObject
         }
     }
 
+    private void Awake() => _counter.IncreaseObjectsCount();
+
     private void Start()
     {
         _index = Random.Range(0, _materials.Length);
@@ -40,7 +36,7 @@ public sealed class ObjectCyclicRepainter : SelectableObject
 
         if (_materials[_index] == _correctMaterial)
         {
-            _counter.IncreaseNumberOfCorrectObjects();
+            _counter.IncreaseCorrectObjectsCount();
             _isDecreaseAllowed = true;
         }
     }
@@ -76,9 +72,9 @@ public sealed class ObjectCyclicRepainter : SelectableObject
             bool isCorrectMaterial = _materials[_index] == _correctMaterial;
 
             if (isCorrectMaterial)
-                _counter.IncreaseNumberOfCorrectObjects();
+                _counter.IncreaseCorrectObjectsCount();
             else if (_isDecreaseAllowed)
-                _counter.DecreaseNumberOfCorrectObjects();
+                _counter.DecreaseCorrectObjectsCount();
 
             _isDecreaseAllowed = isCorrectMaterial;
 

@@ -2,23 +2,19 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public sealed class DropdownSwitch : SelectableObject
 {
     [SerializeField] private float _switchDelay;
     [SerializeField] TMP_Dropdown _dropdown;
     [SerializeField] private int _correctIndex;
-    [SerializeField] private ObjectsInCorrectStatesCounter _counter;
+
+    [Inject] private readonly ObjectsInCorrectStatesCounter _counter;
 
     private int _index = 0;
     private bool _isDecreaseAllowed = false;
     private CancellationTokenSource _cts;
-
-    private void OnValidate()
-    {
-        if (_counter == null)
-            _counter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
-    }
 
     private void OnDisable()
     {
@@ -30,11 +26,16 @@ public sealed class DropdownSwitch : SelectableObject
         }
     }
 
+    private void Awake()
+    {
+        _counter.IncreaseObjectsCount();
+    }
+
     private void Start()
     {
         if (_dropdown.value == _correctIndex)
         {
-            _counter.IncreaseNumberOfCorrectObjects();
+            _counter.IncreaseCorrectObjectsCount();
             _isDecreaseAllowed = true;
         }
     }
@@ -74,9 +75,9 @@ public sealed class DropdownSwitch : SelectableObject
             bool isCorrect = _index == _correctIndex;
 
             if (isCorrect)
-                _counter.IncreaseNumberOfCorrectObjects();
+                _counter.IncreaseCorrectObjectsCount();
             else if (_isDecreaseAllowed)
-                _counter.DecreaseNumberOfCorrectObjects();
+                _counter.DecreaseCorrectObjectsCount();
 
             _isDecreaseAllowed = isCorrect;
         }

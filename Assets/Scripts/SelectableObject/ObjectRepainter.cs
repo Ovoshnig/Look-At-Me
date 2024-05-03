@@ -1,16 +1,14 @@
 using UnityEngine;
+using Zenject;
 
 public sealed class ObjectRepainter : SelectableObject
 {
     [SerializeField] private Material _paintMaterial;
     [SerializeField] private Renderer _renderer;
-    [SerializeField] private ObjectsInCorrectStatesCounter _counter;
+    
+    [Inject] private readonly ObjectsInCorrectStatesCounter _counter;
 
-    private void OnValidate()
-    {
-        if (_counter == null)
-            _counter = FindObjectOfType<ObjectsInCorrectStatesCounter>();
-    }
+    private void Start() => _counter.IncreaseObjectsCount();
     
     public override void SetSelected(bool isSelect)
     {
@@ -20,7 +18,7 @@ public sealed class ObjectRepainter : SelectableObject
         {
             _renderer.material = _paintMaterial;
 
-            _counter.IncreaseNumberOfCorrectObjects();
+            _counter.IncreaseCorrectObjectsCount();
         }
     }
 }

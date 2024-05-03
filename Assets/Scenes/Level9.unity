@@ -1021,7 +1021,7 @@ GameObject:
   - component: {fileID: 1105682020}
   - component: {fileID: 1105682022}
   m_Layer: 0
-  m_Name: LevelManager
+  m_Name: CheckersManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1247,6 +1247,8 @@ GameObject:
   - component: {fileID: 1411161786}
   - component: {fileID: 1411161785}
   - component: {fileID: 1411161784}
+  - component: {fileID: 1411161787}
+  - component: {fileID: 1411161788}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1304,6 +1306,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1411161787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411161783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 1411161788}
+  _installerPrefabs: []
+  _autoRun: 1
+  OnPreInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPreResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  _parentNewObjectsUnderSceneContext: 0
+  _contractNames: []
+  _parentContractNames: []
+--- !u!114 &1411161788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411161783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4cb69c52c1392a498dfa6c9710e57c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1446836401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1890,8 +1936,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3653062366356599858}
   - component: {fileID: 1792885122924582080}
-  - component: {fileID: 6181920547815707507}
   - component: {fileID: 6181920547815707511}
+  - component: {fileID: 6181920547815707507}
   m_Layer: 3
   m_Name: Ketrin
   m_TagString: Untagged
@@ -2995,8 +3041,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2080993417525257939}
   - component: {fileID: 5113317795847266988}
-  - component: {fileID: 4036903072401185825}
   - component: {fileID: 5113317795847266992}
+  - component: {fileID: 4036903072401185825}
   m_Layer: 3
   m_Name: HeO
   m_TagString: Untagged
@@ -3757,8 +3803,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4618066766589336392}
   - component: {fileID: 4979904120590715038}
-  - component: {fileID: 1499884066871976794}
   - component: {fileID: 4988258775589028481}
+  - component: {fileID: 1499884066871976794}
   m_Layer: 3
   m_Name: Hurricane
   m_TagString: Untagged
@@ -3872,8 +3918,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3464721850716608203}
   - component: {fileID: 2886175744115412438}
-  - component: {fileID: 5778318822687602389}
   - component: {fileID: 5778318822687602393}
+  - component: {fileID: 5778318822687602389}
   m_Layer: 3
   m_Name: Venazar
   m_TagString: Untagged
@@ -4026,8 +4072,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5635664086114754383}
   - component: {fileID: 100654554326844498}
-  - component: {fileID: 2824308031540537689}
   - component: {fileID: 5739308549386006789}
+  - component: {fileID: 2824308031540537689}
   m_Layer: 3
   m_Name: PWGood
   m_TagString: Untagged
@@ -4392,8 +4438,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6246242297792464336}
   - component: {fileID: 3110918543443881795}
-  - component: {fileID: 7647244637628595801}
   - component: {fileID: 7647244637628595805}
+  - component: {fileID: 7647244637628595801}
   m_Layer: 3
   m_Name: Hayd1
   m_TagString: Untagged
@@ -4588,8 +4634,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4894792868340369580}
   - component: {fileID: 2858743387953622115}
-  - component: {fileID: 8608297250195898030}
   - component: {fileID: 8608297250195898034}
+  - component: {fileID: 8608297250195898030}
   m_Layer: 3
   m_Name: Dushenka
   m_TagString: Untagged
@@ -4915,6 +4961,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 2104157143}
   - {fileID: 1821094201}
-  - {fileID: 1411161786}
   - {fileID: 1105682017}
   - {fileID: 307469218}
+  - {fileID: 1411161786}
