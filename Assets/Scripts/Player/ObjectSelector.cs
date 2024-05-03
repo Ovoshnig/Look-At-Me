@@ -34,10 +34,7 @@ public class ObjectSelector : MonoBehaviour
                 _selectableDictionary[monoBehaviour.gameObject] = selectableComponent;
     }
 
-    private void Start()
-    {
-        Select().Forget();
-    }
+    private void Start() => Select().Forget();
 
     private async UniTaskVoid Select()
     {
