@@ -1,15 +1,23 @@
+using System;
 using UnityEngine;
 
-public class VolumeKeeper
+public class VolumeKeeper : DataKeeper<float>
 {
-    private float _volume;
-    private const string _volume_key = "Volume";
+    private VolumeKeeper()
+    {
+        DataKey = "Volume";
+        ValueField = PlayerPrefs.GetFloat(DataKey, 0.5f);
+    }
 
-    private VolumeKeeper() => _volume = PlayerPrefs.GetFloat(_volume_key, 0.5f);
-
-    public float Get() => _volume;
-
-    public void Set(float volume) => _volume = Mathf.Clamp01(volume);
-    
-    public void Save() => PlayerPrefs.SetFloat(_volume_key, _volume);
+    public override float Value 
+    { 
+        get => ValueField;
+        set
+        {
+            if (value is >= 0 and <= 1)
+                ValueField = value;
+            else
+                throw new InvalidOperationException("Invalid volume");
+        }
+    }
 }

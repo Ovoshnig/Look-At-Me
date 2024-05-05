@@ -711,7 +711,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2876751642826245452}
         m_TargetAssemblyTypeName: PauseMenuHandler, Assembly-CSharp
-        m_MethodName: LoadMenu
+        m_MethodName: LoadMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -991,8 +991,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2876751642826245452}
         m_TargetAssemblyTypeName: PauseMenuHandler, Assembly-CSharp
-        m_MethodName: PauseOrResume
-        m_Mode: 6
+        m_MethodName: Resume
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2181,7 +2181,7 @@ MonoBehaviour:
       - m_Target: {fileID: 2876751642826245452}
         m_TargetAssemblyTypeName: PauseMenuHandler, Assembly-CSharp
         m_MethodName: LoadNextLevel
-        m_Mode: 6
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
