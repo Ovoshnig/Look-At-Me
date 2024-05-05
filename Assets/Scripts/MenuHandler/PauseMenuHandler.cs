@@ -1,11 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 public sealed class PauseMenuHandler : MenuHandler
 {
-    [Inject] private readonly FPSController _fpsController;
+    [SerializeField] private Image _playerPoint;
 
+    private FPSController _fpsController;
     private bool _isGamePaused;
+
+    [Inject]
+    private void Construct(FPSController fPSController)
+    {
+        _fpsController = fPSController;
+    }
 
     protected override void InitializeSettings()
     {
@@ -46,6 +54,7 @@ public sealed class PauseMenuHandler : MenuHandler
         Cursor.visible = shouldBePaused;
 
         _optionsPanel.SetActive(shouldBePaused);
+        _playerPoint.enabled = !shouldBePaused;
 
         _fpsController.IsCanMove = !shouldBePaused;
     }

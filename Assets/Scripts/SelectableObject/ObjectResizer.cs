@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(AudioSource))]
 public sealed class ObjectResizer : SelectableObject
@@ -12,18 +13,21 @@ public sealed class ObjectResizer : SelectableObject
     [SerializeField] private float _maxLength;
     [SerializeField] private AudioClip _upSoundClip;
     [SerializeField] private AudioClip _downSoundClip;
-    [SerializeField] private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
 
     private Vector3 _initialScale;
     private Vector3 _initialPosition;
     private AudioSource _audioSource;
+    private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
     private CancellationTokenSource _cts = new();
+
+    [Inject]
+    private void Construct(OneSoundAtTimeProvider oneSoundAtTimeProvider)
+    {
+        _oneSoundAtTimeProvider = oneSoundAtTimeProvider;
+    }
 
     private void OnValidate()
     {
-        if (_oneSoundAtTimeProvider == null)
-            _oneSoundAtTimeProvider = FindObjectOfType<OneSoundAtTimeProvider>();
-
         if (_direction == 0)
             _direction = 1;
     }
