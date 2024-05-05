@@ -6,12 +6,14 @@ public class LevelSwitch
 {
     private readonly AchievedLevelKeeper _achievedLevelKeeper;
 
-    private int _currentLevel = 0;
+    private int _currentLevel;
 
     [Inject]
     private LevelSwitch(AchievedLevelKeeper achievedLevelKeeper)
     {
         _achievedLevelKeeper = achievedLevelKeeper;
+
+        _currentLevel = SceneManager.GetActiveScene().buildIndex;
     }
 
     public void LoadAchievedLevel()
@@ -44,10 +46,11 @@ public class LevelSwitch
         if (_currentLevel == _achievedLevelKeeper.Value)
         {
             _currentLevel++;
-            SceneManager.LoadScene(_currentLevel);
 
             if (_achievedLevelKeeper.Value < SceneManager.sceneCountInBuildSettings - 2)
                 _achievedLevelKeeper.Value++;
+
+            SceneManager.LoadScene(_currentLevel);
         }
         else
         {

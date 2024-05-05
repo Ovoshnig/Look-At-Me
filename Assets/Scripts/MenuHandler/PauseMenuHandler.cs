@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Zenject;
 
@@ -7,13 +8,21 @@ public sealed class PauseMenuHandler : MenuHandler
     [SerializeField] private Image _playerPoint;
 
     private FPSController _fpsController;
+    private PlayerInput _playerInput;
     private bool _isGamePaused;
 
     [Inject]
     private void Construct(FPSController fPSController)
     {
         _fpsController = fPSController;
+
+        _playerInput = new PlayerInput();
+        _playerInput.PauseMenu.PauseOrResume.performed += PauseOrResume;
     }
+
+    private void OnEnable() => _playerInput.Enable();
+
+    private void OnDisable() => _playerInput.Disable();
 
     protected override void InitializeSettings()
     {
@@ -23,26 +32,23 @@ public sealed class PauseMenuHandler : MenuHandler
         _isGamePaused = false;
     }
 
-    private void Update()
+    private void PauseOrResume(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (_isGamePaused)
-                Resume();
-            else
-                Pause();
-        }
+        if (_isGamePaused)
+            Resume();
+        else
+            Pause();
     }
 
     public void Pause()
     {
-        ChangePauseState(true);
+        ChangePauseState(shouldBePaused: true);
         _isGamePaused = true;
     }
 
     public void Resume()
     {
-        ChangePauseState(false);
+        ChangePauseState(shouldBePaused: false);
         _isGamePaused = false;
 
         _fpsController.RotationSpeed = _sensitivityKeeper.Value;
@@ -56,7 +62,7 @@ public sealed class PauseMenuHandler : MenuHandler
         _optionsPanel.SetActive(shouldBePaused);
         _playerPoint.enabled = !shouldBePaused;
 
-        _fpsController.IsCanMove = !shouldBePaused;
+        _fpsController.CanMove = !shouldBePaused;
     }
 
     public void ResetLevel() => _levelSwitch.LoadCurrentLevel();
