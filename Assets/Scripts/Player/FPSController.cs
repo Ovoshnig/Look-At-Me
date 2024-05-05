@@ -1,83 +1,124 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[SelectionBase]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(PlayerInput))]
 public class FPSController : MonoBehaviour
 {
     [SerializeField] private float _walkSpeed;
     [SerializeField] private float _runSpeed;
     [SerializeField] private float _jumpForce;
-    [SerializeField] private float _gravityForce;
+    [SerializeField] private float _gravity;
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _xRotationLimit;
-    [SerializeField] private bool _isCanMove = true;
-    [SerializeField] private Camera _playerCamera;
-    [SerializeField] private CharacterController _characterController;
+    [SerializeField] private bool _canMove = true;
+    [SerializeField] private Transform _cameraTransform;
 
+    private CharacterController _characterController;
+    private PlayerInput _playerInput;
+    private Vector2 _movementInput;
+    private Vector2 _lookInput;
+    private bool _jumpInput;
+    private bool _runInput;
     private Vector3 _moveDirection = Vector3.zero;
-    private float _rotationX = 0;
+    private float _rotationX;
     private float _currentSpeedX;
-    private float _currentSpeedY;
+    private float _currentSpeedZ;
     private float _movementDirectionY;
 
-    private bool _isRunning;
+    public bool CanMove { get => _canMove; set => _canMove = value; }
+    public float RotationSpeed { private get => _rotationSpeed; set => _rotationSpeed = value; }
 
-    public float RotationSpeed { set => _rotationSpeed = value; }
-    public bool IsCanMove { get => _isCanMove; set => _isCanMove = value; }
-
-    private void OnValidate()
+    private void Awake()
     {
-        if (_characterController == null)
-            _characterController = GetComponent<CharacterController>();
+        _characterController = GetComponent<CharacterController>();
+
+        _playerInput = new PlayerInput();
+
+        _playerInput.Player.Move.performed += OnMove;
+        _playerInput.Player.Look.performed += OnLook;
+        _playerInput.Player.Jump.performed += OnJump;
+        _playerInput.Player.Run.performed += OnRun;
+
+        _playerInput.Player.Move.canceled += OnMoveCancel;
+        _playerInput.Player.Look.canceled += OnLookCancel;
+        _playerInput.Player.Jump.canceled += OnJumpCancel;
+        _playerInput.Player.Run.canceled += OnRunCancel;
     }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        _rotationSpeed = PlayerPrefs.GetFloat("Sensitivity");
     }
+
+    private void OnEnable() => _playerInput.Enable();
+
+    private void OnDisable() => _playerInput.Disable();
+
+    #region "Performed actions"
+
+    private void OnMove(InputAction.CallbackContext context) => _movementInput = context.action.ReadValue<Vector2>();
+
+    private void OnLook(InputAction.CallbackContext context) => _lookInput = context.action.ReadValue<Vector2>();
+
+    private void OnJump(InputAction.CallbackContext context) => _jumpInput = true;
+    
+    private void OnRun(InputAction.CallbackContext context) => _runInput = true;
+    
+    #endregion
+
+    #region "Canceled actions"
+
+    private void OnMoveCancel(InputAction.CallbackContext context) => _movementInput = Vector2.zero;
+    
+    private void OnLookCancel(InputAction.CallbackContext context) => _lookInput = Vector2.zero;
+
+    private void OnJumpCancel(InputAction.CallbackContext context) => _jumpInput = false;
+    
+    private void OnRunCancel(InputAction.CallbackContext context) => _runInput = false;
+
+    #endregion
 
     private void Update()
     {
-        Movement();
-        Jumping();
-        Rotation();
+        if (_canMove)
+        {
+            Move();
+            Jump();
+            Look();
+        }
     }
 
-    private void Movement()
+    private void Move()
     {
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
 
-        _isRunning = Input.GetKey(KeyCode.LeftShift);
-        _currentSpeedX = _isCanMove ? (_isRunning ? _runSpeed : _walkSpeed) * Input.GetAxis("Vertical") : 0;
-        _currentSpeedY = _isCanMove ? (_isRunning ? _runSpeed : _walkSpeed) * Input.GetAxis("Horizontal") : 0;
+        _currentSpeedX = (_runInput ? _runSpeed : _walkSpeed) * _movementInput.y;
+        _currentSpeedZ = (_runInput ? _runSpeed : _walkSpeed) * _movementInput.x;
         _movementDirectionY = _moveDirection.y;
-        _moveDirection = (forward * _currentSpeedX) + (right * _currentSpeedY);
+        _moveDirection = (forward * _currentSpeedX) + (right * _currentSpeedZ);
     }
 
-    private void Jumping()
+    private void Jump()
     {
-        if (Input.GetButton("Jump") && _isCanMove && _characterController.isGrounded)
+        if (_jumpInput && _characterController.isGrounded)
             _moveDirection.y = _jumpForce;
         else
             _moveDirection.y = _movementDirectionY;
 
         if (!_characterController.isGrounded)
-            _moveDirection.y -= _gravityForce * Time.deltaTime;
+            _moveDirection.y -= _gravity * Time.deltaTime;
+
+        _characterController.Move(_moveDirection * Time.deltaTime);
     }
 
-    private void Rotation()
+    private void Look()
     {
-        _characterController.Move(_moveDirection * Time.deltaTime);
-        if (_isCanMove)
-        {
-            _rotationX += -Input.GetAxis("Mouse Y") * _rotationSpeed;
-            _rotationX = Mathf.Clamp(_rotationX, -_xRotationLimit, _xRotationLimit);
-            _playerCamera.transform.localRotation = Quaternion.Euler(_rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * _rotationSpeed, 0);
-        }
+        _rotationX += -_lookInput.y * _rotationSpeed;
+        _rotationX = Mathf.Clamp(_rotationX, -_xRotationLimit, _xRotationLimit);
+        _cameraTransform.localRotation = Quaternion.Euler(_rotationX, 0, 0);
+        transform.rotation *= Quaternion.Euler(0, _lookInput.x * _rotationSpeed, 0);
     }
 }

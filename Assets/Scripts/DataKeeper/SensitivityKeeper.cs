@@ -6,7 +6,7 @@ public class SensitivityKeeper : DataKeeper<float>
     private SensitivityKeeper()
     {
         DataKey = "Sensitivity";
-        ValueField = PlayerPrefs.GetFloat(DataKey, 5f);
+        ValueField = PlayerPrefs.GetFloat(DataKey, 0.2f);
     }
 
     public override float Value 
