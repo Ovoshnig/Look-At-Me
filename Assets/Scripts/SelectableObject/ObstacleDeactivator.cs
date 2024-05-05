@@ -13,20 +13,26 @@ public sealed class ObstacleDeactivator : SelectableObject
     private void OnValidate()
     {
         if (_renderer == null)
+        {
             _renderer = GetComponent<Renderer>();
+        }
         if (_collider == null)
+        {
             _collider = GetComponent<Collider>();
+        }
         if (_audioSource == null)
+        {
             _audioSource = GetComponent<AudioSource>();
-
-        _audioSource.clip = _popClip;
+            _audioSource.playOnAwake = false;
+            _audioSource.clip = _popClip;
+        }
     }
 
     private void Awake() => _renderer.enabled = true;
     
     public override void SetSelected(bool isSelect)
     {
-        IsSelect = true;
+        IsSelect = isSelect;
 
         DeactivateObstacle();
     }

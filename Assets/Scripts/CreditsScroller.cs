@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Zenject;
 
 [RequireComponent(typeof(TMP_Text),
                   typeof(RectTransform))]
@@ -16,9 +16,16 @@ public class CreditsScroller : MonoBehaviour
     [SerializeField] private TMP_Text _TMP_Text;
     [SerializeField] private RectTransform _rectTransform;
 
-    private readonly string _filePath = "Assets/Resources/Documents/Credits.txt";
+    private const string FilePath = "Assets/Resources/Documents/Credits.txt";
     private string[] _lines;
     private CancellationTokenSource _cts = new();
+    private LevelSwitch _levelSwitch;
+
+    [Inject]
+    private void Construct(LevelSwitch levelSwitch)
+    {
+        _levelSwitch = levelSwitch;
+    }
 
     private void OnValidate()
     {
@@ -42,7 +49,7 @@ public class CreditsScroller : MonoBehaviour
     {
         try
         {
-            _lines = File.ReadAllLines(_filePath);
+            _lines = File.ReadAllLines(FilePath);
 
             ScrollText(_cts.Token).Forget();
         }
@@ -83,6 +90,6 @@ public class CreditsScroller : MonoBehaviour
         int endDelayTime = (int)(1000 * _endDelay);
         await UniTask.Delay(endDelayTime, cancellationToken: token);
 
-        SceneManager.LoadScene(0);
+        _levelSwitch.LoadLevel(0);
     }
 }

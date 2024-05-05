@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class DuringObjectSelectionCompletist : MonoBehaviour
 {
@@ -8,14 +9,21 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
     [SerializeField] private GameObject[] _anvils;
     [SerializeField] private GameObject _book;
 
+    private LevelSwitch _levelSwitch;
+
+    [Inject]
+    private void Construct(LevelSwitch levelSwitch)
+    {
+        _levelSwitch = levelSwitch;
+    }
+
     private Vector3 _objectSpawnPosition;
 
     public void TimerActivate(DuringPreviewSelector selector)
     {
         if (selector == _correctSelector)
         {
-            PauseMenuHandler pauseMenuHandler = FindObjectOfType<PauseMenuHandler>();
-            pauseMenuHandler.LoadNextLevel(true);
+            _levelSwitch.TryLoadNextLevelFirstTime();
         }
         else if (selector == _potopSelector)
         {

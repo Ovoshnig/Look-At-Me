@@ -1,94 +1,60 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Zenject;
 
 public sealed class PauseMenuHandler : MenuHandler
 {
-    private FPSController _fpsController;
+    [Inject] private readonly FPSController _fpsController;
+
     private bool _isGamePaused;
 
     protected override void InitializeSettings()
     {
-        _optionsPanel.SetActive(false);
+        _fpsController.RotationSpeed = _sensitivityKeeper.Value;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        _fpsController = FindObjectOfType<FPSController>();
-        _fpsController.RotationSpeed = _sensitivityKeeper.Get();
-
-        _progressKeeper.UpdateCurrentLevel();
+        Resume();
+        _isGamePaused = false;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-            PauseOrResume(!_isGamePaused);
-    }
-
-    public void PauseOrResume(bool shouldBePaused)
-    {
-        _isGamePaused = shouldBePaused;
-
-        Cursor.lockState = _isGamePaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = _isGamePaused;
-
-        _optionsPanel.SetActive(_isGamePaused);
-
-        _fpsController.IsCanMove = !_isGamePaused;
-
-        if (!shouldBePaused)
-            _fpsController.RotationSpeed = _sensitivityKeeper.Get();
-    }
-
-    public void ResetLevel()
-    {
-        SaveData();
-
-        int currentLevel = _progressKeeper.GetCurrentLevel();
-        SceneManager.LoadScene(currentLevel);
-    }
-
-    public void LoadPreviousLevel()
-    {
-        SaveData();
-
-        int currentLevel = _progressKeeper.GetCurrentLevel();
-
-        if (currentLevel > 1)
-            SceneManager.LoadScene(currentLevel - 1);
-    }
-
-    public void LoadNextLevel(bool isLevelComplete)
-    {
-        SaveData();
-
-        int achievedLevel = _progressKeeper.GetAchievedLevel();
-        int currentLevel = _progressKeeper.GetCurrentLevel();
-
-        if (isLevelComplete && currentLevel + 1 > achievedLevel)
         {
-            currentLevel++;
-            _progressKeeper.SetCurrentLevel(currentLevel);
-            if (achievedLevel < SceneManager.sceneCountInBuildSettings - 2)
-            {
-                achievedLevel++;
-                _progressKeeper.SetAchievedLevel(achievedLevel);
-            }
-
-            SceneManager.LoadScene(currentLevel);
-        }
-        else if (currentLevel < achievedLevel)
-        {
-            currentLevel++;
-
-            SceneManager.LoadScene(currentLevel);
+            if (_isGamePaused)
+                Resume();
+            else
+                Pause();
         }
     }
 
-    public void LoadMenu()
+    public void Pause()
     {
-        SaveData();
-
-        SceneManager.LoadScene(0);
+        ChangePauseState(true);
+        _isGamePaused = true;
     }
+
+    public void Resume()
+    {
+        ChangePauseState(false);
+        _isGamePaused = false;
+
+        _fpsController.RotationSpeed = _sensitivityKeeper.Value;
+    }
+
+    private void ChangePauseState(bool shouldBePaused)
+    {
+        Cursor.lockState = shouldBePaused ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = shouldBePaused;
+
+        _optionsPanel.SetActive(shouldBePaused);
+
+        _fpsController.IsCanMove = !shouldBePaused;
+    }
+
+    public void ResetLevel() => _levelSwitch.LoadCurrentLevel();
+
+    public void LoadPreviousLevel() => _levelSwitch.LoadPreviousLevel();
+
+    public void LoadNextLevel() => _levelSwitch.LoadNextLevel();
+
+    public void LoadMainMenu() => _levelSwitch.LoadLevel(0);
 }

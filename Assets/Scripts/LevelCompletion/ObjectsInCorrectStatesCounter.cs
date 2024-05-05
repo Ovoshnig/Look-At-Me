@@ -1,17 +1,19 @@
-using UnityEngine;
 using Zenject;
 
 public class ObjectsInCorrectStatesCounter
 {
-    [Inject] private readonly PauseMenuHandler _menuHandler;
+    private LevelSwitch _levelSwitch;
+
+    [Inject]
+    private ObjectsInCorrectStatesCounter(LevelSwitch levelSwitch)
+    {
+        _levelSwitch = levelSwitch;
+    }
 
     private uint _objectsCount = 0;
     private uint _correctObjectsCount = 0;
 
-    public void IncreaseObjectsCount()
-    {
-        _objectsCount++;
-    }
+    public void IncreaseObjectsCount() => _objectsCount++;
 
     public void IncreaseCorrectObjectsCount()
     {
@@ -19,14 +21,11 @@ public class ObjectsInCorrectStatesCounter
         CheckIsComplete();
     }
 
-    public void DecreaseCorrectObjectsCount()
-    {
-        _correctObjectsCount--;
-    }
+    public void DecreaseCorrectObjectsCount() => _correctObjectsCount--;
 
     private void CheckIsComplete() 
     {
         if (_correctObjectsCount == _objectsCount)
-            _menuHandler.LoadNextLevel(true);
+            _levelSwitch.TryLoadNextLevelFirstTime();
     }
 }
