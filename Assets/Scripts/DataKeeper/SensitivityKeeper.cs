@@ -1,12 +1,18 @@
 using System;
-using UnityEngine;
+using Zenject;
 
 public class SensitivityKeeper : DataKeeper<float>
 {
-    private SensitivityKeeper()
+    private readonly Settings _settings;
+
+    [Inject]
+    public SensitivityKeeper(Settings settings)
     {
+        _settings = settings;
+        DefaultValue = _settings.MaxSensitivity / 2;
+
         DataKey = "Sensitivity";
-        ValueField = PlayerPrefs.GetFloat(DataKey, 0.2f);
+        LoadData();
     }
 
     public override float Value 
@@ -14,10 +20,12 @@ public class SensitivityKeeper : DataKeeper<float>
         get => ValueField;
         set
         {
-            if (value is >= 0 and <= 10)
+            if (value >= 0 && value <= _settings.MaxSensitivity)
                 ValueField = value;
             else
-                throw new InvalidOperationException("Invalid sensitivity");
+                throw new InvalidOperationException($"Invalid sensitivity: {value}");
         }
     }
+
 }
+    

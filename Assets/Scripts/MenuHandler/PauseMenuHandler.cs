@@ -26,7 +26,7 @@ public sealed class PauseMenuHandler : MenuHandler
 
     protected override void InitializeSettings()
     {
-        _fpsController.RotationSpeed = _sensitivityKeeper.Value;
+        _fpsController.RotationSpeed = SensitivityKeeper.Value;
 
         Resume();
         _isGamePaused = false;
@@ -51,7 +51,7 @@ public sealed class PauseMenuHandler : MenuHandler
         ChangePauseState(shouldBePaused: false);
         _isGamePaused = false;
 
-        _fpsController.RotationSpeed = _sensitivityKeeper.Value;
+        _fpsController.RotationSpeed = SensitivityKeeper.Value;
     }
 
     private void ChangePauseState(bool shouldBePaused)
@@ -65,11 +65,11 @@ public sealed class PauseMenuHandler : MenuHandler
         _fpsController.CanMove = !shouldBePaused;
     }
 
-    public void ResetLevel() => _levelSwitch.LoadCurrentLevel();
+    public void ResetLevel() => LevelSwitch.LoadCurrentLevel();
 
-    public void LoadPreviousLevel() => _levelSwitch.LoadPreviousLevel();
+    public void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
 
-    public void LoadNextLevel() => _levelSwitch.LoadNextLevel();
+    public void LoadNextLevel() => LevelSwitch.LoadNextLevel();
 
-    public void LoadMainMenu() => _levelSwitch.LoadLevel(0);
+    public void LoadMainMenu() => LevelSwitch.LoadLevel(0);
 }

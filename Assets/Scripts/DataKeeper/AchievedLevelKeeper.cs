@@ -1,13 +1,15 @@
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
 public sealed class AchievedLevelKeeper : DataKeeper<int>
 {
+    private const int StartLevel = 1;
+
     private AchievedLevelKeeper()
     {
+        DefaultValue = StartLevel;
         DataKey = "AchievedLevel";
-        ValueField = PlayerPrefs.GetInt(DataKey, 1);
+        LoadData();
     }
 
     public override int Value 

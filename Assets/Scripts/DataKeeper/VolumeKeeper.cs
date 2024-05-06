@@ -1,12 +1,18 @@
 using System;
-using UnityEngine;
+using Zenject;
 
 public class VolumeKeeper : DataKeeper<float>
 {
-    private VolumeKeeper()
+    private readonly Settings _settings;
+
+    [Inject]
+    public VolumeKeeper(Settings settings)
     {
+        _settings = settings;
+        DefaultValue = _settings.MaxVolume / 2;
+
         DataKey = "Volume";
-        ValueField = PlayerPrefs.GetFloat(DataKey, 0.5f);
+        LoadData();
     }
 
     public override float Value 
@@ -14,10 +20,10 @@ public class VolumeKeeper : DataKeeper<float>
         get => ValueField;
         set
         {
-            if (value is >= 0 and <= 1)
+            if (value >= 0 && value <= _settings.MaxVolume)
                 ValueField = value;
             else
-                throw new InvalidOperationException("Invalid volume");
+                throw new InvalidOperationException($"Invalid volume: {value}");
         }
     }
 }

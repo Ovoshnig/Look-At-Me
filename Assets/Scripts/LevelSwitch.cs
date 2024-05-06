@@ -9,7 +9,7 @@ public class LevelSwitch
     private int _currentLevel;
 
     [Inject]
-    private LevelSwitch(AchievedLevelKeeper achievedLevelKeeper)
+    public LevelSwitch(AchievedLevelKeeper achievedLevelKeeper)
     {
         _achievedLevelKeeper = achievedLevelKeeper;
 
