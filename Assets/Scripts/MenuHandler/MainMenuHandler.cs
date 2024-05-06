@@ -10,15 +10,15 @@ public sealed class MainMenuHandler : MenuHandler
         Cursor.visible = true;
     }
 
-    public void Continue() => _levelSwitch.LoadAchievedLevel();
+    public void Continue() => LevelSwitch.LoadAchievedLevel();
 
-    public void StartNewGame() => _levelSwitch.LoadFirstLevel();
+    public void StartNewGame() => LevelSwitch.LoadFirstLevel();
 
     public void OpenSettings() => _optionsPanel.SetActive(true);
 
     public void Resume() => _optionsPanel.SetActive(false);
 
-    public void ResetProgress() => _levelSwitch.ResetProgress();
+    public void ResetProgress() => LevelSwitch.ResetProgress();
 
     public void QuitGame() => Application.Quit();
 }

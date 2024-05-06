@@ -1,24 +1,40 @@
 using System;
+using System.IO;
 using UnityEngine;
 
-public abstract class DataKeeper<T> : IDisposable
+public abstract class DataKeeper<T> : IDisposable where T : new()
 {
+    [SerializeField] protected T ValueField;
+
     protected string DataKey;
-    protected T ValueField;
+    protected T DefaultValue;
 
     public abstract T Value { get; set; }
 
-    public void Dispose()
+    protected virtual string GetFilePath()
     {
-        if (typeof(T) == typeof(int))
-            PlayerPrefs.SetInt(DataKey, Convert.ToInt32(Value));
-        else if (typeof(T) == typeof(float))
-            PlayerPrefs.SetFloat(DataKey, Convert.ToSingle(Value));
-        else if (typeof(T) == typeof(string))
-            PlayerPrefs.SetString(DataKey, Convert.ToString(Value));
-        else
-            throw new InvalidOperationException("Unsupported type provided");
+        return Path.Combine(Application.persistentDataPath, $"{DataKey}.json");
+    }
 
-        PlayerPrefs.Save();
+    public void Dispose() => SaveData();
+
+    protected void SaveData()
+    {
+        string json = JsonUtility.ToJson(this);
+        File.WriteAllText(GetFilePath(), json);
+    }
+
+    protected void LoadData()
+    {
+        string filePath = GetFilePath();
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            JsonUtility.FromJsonOverwrite(json, this);
+        }
+        else
+        {
+            ValueField = DefaultValue;
+        }
     }
 }
