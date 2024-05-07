@@ -121,13 +121,12 @@ public class CheckersVisualizer : MonoBehaviour
             yield return null;
         }
 
-        // После завершения перемещения убедимся, что фигура находится в точке назначения
         figureTransform.position = endPosition;
     }
 
-    public IEnumerator RemoveFigure(Transform figureTransform, float durarion)
+    public IEnumerator RemoveFigure(Transform figureTransform, float duration)
     {
-        yield return new WaitForSeconds(durarion);
+        yield return new WaitForSeconds(duration);
 
         Destroy(figureTransform.gameObject);
     }
@@ -169,5 +168,10 @@ public class CheckersVisualizer : MonoBehaviour
             yield return null;
         }
         figureTransform.position = figurePosition;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }
