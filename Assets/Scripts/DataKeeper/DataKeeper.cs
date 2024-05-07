@@ -11,10 +11,7 @@ public abstract class DataKeeper<T> : IDisposable where T : new()
 
     public abstract T Value { get; set; }
 
-    protected virtual string GetFilePath()
-    {
-        return Path.Combine(Application.persistentDataPath, $"{DataKey}.json");
-    }
+    protected virtual string GetFilePath() => Path.Combine(Application.persistentDataPath, $"{DataKey}.json");
 
     public void Dispose() => SaveData();
 

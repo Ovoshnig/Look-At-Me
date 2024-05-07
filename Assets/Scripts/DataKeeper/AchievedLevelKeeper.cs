@@ -5,7 +5,7 @@ public sealed class AchievedLevelKeeper : DataKeeper<int>
 {
     private const int StartLevel = 1;
 
-    private AchievedLevelKeeper()
+    public AchievedLevelKeeper()
     {
         DefaultValue = StartLevel;
         DataKey = "AchievedLevel";
