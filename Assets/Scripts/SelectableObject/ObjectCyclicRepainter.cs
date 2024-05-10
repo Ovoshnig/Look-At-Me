@@ -41,11 +41,9 @@ public sealed class ObjectCyclicRepainter : SelectableObject
         }
     }
 
-    public override void SetSelected(bool isSelect)
+    protected override void React()
     {
-        IsSelect = isSelect;
-
-        if (IsSelect)
+        if (IsSelected)
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
@@ -66,7 +64,7 @@ public sealed class ObjectCyclicRepainter : SelectableObject
     {
         int delayTime = (int)(1000 * _repaintDelay);
 
-        while (IsSelect)
+        while (IsSelected)
         {
             _renderer.material = _materials[_index];
             bool isCorrectMaterial = _materials[_index] == _correctMaterial;

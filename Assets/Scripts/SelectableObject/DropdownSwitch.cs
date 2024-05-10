@@ -26,10 +26,7 @@ public sealed class DropdownSwitch : SelectableObject
         }
     }
 
-    private void Awake()
-    {
-        _counter.IncreaseObjectsCount();
-    }
+    private void Awake() => _counter.IncreaseObjectsCount();
 
     private void Start()
     {
@@ -40,11 +37,9 @@ public sealed class DropdownSwitch : SelectableObject
         }
     }
 
-    public override void SetSelected(bool isSelect)
+    protected override void React()
     {
-        IsSelect = isSelect;
-
-        if (IsSelect)
+        if (IsSelected)
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
@@ -65,7 +60,7 @@ public sealed class DropdownSwitch : SelectableObject
     {
         int delayTime = (int)(1000 * _switchDelay);
 
-        while (IsSelect)
+        while (IsSelected)
         {
             await UniTask.Delay(delayTime, cancellationToken: token);
 

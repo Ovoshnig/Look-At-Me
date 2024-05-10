@@ -1,94 +1,75 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using Zenject;
 
 public sealed class PauseMenuHandler : MenuHandler
 {
+    [SerializeField] private Image _playerPoint;
+
     private FPSController _fpsController;
+    private PlayerInput _playerInput;
     private bool _isGamePaused;
+
+    [Inject]
+    private void Construct(FPSController fPSController)
+    {
+        _fpsController = fPSController;
+
+        _playerInput = new PlayerInput();
+        _playerInput.PauseMenu.PauseOrResume.performed += PauseOrResume;
+    }
+
+    private void OnEnable() => _playerInput.Enable();
+
+    private void OnDisable() => _playerInput.Disable();
 
     protected override void InitializeSettings()
     {
-        _optionsPanel.SetActive(false);
+        _fpsController.RotationSpeed = SensitivityKeeper.Value;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        _fpsController = FindObjectOfType<FPSController>();
-        _fpsController.RotationSpeed = _sensitivityKeeper.Get();
-
-        _progressKeeper.UpdateCurrentLevel();
+        Resume();
+        _isGamePaused = false;
     }
 
-    private void Update()
+    private void PauseOrResume(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            PauseOrResume(!_isGamePaused);
+        if (_isGamePaused)
+            Resume();
+        else
+            Pause();
     }
 
-    public void PauseOrResume(bool shouldBePaused)
+    public void Pause()
     {
-        _isGamePaused = shouldBePaused;
-
-        Cursor.lockState = _isGamePaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = _isGamePaused;
-
-        _optionsPanel.SetActive(_isGamePaused);
-
-        _fpsController.IsCanMove = !_isGamePaused;
-
-        if (!shouldBePaused)
-            _fpsController.RotationSpeed = _sensitivityKeeper.Get();
+        ChangePauseState(shouldBePaused: true);
+        _isGamePaused = true;
     }
 
-    public void ResetLevel()
+    public void Resume()
     {
-        SaveData();
+        ChangePauseState(shouldBePaused: false);
+        _isGamePaused = false;
 
-        int currentLevel = _progressKeeper.GetCurrentLevel();
-        SceneManager.LoadScene(currentLevel);
+        _fpsController.RotationSpeed = SensitivityKeeper.Value;
     }
 
-    public void LoadPreviousLevel()
+    private void ChangePauseState(bool shouldBePaused)
     {
-        SaveData();
+        Cursor.lockState = shouldBePaused ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = shouldBePaused;
 
-        int currentLevel = _progressKeeper.GetCurrentLevel();
+        _optionsPanel.SetActive(shouldBePaused);
+        _playerPoint.enabled = !shouldBePaused;
 
-        if (currentLevel > 1)
-            SceneManager.LoadScene(currentLevel - 1);
+        _fpsController.CanMove = !shouldBePaused;
     }
 
-    public void LoadNextLevel(bool isLevelComplete)
-    {
-        SaveData();
+    public void ResetLevel() => LevelSwitch.LoadCurrentLevel();
 
-        int achievedLevel = _progressKeeper.GetAchievedLevel();
-        int currentLevel = _progressKeeper.GetCurrentLevel();
+    public void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
 
-        if (isLevelComplete && currentLevel + 1 > achievedLevel)
-        {
-            currentLevel++;
-            _progressKeeper.SetCurrentLevel(currentLevel);
-            if (achievedLevel < SceneManager.sceneCountInBuildSettings - 2)
-            {
-                achievedLevel++;
-                _progressKeeper.SetAchievedLevel(achievedLevel);
-            }
+    public void LoadNextLevel() => LevelSwitch.LoadNextLevel();
 
-            SceneManager.LoadScene(currentLevel);
-        }
-        else if (currentLevel < achievedLevel)
-        {
-            currentLevel++;
-
-            SceneManager.LoadScene(currentLevel);
-        }
-    }
-
-    public void LoadMenu()
-    {
-        SaveData();
-
-        SceneManager.LoadScene(0);
-    }
+    public void LoadMainMenu() => LevelSwitch.LoadLevel(0);
 }

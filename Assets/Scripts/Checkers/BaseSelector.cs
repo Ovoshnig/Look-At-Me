@@ -1,8 +1,8 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CheckersLogic), 
+[RequireComponent(typeof(CheckersLogic),
                  (typeof(CheckersVisualizer)))]
-public class BaseSelector : SelectableObject
+public class BaseSelector : MonoBehaviour
 {
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _basesStartSet;

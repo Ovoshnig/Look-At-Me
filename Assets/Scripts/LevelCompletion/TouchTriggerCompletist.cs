@@ -3,11 +3,17 @@ using Zenject;
 
 public class TouchTriggerCompletist : MonoBehaviour
 {
-    [Inject] private readonly PauseMenuHandler _pauseMenuHandler;
+    private LevelSwitch _levelSwitch;
+
+    [Inject]
+    private void Construct(LevelSwitch levelSwitch)
+    {
+        _levelSwitch = levelSwitch;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-            _pauseMenuHandler.LoadNextLevel(true);
+        if (other.TryGetComponent<FPSController>(out _))
+            _levelSwitch.TryLoadNextLevelFirstTime();
     }
 }
