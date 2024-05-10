@@ -49,23 +49,23 @@ public class ObjectSelector : MonoBehaviour
             {
                 _currentSelectable = _selectableDictionary[hit.collider.gameObject];
 
-                if (_currentSelectable != null && !_currentSelectable.GetSelected())
+                if (_currentSelectable != null)
                 {
-                    _currentSelectable.SetSelected(true);
+                    _currentSelectable.IsSelected = true;
 
-                    if (_previousSelectable != null && _currentSelectable != _previousSelectable && _previousSelectable.GetSelected())
-                        _previousSelectable.SetSelected(false);
+                    if (_previousSelectable != null && _currentSelectable != _previousSelectable)
+                        _previousSelectable.IsSelected = false;
 
                     _previousSelectable = _currentSelectable;
                 }
-                else if (_currentSelectable == null && _previousSelectable != null && _previousSelectable.GetSelected())
+                else if (_currentSelectable == null && _previousSelectable != null)
                 {
-                    _previousSelectable.SetSelected(false);
+                    _previousSelectable.IsSelected = false;
                 }
             }
-            else if (_previousSelectable != null && _previousSelectable.GetSelected())
+            else if (_previousSelectable != null)
             {
-                _previousSelectable.SetSelected(false);
+                _previousSelectable.IsSelected = false;
             }
 
             await UniTask.Delay(delay, cancellationToken: token);

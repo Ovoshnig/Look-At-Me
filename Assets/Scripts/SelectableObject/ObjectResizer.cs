@@ -49,15 +49,13 @@ public sealed class ObjectResizer : SelectableObject
         _initialPosition = transform.localPosition;
     }
 
-    public override void SetSelected(bool isSelect)
+    protected override void React()
     {
-        IsSelect = isSelect;
-
         _cts.Cancel();
         _cts.Dispose();
         _cts = new CancellationTokenSource();
 
-        Resize(IsSelect, _cts.Token).Forget();
+        Resize(IsSelected, _cts.Token).Forget();
     }
 
     private async UniTaskVoid Resize(bool increasing, CancellationToken token)
