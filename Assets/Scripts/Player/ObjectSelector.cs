@@ -47,7 +47,7 @@ public class ObjectSelector : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit, _rayLength, _selectableLayer))
             {
-                _selectableDictionary.TryGetValue(hit.collider.gameObject, out _currentSelectable);
+                _currentSelectable = _selectableDictionary[hit.collider.gameObject];
 
                 if (_currentSelectable != null && !_currentSelectable.GetSelected())
                 {
