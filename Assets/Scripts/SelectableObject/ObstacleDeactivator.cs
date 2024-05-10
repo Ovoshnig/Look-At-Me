@@ -29,13 +29,8 @@ public sealed class ObstacleDeactivator : SelectableObject
     }
 
     private void Awake() => _renderer.enabled = true;
-    
-    public override void SetSelected(bool isSelect)
-    {
-        IsSelect = isSelect;
 
-        DeactivateObstacle();
-    }
+    protected override void React() => DeactivateObstacle();
 
     private void DeactivateObstacle()
     {

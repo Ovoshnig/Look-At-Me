@@ -32,11 +32,9 @@ public sealed class ObjectRotator : SelectableObject
         _audioSource.Play();
     }
 
-    public override void SetSelected(bool isSelect)
+    protected override void React()
     {
-        IsSelect = isSelect;
-
-        if (IsSelect)
+        if (IsSelected)
             _audioSource.Pause();
         else
             _audioSource.UnPause();
@@ -46,6 +44,6 @@ public sealed class ObjectRotator : SelectableObject
     {
         Vector3 angularVelocity = Vector3.zero;
         angularVelocity[_axis] = _direction * _rotationSpeed;
-        _rigidbody.angularVelocity = IsSelect ? Vector3.zero : angularVelocity;
+        _rigidbody.angularVelocity = IsSelected ? Vector3.zero : angularVelocity;
     }
 }

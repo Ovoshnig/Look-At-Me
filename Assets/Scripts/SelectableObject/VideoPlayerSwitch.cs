@@ -22,11 +22,9 @@ public sealed class VideoPlayerSwitch : SelectableObject
         }
     }
     
-    public override void SetSelected(bool isSelect)
+    protected override void React()
     {
-        IsSelect = isSelect;
-
-        if (IsSelect)
+        if (IsSelected)
             _videoPlayer.Play();
         else
             _videoPlayer.Stop();
