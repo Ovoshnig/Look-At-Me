@@ -2,53 +2,56 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class MenuHandler : MonoBehaviour
+public abstract class MenuHandler : MonoBehaviour
 {
     [SerializeField] protected GameObject _optionsPanel;
     [SerializeField] protected Slider _sensitivitySlider;
     [SerializeField] protected Slider _volumeSlider;
 
-    [Inject] protected readonly ProgressKeeper _progressKeeper;
-    [Inject] protected readonly SensitivityKeeper _sensitivityKeeper;
-    [Inject] protected readonly VolumeKeeper _volumeKeeper;
+    protected LevelSwitch LevelSwitch;
+    protected SensitivityKeeper SensitivityKeeper;
+    protected VolumeKeeper VolumeKeeper;
+    protected Settings Settings;
+
+    [Inject]
+    protected void Construct(LevelSwitch levelSwitch, SensitivityKeeper sensitivityKeeper, 
+        VolumeKeeper volumeKeeper, Settings settings)
+    {
+        LevelSwitch = levelSwitch;
+        SensitivityKeeper = sensitivityKeeper;
+        VolumeKeeper = volumeKeeper;
+        Settings = settings;
+    }
 
     protected void Start()
     {
         InitializeSettings();
-        DataLoad();
+        InitializeSliders();
     }
 
-    protected virtual void InitializeSettings()
-    {
+    protected abstract void InitializeSettings();
 
-    }
-
-    public void DataLoad()
+    protected void InitializeSliders()
     {
-        var sensitivity = _sensitivityKeeper.Get();
+        float sensitivity = SensitivityKeeper.Value;
         _sensitivitySlider.value = sensitivity;
+        _sensitivitySlider.maxValue = Settings.MaxSensitivity;
 
-        var volume = _volumeKeeper.Get();
+        float volume = VolumeKeeper.Value;
         _volumeSlider.value = volume;
+        _volumeSlider.maxValue = Settings.MaxVolume;
     }
 
     public void SetSensitivity()
     {
-        var sensitivity = _sensitivitySlider.value;
-        _sensitivityKeeper.Set(sensitivity);
+        float sensitivity = _sensitivitySlider.value;
+        SensitivityKeeper.Value = sensitivity;
     }
 
     public void SetVolume()
     {
-        var volume = _volumeSlider.value;
-        _volumeKeeper.Set(volume);
+        float volume = _volumeSlider.value;
+        VolumeKeeper.Value = volume;
         AudioListener.volume = volume;
-    }
-
-    protected void SaveData()
-    {
-        _sensitivityKeeper.Save();
-        _volumeKeeper.Save();
-        PlayerPrefs.Save();
     }
 }

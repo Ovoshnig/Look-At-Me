@@ -10,12 +10,18 @@ public class CheckersLogic : MonoBehaviour
     [SerializeField] private float _finishDelay;
     [SerializeField] private CheckersVisualizer _visualizer;
 
-    [Inject] private readonly PauseMenuHandler _pauseMenuHandler;
+    private LevelSwitch _levelSwitch;
 
     private readonly int[,] _board = new int[8, 8];
     private uint _player1Count = 12;
     private uint _player2Count = 12;
     private int _turn = 1;
+
+    [Inject]
+    private void Construct(LevelSwitch levelSwitch)
+    {
+        _levelSwitch = levelSwitch;
+    }
 
     private void OnValidate()
     { 
@@ -420,6 +426,6 @@ public class CheckersLogic : MonoBehaviour
 
         yield return new WaitForSeconds(_finishDelay);
 
-        _pauseMenuHandler.LoadNextLevel(true);
+        _levelSwitch.TryLoadNextLevelFirstTime();
     }
 }

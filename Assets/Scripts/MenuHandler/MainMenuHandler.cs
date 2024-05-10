@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public sealed class MainMenuHandler : MenuHandler
 {
@@ -11,44 +10,15 @@ public sealed class MainMenuHandler : MenuHandler
         Cursor.visible = true;
     }
 
-    public void LoadAchievedLevel()
-    {
-        SaveData();
+    public void Continue() => LevelSwitch.LoadAchievedLevel();
 
-        int achievedLevel = _progressKeeper.GetAchievedLevel();
-        SceneManager.LoadScene(achievedLevel);
-    }
+    public void StartNewGame() => LevelSwitch.LoadFirstLevel();
 
-    public void LoadFirstLevel()
-    {
-        SaveData();
+    public void OpenSettings() => _optionsPanel.SetActive(true);
 
-        int achievedLevel = 1;
-        _progressKeeper.SetAchievedLevel(achievedLevel);
-        SceneManager.LoadScene(achievedLevel);
-    }
+    public void Resume() => _optionsPanel.SetActive(false);
 
-    public void OpenSettings()
-    {
-        _optionsPanel.SetActive(true);
-    }
+    public void ResetProgress() => LevelSwitch.ResetProgress();
 
-    public void Resume()
-    {
-        SaveData();
-
-        _optionsPanel.SetActive(false);
-    }
-
-    public void ResetProgress()
-    {
-        int achievedLevel = 1;
-        _progressKeeper.SetAchievedLevel(achievedLevel);
-    }
-
-    public void QuitGame()
-    {
-        SaveData();
-        Application.Quit();
-    }
+    public void QuitGame() => Application.Quit();
 }

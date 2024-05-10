@@ -2,15 +2,28 @@ using UnityEngine;
 
 public interface ISelectable
 {
-    void SetSelected(bool isSelected);
-    bool GetSelected();
+    public bool IsSelected { get; set; }
 }
 
-public class SelectableObject : MonoBehaviour, ISelectable
+public abstract class SelectableObject : MonoBehaviour, ISelectable
 {
-    protected bool IsSelect = false;
+    private bool _isSelected;
 
-    public virtual void SetSelected(bool isSelect) => IsSelect = isSelect;
-    
-    public bool GetSelected() => IsSelect;
+    public bool IsSelected
+    {
+        get
+        { 
+            return _isSelected; 
+        }
+        set
+        {
+            if (_isSelected != value)
+            {
+                _isSelected = value;
+                React();
+            }
+        }
+    }
+
+    protected abstract void React();
 }

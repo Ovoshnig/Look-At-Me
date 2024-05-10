@@ -245,8 +245,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _axis: 0
-  _rotationDirection: 1
+  _direction: 1
   _rotationSpeed: 1
   _rotationClips:
   - {fileID: 8300000, guid: 0be2dae2cec99cd4798fd9764a4204a3, type: 3}
   - {fileID: 8300000, guid: 242d329f15d48454f82e64d3b6dcd8e1, type: 3}
+  _rigidbody: {fileID: 4343275997547643517}
+  _audioSource: {fileID: 5403207731071105271}

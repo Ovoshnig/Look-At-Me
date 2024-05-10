@@ -10,11 +10,9 @@ public sealed class ObjectRepainter : SelectableObject
 
     private void Start() => _counter.IncreaseObjectsCount();
     
-    public override void SetSelected(bool isSelect)
+    protected override void React()
     {
-        IsSelect = isSelect;
-
-        if (IsSelect && _renderer.material.color != _paintMaterial.color)
+        if (IsSelected && _renderer.material.color != _paintMaterial.color)
         {
             _renderer.material = _paintMaterial;
 

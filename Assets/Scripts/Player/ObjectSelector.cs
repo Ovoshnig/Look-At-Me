@@ -38,8 +38,7 @@ public class ObjectSelector : MonoBehaviour
 
     private async UniTaskVoid Select()
     {
-        int delay = (int)(1000 * _raycastDelay);
-        var token = _cts.Token;
+        CancellationToken token = _cts.Token;
 
         while (true)
         {
@@ -47,28 +46,20 @@ public class ObjectSelector : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit, _rayLength, _selectableLayer))
             {
-                _selectableDictionary.TryGetValue(hit.collider.gameObject, out _currentSelectable);
+                _previousSelectable = _currentSelectable;
+                _currentSelectable = _selectableDictionary[hit.collider.gameObject];
 
-                if (_currentSelectable != null && !_currentSelectable.GetSelected())
-                {
-                    _currentSelectable.SetSelected(true);
+                if (_previousSelectable != null && _previousSelectable != _currentSelectable)
+                    _previousSelectable.IsSelected = false;
 
-                    if (_previousSelectable != null && _currentSelectable != _previousSelectable && _previousSelectable.GetSelected())
-                        _previousSelectable.SetSelected(false);
-
-                    _previousSelectable = _currentSelectable;
-                }
-                else if (_currentSelectable == null && _previousSelectable != null && _previousSelectable.GetSelected())
-                {
-                    _previousSelectable.SetSelected(false);
-                }
+                _currentSelectable.IsSelected = true;
             }
-            else if (_previousSelectable != null && _previousSelectable.GetSelected())
+            else if (_currentSelectable != null)
             {
-                _previousSelectable.SetSelected(false);
+                _currentSelectable.IsSelected = false;
             }
 
-            await UniTask.Delay(delay, cancellationToken: token);
+            await UniTask.WaitForSeconds(_raycastDelay, cancellationToken: token);
         }
     }
 }

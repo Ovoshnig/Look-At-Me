@@ -1,15 +1,31 @@
-using UnityEngine;
+using System;
+using Zenject;
 
-public class SensitivityKeeper
+public class SensitivityKeeper : DataKeeper<float>
 {
-    private float _sensitivity;
-    private const string _sensitivity_key = "Sensitivity";
+    private readonly Settings _settings;
 
-    private SensitivityKeeper() => _sensitivity = PlayerPrefs.GetFloat(_sensitivity_key, 5f);
+    [Inject]
+    public SensitivityKeeper(Settings settings)
+    {
+        _settings = settings;
+        DefaultValue = _settings.MaxSensitivity / 2;
 
-    public float Get() => _sensitivity;
+        DataKey = "Sensitivity";
+        LoadData();
+    }
 
-    public void Set(float sensitivity) => _sensitivity = Mathf.Clamp(sensitivity, 0f, 10f);
+    public override float Value 
+    { 
+        get => ValueField;
+        set
+        {
+            if (value >= 0 && value <= _settings.MaxSensitivity)
+                ValueField = value;
+            else
+                throw new InvalidOperationException($"Invalid sensitivity: {value}");
+        }
+    }
 
-    public void Save() => PlayerPrefs.SetFloat(_sensitivity_key, _sensitivity);
 }
+    

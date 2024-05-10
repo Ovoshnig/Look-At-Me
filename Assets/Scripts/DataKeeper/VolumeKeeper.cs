@@ -1,15 +1,29 @@
-using UnityEngine;
+using System;
+using Zenject;
 
-public class VolumeKeeper
+public class VolumeKeeper : DataKeeper<float>
 {
-    private float _volume;
-    private const string _volume_key = "Volume";
+    private readonly Settings _settings;
 
-    private VolumeKeeper() => _volume = PlayerPrefs.GetFloat(_volume_key, 0.5f);
+    [Inject]
+    public VolumeKeeper(Settings settings)
+    {
+        _settings = settings;
+        DefaultValue = _settings.MaxVolume / 2;
 
-    public float Get() => _volume;
+        DataKey = "Volume";
+        LoadData();
+    }
 
-    public void Set(float volume) => _volume = Mathf.Clamp01(volume);
-    
-    public void Save() => PlayerPrefs.SetFloat(_volume_key, _volume);
+    public override float Value 
+    { 
+        get => ValueField;
+        set
+        {
+            if (value >= 0 && value <= _settings.MaxVolume)
+                ValueField = value;
+            else
+                throw new InvalidOperationException($"Invalid volume: {value}");
+        }
+    }
 }

@@ -26,15 +26,15 @@ public sealed class DuringBaseSelector : SelectableObject
         }
     }
 
-    public override void SetSelected(bool isSelect)
+    protected async override void React()
     {
-        IsSelect = isSelect;
-
-        if (IsSelect)
+        if (IsSelected)
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
-            SelectingTimer(_cts.Token).Forget();
+            await SelectingTimer(_cts.Token);
+
+            _baseSelector.SelectBase(gameObject.name);
         }
         else
         {
@@ -47,11 +47,8 @@ public sealed class DuringBaseSelector : SelectableObject
         }
     }
 
-    private async UniTaskVoid SelectingTimer(CancellationToken token)
+    private async UniTask SelectingTimer(CancellationToken token)
     {
-        int delayTime = (int)(1000 * _lookingTime);
-        await UniTask.Delay(delayTime, cancellationToken: token);
-
-        _baseSelector.SelectBase(gameObject.name);
+        await UniTask.WaitForSeconds(_lookingTime, cancellationToken: token);
     }
 }
