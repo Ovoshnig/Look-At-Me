@@ -1649,8 +1649,8 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 9036547352052814359, guid: 4881ba374715e6f419d02e3e0bb048fc, type: 3}
-      propertyPath: m_SkinWidth
-      value: 0.01
+      propertyPath: m_SlopeLimit
+      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
