@@ -13,13 +13,11 @@ public sealed class ObstacleDeactivator : SelectableObject
     private void OnValidate()
     {
         if (_renderer == null)
-        {
             _renderer = GetComponent<Renderer>();
-        }
+
         if (_collider == null)
-        {
             _collider = GetComponent<Collider>();
-        }
+
         if (_audioSource == null)
         {
             _audioSource = GetComponent<AudioSource>();

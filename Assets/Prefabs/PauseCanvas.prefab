@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 8945655240115318124}
   - component: {fileID: 1924787468436175204}
   m_Layer: 5
-  m_Name: VolumeSlider
+  m_Name: GlobalVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1798,7 +1798,7 @@ GameObject:
   - component: {fileID: 4566275637261484048}
   - component: {fileID: 7113317897247653761}
   m_Layer: 5
-  m_Name: VolumeSlider
+  m_Name: GlobalVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2518,7 +2518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _optionsPanel: {fileID: 5353405128484736961}
   _sensitivitySlider: {fileID: 4316203257761812497}
-  _volumeSlider: {fileID: 8945655240115318124}
+  _globalVolumeSlider: {fileID: 8945655240115318124}
   _playerPoint: {fileID: 2033991236048103568}
 --- !u!1 &8786786958741818368
 GameObject:

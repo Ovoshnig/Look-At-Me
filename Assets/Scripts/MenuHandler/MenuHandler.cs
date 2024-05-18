@@ -6,20 +6,20 @@ public abstract class MenuHandler : MonoBehaviour
 {
     [SerializeField] protected GameObject _optionsPanel;
     [SerializeField] protected Slider _sensitivitySlider;
-    [SerializeField] protected Slider _volumeSlider;
+    [SerializeField] protected Slider _globalVolumeSlider;
 
     protected LevelSwitch LevelSwitch;
-    protected SensitivityKeeper SensitivityKeeper;
-    protected VolumeKeeper VolumeKeeper;
+    protected LookSettings LookSettings;
+    protected AudioSettings AudioSettings;
     protected Settings Settings;
 
     [Inject]
-    protected void Construct(LevelSwitch levelSwitch, SensitivityKeeper sensitivityKeeper, 
-        VolumeKeeper volumeKeeper, Settings settings)
+    protected void Construct(LevelSwitch levelSwitch, LookSettings lookSettings, 
+        AudioSettings audioSettings, Settings settings)
     {
         LevelSwitch = levelSwitch;
-        SensitivityKeeper = sensitivityKeeper;
-        VolumeKeeper = volumeKeeper;
+        LookSettings = lookSettings;
+        AudioSettings = audioSettings;
         Settings = settings;
     }
 
@@ -33,25 +33,14 @@ public abstract class MenuHandler : MonoBehaviour
 
     protected void InitializeSliders()
     {
-        float sensitivity = SensitivityKeeper.Value;
-        _sensitivitySlider.value = sensitivity;
+        _sensitivitySlider.value = LookSettings.Sensitivity;
         _sensitivitySlider.maxValue = Settings.MaxSensitivity;
 
-        float volume = VolumeKeeper.Value;
-        _volumeSlider.value = volume;
-        _volumeSlider.maxValue = Settings.MaxVolume;
+        _globalVolumeSlider.value = AudioSettings.GlobalVolume;
+        _globalVolumeSlider.maxValue = Settings.MaxVolume;
     }
 
-    public void SetSensitivity()
-    {
-        float sensitivity = _sensitivitySlider.value;
-        SensitivityKeeper.Value = sensitivity;
-    }
+    public void SetSensitivity() => LookSettings.Sensitivity = _sensitivitySlider.value;
 
-    public void SetVolume()
-    {
-        float volume = _volumeSlider.value;
-        VolumeKeeper.Value = volume;
-        AudioListener.volume = volume;
-    }
+    public void SetVolume() => AudioSettings.GlobalVolume = _globalVolumeSlider.value;
 }
