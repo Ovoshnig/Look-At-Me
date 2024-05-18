@@ -966,7 +966,7 @@ GameObject:
   - component: {fileID: 463211328}
   - component: {fileID: 463211329}
   m_Layer: 5
-  m_Name: VolumeSlider
+  m_Name: GlobalVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2191,7 +2191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _optionsPanel: {fileID: 873409935}
   _sensitivitySlider: {fileID: 90966393}
-  _volumeSlider: {fileID: 463211328}
+  _globalVolumeSlider: {fileID: 463211328}
 --- !u!1 &1057386270
 GameObject:
   m_ObjectHideFlags: 0

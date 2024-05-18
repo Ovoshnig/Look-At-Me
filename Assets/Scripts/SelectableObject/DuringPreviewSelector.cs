@@ -7,9 +7,14 @@ public sealed class DuringPreviewSelector : SelectableObject
 {
     [SerializeField] private float _lookingTime;
 
-    [Inject] private readonly DuringObjectSelectionCompletist _completist;
-
+    private DuringObjectSelectionCompletist _completist;
     private CancellationTokenSource _cts;
+
+    [Inject]
+    private void Construct(DuringObjectSelectionCompletist completist)
+    {
+        _completist = completist;
+    }
 
     private void OnDisable()
     {
@@ -31,20 +36,24 @@ public sealed class DuringPreviewSelector : SelectableObject
         }
         else
         {
-            if (_cts != null)
-            {
-                _cts.Cancel();
-                _cts.Dispose();
-                _cts = null;
-            }
+            CancelToken();
         }
     }
 
     private async UniTask ActivateDelayed(CancellationToken token)
     {
-        int delayTime = (int)(1000 * _lookingTime);
-        await UniTask.Delay(delayTime, cancellationToken: token);
+        await UniTask.WaitForSeconds(_lookingTime, cancellationToken: token);
 
         _completist.TimerActivate(this);
+    }
+
+    private void CancelToken()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
     }
 }

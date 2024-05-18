@@ -8,24 +8,14 @@ public class ProjectInstaller : MonoInstaller
     public override void InstallBindings()
     {
         BindSettings();
-        BindKeepers();
-        BindLevelSwitch();
-    }
-
-    private void BindKeepers()
-    {
-        Container.BindInterfacesAndSelfTo<AchievedLevelKeeper>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<SensitivityKeeper>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<VolumeKeeper>().AsSingle().NonLazy();
-    }
-
-    private void BindLevelSwitch()
-    {
-        Container.BindInterfacesAndSelfTo<LevelSwitch>().AsSingle().NonLazy();
     }
 
     private void BindSettings()
     {
         Container.BindInstance(_settings).AsSingle().NonLazy();
+
+        Container.BindInterfacesAndSelfTo<LevelSwitch>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<LookSettings>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<AudioSettings>().FromNew().AsSingle().NonLazy();
     }
 }

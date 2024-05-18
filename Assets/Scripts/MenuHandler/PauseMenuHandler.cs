@@ -7,14 +7,14 @@ public sealed class PauseMenuHandler : MenuHandler
 {
     [SerializeField] private Image _playerPoint;
 
-    private FPSController _fpsController;
+    private FPSController _FPSController;
     private PlayerInput _playerInput;
     private bool _isGamePaused;
 
     [Inject]
-    private void Construct(FPSController fPSController)
+    private void Construct(FPSController FPSController)
     {
-        _fpsController = fPSController;
+        _FPSController = FPSController;
 
         _playerInput = new PlayerInput();
         _playerInput.PauseMenu.PauseOrResume.performed += PauseOrResume;
@@ -26,7 +26,7 @@ public sealed class PauseMenuHandler : MenuHandler
 
     protected override void InitializeSettings()
     {
-        _fpsController.RotationSpeed = SensitivityKeeper.Value;
+        _FPSController.RotationSpeed = LookSettings.Sensitivity;
 
         Resume();
         _isGamePaused = false;
@@ -51,7 +51,7 @@ public sealed class PauseMenuHandler : MenuHandler
         ChangePauseState(shouldBePaused: false);
         _isGamePaused = false;
 
-        _fpsController.RotationSpeed = SensitivityKeeper.Value;
+        _FPSController.RotationSpeed = LookSettings.Sensitivity;
     }
 
     private void ChangePauseState(bool shouldBePaused)
@@ -62,7 +62,7 @@ public sealed class PauseMenuHandler : MenuHandler
         _optionsPanel.SetActive(shouldBePaused);
         _playerPoint.enabled = !shouldBePaused;
 
-        _fpsController.CanMove = !shouldBePaused;
+        _FPSController.CanMove = !shouldBePaused;
     }
 
     public void ResetLevel() => LevelSwitch.LoadCurrentLevel();

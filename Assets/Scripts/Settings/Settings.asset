@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5fa97f34043e240bf6e949e9d5077c, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
+  FirstGameplayLevel: 1
   MaxSensitivity: 0.25
   MaxVolume: 1
+  DefaultSliderCoefficient: 0.5

@@ -32,15 +32,7 @@ public sealed class ObjectResizer : SelectableObject
             _direction = 1;
     }
 
-    private void OnDisable()
-    {
-        if (_cts != null)
-        {
-            _cts.Cancel();
-            _cts.Dispose();
-            _cts = null;
-        }
-    }
+    private void OnDisable() => CancelToken();
 
     private void Awake()
     {
@@ -90,5 +82,15 @@ public sealed class ObjectResizer : SelectableObject
         Vector3 position = transform.localPosition;
         position[_axis] += positionChange;
         transform.localPosition = position;
+    }
+
+    private void CancelToken()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
     }
 }
