@@ -15,8 +15,10 @@ public class LevelSwitch : IDisposable
     {
         _settings = settings;
         _achievedLevelKeeper = new DataKeeper<uint>(AchievedLevelKey, _settings.FirstGameplayLevel);
-
         _currentLevel = (uint)SceneManager.GetActiveScene().buildIndex;
+
+        if (_currentLevel > _achievedLevelKeeper.Value && _achievedLevelKeeper.Value < SceneManager.sceneCountInBuildSettings - 2)
+            _achievedLevelKeeper.Value = _currentLevel;
     }
 
     public void LoadAchievedLevel()

@@ -57,7 +57,7 @@ public class CheckersLogic : MonoBehaviour
             }
         }
 
-        StartCoroutine(EnumerateMoves());
+        StartCoroutine(StartPlacement());
     }
 
     private bool IsCanMove(int i, int j)
@@ -417,7 +417,7 @@ public class CheckersLogic : MonoBehaviour
             {
                 if (_board[i, j] == winnerTurn)
                 {
-                    startDelay = Random.Range(0, _finishDelay);
+                    startDelay = Random.Range(0, _finishDelay / 2);
 
                     StartCoroutine(_visualizer.PlayFigureAnimation(i, j, startDelay));
                 }
@@ -425,6 +425,7 @@ public class CheckersLogic : MonoBehaviour
         }
 
         yield return new WaitForSeconds(_finishDelay);
+        _visualizer.StopAllCoroutines();
 
         _levelSwitch.TryLoadNextLevelFirstTime();
     }
