@@ -90,6 +90,6 @@ public class CreditsScroller : MonoBehaviour
         int endDelayTime = (int)(1000 * _endDelay);
         await UniTask.Delay(endDelayTime, cancellationToken: token);
 
-        _levelSwitch.LoadLevel(0);
+        _levelSwitch.LoadLevel(0).Forget();
     }
 }

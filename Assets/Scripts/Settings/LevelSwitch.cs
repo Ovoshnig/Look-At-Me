@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
@@ -6,12 +8,14 @@ public class LevelSwitch : IDisposable
 {
     private const string AchievedLevelKey = "AchievedLevel";
 
-    private readonly Settings _settings;
+    private readonly GameSettingsInstaller.GameSettings _settings;
     private readonly DataKeeper<uint> _achievedLevelKeeper;
     private uint _currentLevel;
 
+    public event Action LevelLoaded;
+
     [Inject]
-    public LevelSwitch(Settings settings)
+    public LevelSwitch(GameSettingsInstaller.GameSettings settings)
     {
         _settings = settings;
         _achievedLevelKeeper = new DataKeeper<uint>(AchievedLevelKey, _settings.FirstGameplayLevel);
@@ -19,12 +23,14 @@ public class LevelSwitch : IDisposable
 
         if (_currentLevel > _achievedLevelKeeper.Value && _achievedLevelKeeper.Value < SceneManager.sceneCountInBuildSettings - 2)
             _achievedLevelKeeper.Value = _currentLevel;
+
+        WaitForFirstSceneLoad().Forget();
     }
 
     public void LoadAchievedLevel()
     {
         _currentLevel = _achievedLevelKeeper.Value;
-        SceneManager.LoadScene((int)_currentLevel);
+        LoadLevel(_currentLevel).Forget();
     }
 
     public void LoadFirstLevel()
@@ -32,7 +38,7 @@ public class LevelSwitch : IDisposable
         ResetProgress();
 
         _currentLevel = 1;
-        SceneManager.LoadScene((int)_currentLevel);
+        LoadLevel(_currentLevel).Forget();
     }
 
     public void ResetProgress() => _achievedLevelKeeper.Value = _settings.FirstGameplayLevel;
@@ -42,7 +48,7 @@ public class LevelSwitch : IDisposable
         if (_currentLevel < _achievedLevelKeeper.Value)
         {
             _currentLevel++;
-            SceneManager.LoadScene((int)_currentLevel);
+            LoadLevel(_currentLevel).Forget();
         }
     }
 
@@ -57,7 +63,7 @@ public class LevelSwitch : IDisposable
             if (_achievedLevelKeeper.Value < SceneManager.sceneCountInBuildSettings - 2)
                 _achievedLevelKeeper.Value++;
 
-            SceneManager.LoadScene((int)_currentLevel);
+            LoadLevel(_currentLevel).Forget();
         }
         else
         {
@@ -72,16 +78,19 @@ public class LevelSwitch : IDisposable
         if (_currentLevel > 1)
         {
             _currentLevel--;
-            SceneManager.LoadScene((int)_currentLevel);
+            LoadLevel(_currentLevel).Forget();
         }
     }
 
-    public void LoadLevel(int value)
+    public void LoadCurrentLevel() => LoadLevel(_currentLevel).Forget();
+
+    public async UniTaskVoid LoadLevel(uint value)
     {
         if (value <= _achievedLevelKeeper.Value)
         {
-            _currentLevel = (uint)value;
-            SceneManager.LoadScene(value);
+            _currentLevel = value;
+            await SceneManager.LoadSceneAsync((int)value);
+            LevelLoaded?.Invoke();
         }
         else
         {
@@ -89,7 +98,11 @@ public class LevelSwitch : IDisposable
         }
     }
 
-    public void LoadCurrentLevel() => SceneManager.LoadScene((int)_currentLevel);
-
     public void Dispose() => _achievedLevelKeeper.Dispose();
+
+    private async UniTaskVoid WaitForFirstSceneLoad()
+    {
+        await UniTask.WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
+        LevelLoaded?.Invoke();
+    }
 }

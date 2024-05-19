@@ -5,17 +5,19 @@ using Zenject;
 public abstract class MenuHandler : MonoBehaviour
 {
     [SerializeField] protected GameObject _optionsPanel;
-    [SerializeField] protected Slider _sensitivitySlider;
-    [SerializeField] protected Slider _globalVolumeSlider;
+
+    [SerializeField] private Slider _sensitivitySlider;
+    [SerializeField] private Slider _soundsVolumeSlider;
+    [SerializeField] private Slider _musicVolumeSlider;
 
     protected LevelSwitch LevelSwitch;
     protected LookSettings LookSettings;
     protected AudioSettings AudioSettings;
-    protected Settings Settings;
+    protected GameSettingsInstaller.GameSettings Settings;
 
     [Inject]
     protected void Construct(LevelSwitch levelSwitch, LookSettings lookSettings, 
-        AudioSettings audioSettings, Settings settings)
+        AudioSettings audioSettings, GameSettingsInstaller.GameSettings settings)
     {
         LevelSwitch = levelSwitch;
         LookSettings = lookSettings;
@@ -36,11 +38,16 @@ public abstract class MenuHandler : MonoBehaviour
         _sensitivitySlider.value = LookSettings.Sensitivity;
         _sensitivitySlider.maxValue = Settings.MaxSensitivity;
 
-        _globalVolumeSlider.value = AudioSettings.GlobalVolume;
-        _globalVolumeSlider.maxValue = Settings.MaxVolume;
+        _soundsVolumeSlider.value = AudioSettings.SoundsVolume;
+        _soundsVolumeSlider.maxValue = Settings.MaxVolume;
+
+        _musicVolumeSlider.value = AudioSettings.MusicVolume;
+        _musicVolumeSlider.maxValue = Settings.MaxVolume;
     }
 
     public void SetSensitivity() => LookSettings.Sensitivity = _sensitivitySlider.value;
 
-    public void SetVolume() => AudioSettings.GlobalVolume = _globalVolumeSlider.value;
+    public void SetSoundsVolume() => AudioSettings.SoundsVolume = _soundsVolumeSlider.value;
+
+    public void SetMusicVolume() => AudioSettings.MusicVolume = _musicVolumeSlider.value;
 }
