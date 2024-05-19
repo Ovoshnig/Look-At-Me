@@ -62,7 +62,13 @@ public sealed class PauseMenuHandler : MenuHandler
         _optionsPanel.SetActive(shouldBePaused);
         _playerPoint.enabled = !shouldBePaused;
 
+        Time.timeScale = shouldBePaused ? 0 : 1;
         _FPSController.CanMove = !shouldBePaused;
+
+        if (shouldBePaused)
+            AudioSettings.PauseSounds();
+        else
+            AudioSettings.UnPauseSounds();
     }
 
     public void ResetLevel() => LevelSwitch.LoadCurrentLevel();
@@ -71,5 +77,5 @@ public sealed class PauseMenuHandler : MenuHandler
 
     public void LoadNextLevel() => LevelSwitch.LoadNextLevel();
 
-    public void LoadMainMenu() => LevelSwitch.LoadLevel(0);
+    public void LoadMainMenu() => LevelSwitch.LoadLevel(0).Forget();
 }

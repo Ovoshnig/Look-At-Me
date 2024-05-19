@@ -13,7 +13,7 @@ public sealed class DuringBaseSelector : SelectableObject
     private void OnValidate()
     {
         if (_baseSelector == null)
-            _baseSelector = FindObjectOfType<BaseSelector>();
+            _baseSelector = FindFirstObjectByType<BaseSelector>();
     }
 
     private void OnDisable()

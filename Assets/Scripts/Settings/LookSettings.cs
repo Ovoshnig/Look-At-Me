@@ -6,11 +6,11 @@ public class LookSettings : IDisposable
 {
     private const string SensitivityKey = "Sensitivity";
 
-    private readonly Settings _settings;
+    private readonly GameSettingsInstaller.GameSettings _settings;
     private readonly DataKeeper<float> _sensitivityKeeper;
 
     [Inject]
-    public LookSettings(Settings settings)
+    public LookSettings(GameSettingsInstaller.GameSettings settings)
     {
         _settings = settings;
         _sensitivityKeeper = new DataKeeper<float>(SensitivityKey, _settings.MaxSensitivity * _settings.DefaultSliderCoefficient);
