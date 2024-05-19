@@ -226,6 +226,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "SplashImage",
+            "id": "cde6829d-0a91-4a24-bfe5-04f83f85fae6",
+            "actions": [
+                {
+                    "name": "PassSplashImage",
+                    "type": "Button",
+                    "id": "8376583f-ae4e-49fa-ae63-62e7edb4f4fa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8ab6d183-5731-4ec8-96c6-8e137fae766d",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Hold(duration=0.5)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PassSplashImage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
