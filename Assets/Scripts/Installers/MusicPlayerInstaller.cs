@@ -1,12 +1,15 @@
 using UnityEngine;
 using Zenject;
 
+[RequireComponent(typeof(MusicPlayer),
+                  typeof(AudioSource))]
 public class MusicPlayerInstaller : MonoInstaller
 {
-    [SerializeField] private GameObject _musicPlayer;
-
     public override void InstallBindings()
     {
-        Container.InstantiateComponent<MusicPlayer>(_musicPlayer);
+        var musicPlayer = GetComponent<MusicPlayer>();
+        var audioSource = GetComponent<AudioSource>();
+        Container.Bind<MusicPlayer>().FromInstance(musicPlayer).AsSingle().NonLazy();
+        Container.Bind<AudioSource>().FromInstance(audioSource).AsSingle().NonLazy();
     }
 }

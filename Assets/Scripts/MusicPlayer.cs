@@ -23,7 +23,6 @@ public class MusicPlayer : MonoBehaviour
         _random = new System.Random();
         LoadMusicTracks();
         ShuffleAndQueueTracks();
-
         PlayNextTrack().Forget();
     }
 
@@ -42,7 +41,7 @@ public class MusicPlayer : MonoBehaviour
         _musicTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>(MusicClipsPath));
         if (_musicTracks.Count == 0)
         {
-            Debug.LogWarning("No music tracks found in Resources/Audio/Music.");
+            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}.");
         }
     }
 
