@@ -4,8 +4,6 @@ using Zenject;
 
 public abstract class MenuHandler : MonoBehaviour
 {
-    [SerializeField] protected GameObject _optionsPanel;
-
     [SerializeField] private Slider _sensitivitySlider;
     [SerializeField] private Slider _soundsVolumeSlider;
     [SerializeField] private Slider _musicVolumeSlider;
