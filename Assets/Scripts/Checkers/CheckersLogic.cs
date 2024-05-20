@@ -57,7 +57,7 @@ public class CheckersLogic : MonoBehaviour
             }
         }
 
-        StartCoroutine(StartPlacement());
+        StartCoroutine(EnumerateMoves());
     }
 
     private bool IsCanMove(int i, int j)

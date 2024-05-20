@@ -6,18 +6,18 @@ public class DataKeeper<T> : IDisposable
 {
     [SerializeField] public T Value;
 
-    protected string DataKey;
-    protected T DefaultValue;
+    private readonly string _dataKey;
+    private readonly T _defaultValue;
 
     public DataKeeper(string dataKey, T defaultValue)
     {
-        DataKey = dataKey;
-        DefaultValue = defaultValue;
+        _dataKey = dataKey;
+        _defaultValue = defaultValue;
 
         LoadData();
     }
 
-    private string GetFilePath() => Path.Combine(Application.persistentDataPath, $"{DataKey}.json");
+    private string GetFilePath() => Path.Combine(Application.persistentDataPath, $"{_dataKey}.json");
 
     private void LoadData()
     {
@@ -29,7 +29,7 @@ public class DataKeeper<T> : IDisposable
         }
         else
         {
-            Value = DefaultValue;
+            Value = _defaultValue;
         }
     }
 

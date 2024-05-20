@@ -86,7 +86,7 @@ public class LevelSwitch : IDisposable
 
     public async UniTaskVoid LoadLevel(uint value)
     {
-        if (value <= _achievedLevelKeeper.Value)
+        if (value < SceneManager.sceneCountInBuildSettings)
         {
             _currentLevel = value;
             await SceneManager.LoadSceneAsync((int)value);

@@ -154,20 +154,24 @@ public class CheckersVisualizer : MonoBehaviour
         yield return new WaitForSeconds(startDelay);
 
         Transform figureTransform = _figureTransforms[i, j];
-        Vector3 figurePosition = figureTransform.position;
 
-        float expiredTime = 0;
-
-        while (expiredTime < _jumpDuration)
+        if (figureTransform != null)
         {
-            float progress = expiredTime / _jumpDuration;
-            float currentY = _jumpHeigh * _jumpCurve.Evaluate(progress);
-            figureTransform.position = new Vector3(figurePosition.x, currentY, figurePosition.z);
-            expiredTime += Time.deltaTime;
+            Vector3 figurePosition = figureTransform.position;
 
-            yield return null;
+            float expiredTime = 0;
+
+            while (expiredTime < _jumpDuration)
+            {
+                float progress = expiredTime / _jumpDuration;
+                float currentY = _jumpHeigh * _jumpCurve.Evaluate(progress);
+                figureTransform.position = new Vector3(figurePosition.x, currentY, figurePosition.z);
+                expiredTime += Time.deltaTime;
+
+                yield return null;
+            }
+            figureTransform.position = figurePosition;
         }
-        figureTransform.position = figurePosition;
     }
 
     private void OnDisable()
