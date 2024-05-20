@@ -2,9 +2,11 @@ using UnityEngine;
 
 public sealed class MainMenuHandler : MenuHandler
 {
+    [SerializeField] private GameObject _settingsPanel;
+
     protected override void InitializeSettings()
     {
-        _optionsPanel.SetActive(false);
+        _settingsPanel.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -14,9 +16,9 @@ public sealed class MainMenuHandler : MenuHandler
 
     public void StartNewGame() => LevelSwitch.LoadFirstLevel();
 
-    public void OpenSettings() => _optionsPanel.SetActive(true);
+    public void OpenSettings() => _settingsPanel.SetActive(true);
 
-    public void Resume() => _optionsPanel.SetActive(false);
+    public void Resume() => _settingsPanel.SetActive(false);
 
     public void ResetProgress() => LevelSwitch.ResetProgress();
 
