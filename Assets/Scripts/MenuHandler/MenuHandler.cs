@@ -4,6 +4,11 @@ using Zenject;
 
 public abstract class MenuHandler : MonoBehaviour
 {
+    [SerializeField] protected GameObject MenuPanel;
+    [SerializeField] protected GameObject SettingsPanel;
+
+    [SerializeField] private Button _openSettingsPanelButton;
+    [SerializeField] private Button _closeSettingsPanelButton;
     [SerializeField] private Slider _sensitivitySlider;
     [SerializeField] private Slider _soundsVolumeSlider;
     [SerializeField] private Slider _musicVolumeSlider;
@@ -15,7 +20,7 @@ public abstract class MenuHandler : MonoBehaviour
 
     [Inject]
     protected void Construct(LevelSwitch levelSwitch, LookSettings lookSettings, 
-        AudioSettings audioSettings, GameSettingsInstaller.GameSettings settings)
+                             AudioSettings audioSettings, GameSettingsInstaller.GameSettings settings)
     {
         LevelSwitch = levelSwitch;
         LookSettings = lookSettings;
@@ -26,10 +31,16 @@ public abstract class MenuHandler : MonoBehaviour
     protected void Start()
     {
         InitializeSettings();
+        
         InitializeSliders();
     }
 
     protected abstract void InitializeSettings();
+
+    protected void SettingsPanelSet()
+    {
+        SettingsPanel.SetActive(false);
+    }
 
     protected void InitializeSliders()
     {
@@ -43,9 +54,40 @@ public abstract class MenuHandler : MonoBehaviour
         _musicVolumeSlider.maxValue = Settings.MaxVolume;
     }
 
-    public void SetSensitivity() => LookSettings.Sensitivity = _sensitivitySlider.value;
+    protected void OnEnable()
+    {
+        AddButtonListeners();
+        AddSliderListeners();
+    }
 
-    public void SetSoundsVolume() => AudioSettings.SoundsVolume = _soundsVolumeSlider.value;
+    protected virtual void AddButtonListeners()
+    {
+        _openSettingsPanelButton.onClick.AddListener(OpenSettingsPanel);
+        _closeSettingsPanelButton.onClick.AddListener(CloseSettingsPanel);
+    }
 
-    public void SetMusicVolume() => AudioSettings.MusicVolume = _musicVolumeSlider.value;
+    protected void AddSliderListeners()
+    {
+        _sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        _soundsVolumeSlider.onValueChanged.AddListener(SetSoundsVolume);
+        _musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+    }
+
+    protected void OpenSettingsPanel()
+    {
+        MenuPanel.SetActive(false);
+        SettingsPanel.SetActive(true);
+    }
+
+    protected void CloseSettingsPanel()
+    {
+        MenuPanel.SetActive(true);
+        SettingsPanel.SetActive(false);
+    }
+
+    protected void SetSensitivity(float value) => LookSettings.Sensitivity = value;
+
+    protected void SetSoundsVolume(float value) => AudioSettings.SoundsVolume = value;
+
+    protected void SetMusicVolume(float value) => AudioSettings.MusicVolume = value;
 }

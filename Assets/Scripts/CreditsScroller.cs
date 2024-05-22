@@ -13,30 +13,41 @@ public class CreditsScroller : MonoBehaviour
     [SerializeField] private float _startDelay;
     [SerializeField] private float _endDelay;
     [SerializeField] private float _scrollSpeed;
-    [SerializeField] private TMP_Text _TMP_Text;
-    [SerializeField] private RectTransform _rectTransform;
 
     private const string FilePath = "Assets/Resources/Documents/Credits.txt";
+
+    private TMP_Text _TMP_Text;
+    private RectTransform _rectTransform;
     private string[] _lines;
     private CancellationTokenSource _cts = new();
+    private GameState _gameState;
     private LevelSwitch _levelSwitch;
+    private bool _isPaused;
 
     [Inject]
-    private void Construct(LevelSwitch levelSwitch)
+    private void Construct(GameState gameState, LevelSwitch levelSwitch)
     {
+        _gameState = gameState;
         _levelSwitch = levelSwitch;
     }
 
-    private void OnValidate()
+    private void Awake()
     {
-        if (_TMP_Text == null)
-            _TMP_Text = GetComponent<TMP_Text>();
-        if (_rectTransform == null)
-            _rectTransform = GetComponent<RectTransform>();
+        _TMP_Text = GetComponent<TMP_Text>();
+        _rectTransform = GetComponent<RectTransform>();
+    }
+
+    private void OnEnable()
+    {
+        _gameState.GamePaused += Pause;
+        _gameState.GameUnpaused += Unpause;
     }
 
     private void OnDisable()
     {
+        _gameState.GamePaused -= Pause;
+        _gameState.GameUnpaused -= Unpause;
+
         if (_cts != null)
         {
             _cts.Cancel();
@@ -85,11 +96,17 @@ public class CreditsScroller : MonoBehaviour
             transform.localPosition += positionDifference;
 
             await UniTask.Yield(cancellationToken: token);
+
+            if (_isPaused)
+                await UniTask.WaitUntil(() => _isPaused == false);
         }
 
-        int endDelayTime = (int)(1000 * _endDelay);
-        await UniTask.Delay(endDelayTime, cancellationToken: token);
+        await UniTask.WaitForSeconds(_endDelay, cancellationToken: token);
 
         _levelSwitch.LoadLevel(0).Forget();
     }
+
+    private void Pause() => _isPaused = true;
+
+    private void Unpause() => _isPaused = false;
 }
