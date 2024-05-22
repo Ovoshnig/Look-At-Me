@@ -4,7 +4,13 @@ public class ProjectInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
+        BindGameState();
         BindSettings();
+    }
+
+    private void BindGameState()
+    {
+        Container.BindInterfacesAndSelfTo<GameState>().FromNew().AsSingle().NonLazy();
     }
 
     private void BindSettings()

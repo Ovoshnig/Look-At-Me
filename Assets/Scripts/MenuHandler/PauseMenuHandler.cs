@@ -1,101 +1,61 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Zenject;
 
 public sealed class PauseMenuHandler : MenuHandler
 {
-    [SerializeField] private GameObject _pausePanel;
-    [SerializeField] private GameObject _settingsPanel;
-    [SerializeField] private Image _playerPoint;
+    [SerializeField] private GameObject _playerPoint;
+    [SerializeField] private Button _resumeButton;
+    [SerializeField] private Button _resetLevelButton;
+    [SerializeField] private Button _loadNextLevelButton;
+    [SerializeField] private Button _loadPreviousLevelButton;
+    [SerializeField] private Button _loadMainMenuButton;
 
-    private FPSController _FPSController;
-    private PlayerInput _playerInput;
-    private bool _isGamePaused;
+    private GameState _gameState;
 
-    public void Pause()
+    protected override void InitializeSettings() => Resume();
+
+    protected override void AddButtonListeners()
     {
-        ChangePauseState(shouldBePaused: true);
-        _isGamePaused = true;
+        base.AddButtonListeners();
+
+        _gameState.GamePaused += Pause;
+        _gameState.GameUnpaused += Resume;
+
+        _resumeButton.onClick.AddListener(_gameState.Unpause);
+        _resetLevelButton.onClick.AddListener(ResetLevel);
+        _loadNextLevelButton.onClick.AddListener(LoadNextLevel);
+        _loadPreviousLevelButton.onClick.AddListener(LoadPreviousLevel);
+        _loadMainMenuButton.onClick.AddListener(LoadMainMenu);
     }
 
-    public void Resume()
+    private void OnDisable()
     {
-        ChangePauseState(shouldBePaused: false);
-        _isGamePaused = false;
-
-        _FPSController.RotationSpeed = LookSettings.Sensitivity;
-    }
-
-    public void ResetLevel() => LevelSwitch.LoadCurrentLevel();
-
-    public void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
-
-    public void LoadNextLevel() => LevelSwitch.LoadNextLevel();
-
-    public void LoadMainMenu() => LevelSwitch.LoadLevel(0).Forget();
-
-    public void OpenSettingsPanel()
-    {
-        _pausePanel.SetActive(false);
-        _settingsPanel.SetActive(true);
-    }
-
-    public void CloseSettingsPanel()
-    {
-        _pausePanel.SetActive(true);
-        _settingsPanel.SetActive(false);
-    }
-
-    protected override void InitializeSettings()
-    {
-        _FPSController.RotationSpeed = LookSettings.Sensitivity;
-
-        _playerInput.PauseMenu.PauseOrResume.performed += PauseOrResume;
-
-        Resume();
-        _settingsPanel.SetActive(false);
-        _isGamePaused = false;
+        _gameState.GamePaused -= Pause;
+        _gameState.GameUnpaused -= Resume;
     }
 
     [Inject]
-    private void Construct(FPSController FPSController) => _FPSController = FPSController;
+    private void Construct(GameState gameState) => _gameState = gameState;
 
-    private void Awake() => _playerInput = new PlayerInput();
+    private void ResetLevel() => LevelSwitch.LoadCurrentLevel();
 
-    private void OnEnable() => _playerInput.Enable();
+    private void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
 
-    private void OnDisable() => _playerInput.Disable();
+    private void LoadNextLevel() => LevelSwitch.LoadNextLevel();
 
-    private void PauseOrResume(InputAction.CallbackContext context)
+    private void LoadMainMenu() => LevelSwitch.LoadLevel(0).Forget();
+
+    private void Pause()
     {
-        if (_settingsPanel.activeSelf)
-        {
-            CloseSettingsPanel();
-        }
-        else
-        {
-            if (_isGamePaused)
-                Resume();
-            else
-                Pause();
-        }
+        MenuPanel.SetActive(true);
+        _playerPoint.SetActive(false);
     }
 
-    private void ChangePauseState(bool shouldBePaused)
+    private void Resume()
     {
-        Cursor.lockState = shouldBePaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = shouldBePaused;
-
-        _pausePanel.SetActive(shouldBePaused);
-        _playerPoint.enabled = !shouldBePaused;
-
-        Time.timeScale = shouldBePaused ? 0 : 1;
-        _FPSController.CanMove = !shouldBePaused;
-
-        if (shouldBePaused)
-            AudioSettings.PauseSounds();
-        else
-            AudioSettings.UnPauseSounds();
+        MenuPanel.SetActive(false);
+        SettingsPanel.SetActive(false);
+        _playerPoint.SetActive(true);
     }
 }

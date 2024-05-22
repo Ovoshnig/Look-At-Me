@@ -200,14 +200,14 @@
             ]
         },
         {
-            "name": "PauseMenu",
+            "name": "GameState",
             "id": "a45349ce-b576-4d1a-9622-9dffb3c11a02",
             "actions": [
                 {
-                    "name": "PauseOrResume",
+                    "name": "ReversePauseState",
                     "type": "Button",
                     "id": "457c5597-75dd-4544-b674-41484284c01c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -221,7 +221,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
-                    "action": "PauseOrResume",
+                    "action": "ReversePauseState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerInput))]
@@ -14,6 +15,8 @@ public class FPSController : MonoBehaviour
     [SerializeField] private bool _canMove = true;
     [SerializeField] private Transform _cameraTransform;
 
+    private GameState _gameState;
+    private LookSettings _lookSettings;
     private CharacterController _characterController;
     private PlayerInput _playerInput;
     private Vector2 _movementInput;
@@ -26,8 +29,12 @@ public class FPSController : MonoBehaviour
     private float _currentSpeedZ;
     private float _movementDirectionY;
 
-    public bool CanMove { get => _canMove; set => _canMove = value; }
-    public float RotationSpeed { private get => _rotationSpeed; set => _rotationSpeed = value; }
+    [Inject]
+    private void Construct(GameState gameState, LookSettings lookSettings)
+    {
+        _gameState = gameState;
+        _lookSettings = lookSettings;
+    }
 
     private void Awake()
     {
@@ -50,11 +57,25 @@ public class FPSController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        _rotationSpeed = _lookSettings.Sensitivity;
     }
 
-    private void OnEnable() => _playerInput.Enable();
+    private void OnEnable()
+    {
+        _playerInput.Enable();
 
-    private void OnDisable() => _playerInput.Disable();
+        _gameState.GamePaused += Pause;
+        _gameState.GameUnpaused += Unpause;
+    }
+
+    private void OnDisable()
+    {
+        _playerInput.Disable();
+
+        _gameState.GamePaused -= Pause;
+        _gameState.GameUnpaused -= Unpause;
+    }
 
     #region "Performed actions"
 
@@ -79,6 +100,25 @@ public class FPSController : MonoBehaviour
     private void OnRunCancel(InputAction.CallbackContext context) => _runInput = false;
 
     #endregion
+
+    private void Pause()
+    {
+        _canMove = false;
+        SetPauseState(pause: true);
+    }
+
+    private void Unpause()
+    {
+        _canMove = true;
+        SetPauseState(pause: false);
+        _rotationSpeed = _lookSettings.Sensitivity;
+    }
+
+    private void SetPauseState(bool pause)
+    {
+        Cursor.lockState = pause ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = pause;
+    }
 
     private void Update()
     {
