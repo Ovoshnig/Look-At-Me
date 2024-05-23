@@ -25,7 +25,6 @@ public sealed class VideoPlayerSwitch : SelectableObject
     {
         _videoPlayer = GetComponent<VideoPlayer>();
         _audioSource = GetComponent<AudioSource>();
-
         _audioSource.playOnAwake = false;
         _videoPlayer.playOnAwake = false;
         _videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;

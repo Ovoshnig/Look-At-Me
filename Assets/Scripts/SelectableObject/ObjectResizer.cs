@@ -15,7 +15,6 @@ public sealed class ObjectResizer : SelectableObject
     [SerializeField] private AudioClip _downSoundClip;
 
     private Vector3 _initialScale;
-    private Vector3 _initialPosition;
     private AudioSource _audioSource;
     private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
     private CancellationTokenSource _cts = new();
@@ -38,7 +37,6 @@ public sealed class ObjectResizer : SelectableObject
     {
         _audioSource = GetComponent<AudioSource>();
         _initialScale = transform.localScale;
-        _initialPosition = transform.localPosition;
     }
 
     protected override void React()

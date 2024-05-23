@@ -39,10 +39,9 @@ public class MusicPlayer : MonoBehaviour
     private void LoadMusicTracks()
     {
         _musicTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>(MusicClipsPath));
+
         if (_musicTracks.Count == 0)
-        {
             Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}.");
-        }
     }
 
     private void ShuffleAndQueueTracks()

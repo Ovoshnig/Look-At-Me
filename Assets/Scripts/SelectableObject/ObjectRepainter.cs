@@ -9,10 +9,7 @@ public sealed class ObjectRepainter : SelectableObject
     private ObjectsInCorrectStatesCounter _counter;
 
     [Inject]
-    private void Construct(ObjectsInCorrectStatesCounter counter)
-    {
-        _counter = counter;
-    }
+    private void Construct(ObjectsInCorrectStatesCounter counter) => _counter = counter;
 
     private void Start() => _counter.IncreaseObjectsCount();
     

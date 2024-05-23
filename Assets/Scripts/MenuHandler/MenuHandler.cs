@@ -31,16 +31,10 @@ public abstract class MenuHandler : MonoBehaviour
     protected void Start()
     {
         InitializeSettings();
-        
         InitializeSliders();
     }
 
     protected abstract void InitializeSettings();
-
-    protected void SettingsPanelSet()
-    {
-        SettingsPanel.SetActive(false);
-    }
 
     protected void InitializeSliders()
     {

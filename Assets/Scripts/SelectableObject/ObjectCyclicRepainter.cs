@@ -7,24 +7,26 @@ using Zenject;
 public sealed class ObjectCyclicRepainter : SelectableObject
 {
     [SerializeField] private float _repaintDelay;
-    [SerializeField] private Renderer _renderer;
     [SerializeField] private Material[] _materials;
     [SerializeField] private Material _correctMaterial;
 
+    private Renderer _renderer;
     private ObjectsInCorrectStatesCounter _counter;
     private CancellationTokenSource _cts;
     private int _index;
     private bool _isDecreaseAllowed = false;
 
     [Inject]
-    private void Construct(ObjectsInCorrectStatesCounter counter)
-    {
-        _counter = counter;
-    }
+    private void Construct(ObjectsInCorrectStatesCounter counter) => _counter = counter;
 
     private void OnDisable() => CancelToken();
 
-    private void Awake() => _counter.IncreaseObjectsCount();
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+
+        _counter.IncreaseObjectsCount();
+    }
 
     private void Start()
     {
