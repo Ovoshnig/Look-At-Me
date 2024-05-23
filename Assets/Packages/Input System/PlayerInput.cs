@@ -251,14 +251,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""SplashImage"",
+            ""name"": ""SplashScreen"",
             ""id"": ""cde6829d-0a91-4a24-bfe5-04f83f85fae6"",
             ""actions"": [
                 {
-                    ""name"": ""PassSplashImage"",
+                    ""name"": ""Pass"",
                     ""type"": ""Button"",
                     ""id"": ""8376583f-ae4e-49fa-ae63-62e7edb4f4fa"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -269,10 +269,38 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""8ab6d183-5731-4ec8-96c6-8e137fae766d"",
                     ""path"": ""<Keyboard>/space"",
-                    ""interactions"": ""Hold(duration=0.5)"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PassSplashImage"",
+                    ""action"": ""Pass"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Credits"",
+            ""id"": ""c70f53b1-65a5-4e4e-9d19-389e4aaafe0d"",
+            ""actions"": [
+                {
+                    ""name"": ""SpeedUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""474e3938-f525-491f-a578-b95a34ac627c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c4e7cafc-f5c6-4e82-aed0-6648e67e1ff8"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpeedUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -318,16 +346,20 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // GameState
         m_GameState = asset.FindActionMap("GameState", throwIfNotFound: true);
         m_GameState_ReversePauseState = m_GameState.FindAction("ReversePauseState", throwIfNotFound: true);
-        // SplashImage
-        m_SplashImage = asset.FindActionMap("SplashImage", throwIfNotFound: true);
-        m_SplashImage_PassSplashImage = m_SplashImage.FindAction("PassSplashImage", throwIfNotFound: true);
+        // SplashScreen
+        m_SplashScreen = asset.FindActionMap("SplashScreen", throwIfNotFound: true);
+        m_SplashScreen_Pass = m_SplashScreen.FindAction("Pass", throwIfNotFound: true);
+        // Credits
+        m_Credits = asset.FindActionMap("Credits", throwIfNotFound: true);
+        m_Credits_SpeedUp = m_Credits.FindAction("SpeedUp", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
     {
         Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInput.Player.Disable() has not been called.");
         Debug.Assert(!m_GameState.enabled, "This will cause a leak and performance issues, PlayerInput.GameState.Disable() has not been called.");
-        Debug.Assert(!m_SplashImage.enabled, "This will cause a leak and performance issues, PlayerInput.SplashImage.Disable() has not been called.");
+        Debug.Assert(!m_SplashScreen.enabled, "This will cause a leak and performance issues, PlayerInput.SplashScreen.Disable() has not been called.");
+        Debug.Assert(!m_Credits.enabled, "This will cause a leak and performance issues, PlayerInput.Credits.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -502,51 +534,97 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     }
     public GameStateActions @GameState => new GameStateActions(this);
 
-    // SplashImage
-    private readonly InputActionMap m_SplashImage;
-    private List<ISplashImageActions> m_SplashImageActionsCallbackInterfaces = new List<ISplashImageActions>();
-    private readonly InputAction m_SplashImage_PassSplashImage;
-    public struct SplashImageActions
+    // SplashScreen
+    private readonly InputActionMap m_SplashScreen;
+    private List<ISplashScreenActions> m_SplashScreenActionsCallbackInterfaces = new List<ISplashScreenActions>();
+    private readonly InputAction m_SplashScreen_Pass;
+    public struct SplashScreenActions
     {
         private @PlayerInput m_Wrapper;
-        public SplashImageActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @PassSplashImage => m_Wrapper.m_SplashImage_PassSplashImage;
-        public InputActionMap Get() { return m_Wrapper.m_SplashImage; }
+        public SplashScreenActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pass => m_Wrapper.m_SplashScreen_Pass;
+        public InputActionMap Get() { return m_Wrapper.m_SplashScreen; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(SplashImageActions set) { return set.Get(); }
-        public void AddCallbacks(ISplashImageActions instance)
+        public static implicit operator InputActionMap(SplashScreenActions set) { return set.Get(); }
+        public void AddCallbacks(ISplashScreenActions instance)
         {
-            if (instance == null || m_Wrapper.m_SplashImageActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_SplashImageActionsCallbackInterfaces.Add(instance);
-            @PassSplashImage.started += instance.OnPassSplashImage;
-            @PassSplashImage.performed += instance.OnPassSplashImage;
-            @PassSplashImage.canceled += instance.OnPassSplashImage;
+            if (instance == null || m_Wrapper.m_SplashScreenActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SplashScreenActionsCallbackInterfaces.Add(instance);
+            @Pass.started += instance.OnPass;
+            @Pass.performed += instance.OnPass;
+            @Pass.canceled += instance.OnPass;
         }
 
-        private void UnregisterCallbacks(ISplashImageActions instance)
+        private void UnregisterCallbacks(ISplashScreenActions instance)
         {
-            @PassSplashImage.started -= instance.OnPassSplashImage;
-            @PassSplashImage.performed -= instance.OnPassSplashImage;
-            @PassSplashImage.canceled -= instance.OnPassSplashImage;
+            @Pass.started -= instance.OnPass;
+            @Pass.performed -= instance.OnPass;
+            @Pass.canceled -= instance.OnPass;
         }
 
-        public void RemoveCallbacks(ISplashImageActions instance)
+        public void RemoveCallbacks(ISplashScreenActions instance)
         {
-            if (m_Wrapper.m_SplashImageActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_SplashScreenActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(ISplashImageActions instance)
+        public void SetCallbacks(ISplashScreenActions instance)
         {
-            foreach (var item in m_Wrapper.m_SplashImageActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_SplashScreenActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_SplashImageActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_SplashScreenActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public SplashImageActions @SplashImage => new SplashImageActions(this);
+    public SplashScreenActions @SplashScreen => new SplashScreenActions(this);
+
+    // Credits
+    private readonly InputActionMap m_Credits;
+    private List<ICreditsActions> m_CreditsActionsCallbackInterfaces = new List<ICreditsActions>();
+    private readonly InputAction m_Credits_SpeedUp;
+    public struct CreditsActions
+    {
+        private @PlayerInput m_Wrapper;
+        public CreditsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SpeedUp => m_Wrapper.m_Credits_SpeedUp;
+        public InputActionMap Get() { return m_Wrapper.m_Credits; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CreditsActions set) { return set.Get(); }
+        public void AddCallbacks(ICreditsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CreditsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CreditsActionsCallbackInterfaces.Add(instance);
+            @SpeedUp.started += instance.OnSpeedUp;
+            @SpeedUp.performed += instance.OnSpeedUp;
+            @SpeedUp.canceled += instance.OnSpeedUp;
+        }
+
+        private void UnregisterCallbacks(ICreditsActions instance)
+        {
+            @SpeedUp.started -= instance.OnSpeedUp;
+            @SpeedUp.performed -= instance.OnSpeedUp;
+            @SpeedUp.canceled -= instance.OnSpeedUp;
+        }
+
+        public void RemoveCallbacks(ICreditsActions instance)
+        {
+            if (m_Wrapper.m_CreditsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICreditsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CreditsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CreditsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CreditsActions @Credits => new CreditsActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -576,8 +654,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnReversePauseState(InputAction.CallbackContext context);
     }
-    public interface ISplashImageActions
+    public interface ISplashScreenActions
     {
-        void OnPassSplashImage(InputAction.CallbackContext context);
+        void OnPass(InputAction.CallbackContext context);
+    }
+    public interface ICreditsActions
+    {
+        void OnSpeedUp(InputAction.CallbackContext context);
     }
 }

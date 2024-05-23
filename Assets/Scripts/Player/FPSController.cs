@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 using Zenject;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(PlayerInput))]
 public class FPSController : MonoBehaviour
 {
     [SerializeField] private float _walkSpeed;

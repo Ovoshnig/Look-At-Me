@@ -228,14 +228,14 @@
             ]
         },
         {
-            "name": "SplashImage",
+            "name": "SplashScreen",
             "id": "cde6829d-0a91-4a24-bfe5-04f83f85fae6",
             "actions": [
                 {
-                    "name": "PassSplashImage",
+                    "name": "Pass",
                     "type": "Button",
                     "id": "8376583f-ae4e-49fa-ae63-62e7edb4f4fa",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -246,10 +246,38 @@
                     "name": "",
                     "id": "8ab6d183-5731-4ec8-96c6-8e137fae766d",
                     "path": "<Keyboard>/space",
-                    "interactions": "Hold(duration=0.5)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PassSplashImage",
+                    "action": "Pass",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Credits",
+            "id": "c70f53b1-65a5-4e4e-9d19-389e4aaafe0d",
+            "actions": [
+                {
+                    "name": "SpeedUp",
+                    "type": "Button",
+                    "id": "474e3938-f525-491f-a578-b95a34ac627c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c4e7cafc-f5c6-4e82-aed0-6648e67e1ff8",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SpeedUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
