@@ -9,28 +9,78 @@ public class AudioSettings : IDisposable
     private const string SoundsVolumeKey = "SoundsVolume";
     private const string MusicVolumeKey = "MusicVolume";
 
+    private readonly DataSaver _dataSaver;
     private readonly GameSettingsInstaller.GameSettings _settings;
     private readonly GameState _gameState;
     private readonly AudioSource _musicSource;
     private readonly LevelSwitch _levelSwitch;
-    private readonly DataKeeper<float> _soundsVolumeKeeper;
-    private readonly DataKeeper<float> _musicVolumeKeeper;
+    private float _soundsVolume;
+    private float _musicVolume;
     private List<AudioSource> _soundSources = new();
 
     [Inject]
-    public AudioSettings(GameSettingsInstaller.GameSettings settings, GameState gameState, 
-                         LevelSwitch levelSwitch, AudioSource musicSource)
+    public AudioSettings(DataSaver dataSaver, GameSettingsInstaller.GameSettings settings, 
+                         GameState gameState, LevelSwitch levelSwitch, AudioSource musicSource)
     {
+        _dataSaver = dataSaver;
         _settings = settings;
         _gameState = gameState;
         _levelSwitch = levelSwitch;
         _musicSource = musicSource;
 
-        _soundsVolumeKeeper = new DataKeeper<float>(SoundsVolumeKey, _settings.MaxVolume * _settings.DefaultSliderCoefficient);
-        _musicVolumeKeeper = new DataKeeper<float>(MusicVolumeKey, _settings.MaxVolume * _settings.DefaultSliderCoefficient);
-        SoundsVolume = _soundsVolumeKeeper.Value;
-        MusicVolume = _musicVolumeKeeper.Value;
+        InitializeVolumeData();
+        SubscribeToEvents();
+    }
 
+    public float SoundsVolume
+    {
+        get
+        {
+            return _soundsVolume;
+        }
+        set
+        {
+            if (value >= 0 && value <= _settings.MaxVolume)
+                _soundsVolume = value;
+        }
+    }
+    
+    public float MusicVolume
+    {
+        get
+        {
+            return _musicVolume;
+        }
+        set
+        {
+            if (value >= 0 && value <= _settings.MaxVolume)
+            {
+                _musicVolume = value;
+                _musicSource.volume = value;
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        SaveVolumeData();
+        UnsubscribeFromEvents();
+    }
+
+    public void PauseSoundSources() => SetSoundSourcesPauseState(pause: true);
+
+    public void UnpauseSoundSources() => SetSoundSourcesPauseState(pause: false);
+
+    private void InitializeVolumeData()
+    {
+        _soundsVolume = _dataSaver.LoadData(SoundsVolumeKey, _settings.MaxVolume * _settings.DefaultSliderCoefficient);
+        _musicVolume = _dataSaver.LoadData(MusicVolumeKey, _settings.MaxVolume * _settings.DefaultSliderCoefficient);
+        SoundsVolume = _soundsVolume;
+        MusicVolume = _musicVolume;
+    }
+
+    private void SubscribeToEvents()
+    {
         _levelSwitch.LevelLoaded += GetAudioSources;
         _levelSwitch.LevelLoaded += SetSourcesVolume;
         _gameState.GamePaused += GetAudioSources;
@@ -39,44 +89,14 @@ public class AudioSettings : IDisposable
         _gameState.GameUnpaused += UnpauseSoundSources;
     }
 
-    public float SoundsVolume
+    private void SaveVolumeData()
     {
-        get
-        {
-            return _soundsVolumeKeeper.Value;
-        }
-        set
-        {
-            if (value >= 0 && value <= _settings.MaxVolume)
-                _soundsVolumeKeeper.Value = value;
-        }
-    }
-    
-    public float MusicVolume
-    {
-        get
-        {
-            return _musicVolumeKeeper.Value;
-        }
-        set
-        {
-            if (value >= 0 && value <= _settings.MaxVolume)
-            {
-                _musicVolumeKeeper.Value = value;
-                _musicSource.volume = value;
-            }
-        }
+        _dataSaver.SaveData(SoundsVolumeKey, _soundsVolume);
+        _dataSaver.SaveData(MusicVolumeKey, _musicVolume);
     }
 
-    public void PauseSoundSources() => SetSoundSourcesPauseState(pause: true);
-
-    public void UnpauseSoundSources() => SetSoundSourcesPauseState(pause: false);
-
-    public void Dispose()
+    private void UnsubscribeFromEvents()
     {
-        _soundsVolumeKeeper.Dispose();
-        _musicVolumeKeeper.Dispose();
-
         _levelSwitch.LevelLoaded -= GetAudioSources;
         _levelSwitch.LevelLoaded -= SetSourcesVolume;
         _gameState.GamePaused -= GetAudioSources;
@@ -95,7 +115,7 @@ public class AudioSettings : IDisposable
     {
         foreach (AudioSource soundSource in _soundSources)
             if (soundSource != null)
-                soundSource.volume = _soundsVolumeKeeper.Value;
+                soundSource.volume = _soundsVolume;
     }
 
     private void SetSoundSourcesPauseState(bool pause)

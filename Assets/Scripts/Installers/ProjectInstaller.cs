@@ -5,12 +5,18 @@ public class ProjectInstaller : MonoInstaller
     public override void InstallBindings()
     {
         BindGameState();
+        BindDataSaver();
         BindSettings();
     }
 
     private void BindGameState()
     {
         Container.BindInterfacesAndSelfTo<GameState>().FromNew().AsSingle().NonLazy();
+    }
+
+    private void BindDataSaver()
+    {
+        Container.BindInterfacesAndSelfTo<DataSaver>().FromNew().AsSingle().NonLazy();
     }
 
     private void BindSettings()
