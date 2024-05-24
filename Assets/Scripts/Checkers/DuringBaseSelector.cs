@@ -13,10 +13,34 @@ public sealed class DuringBaseSelector : SelectableObject
     private void OnValidate()
     {
         if (_baseSelector == null)
-            _baseSelector = FindObjectOfType<BaseSelector>();
+            _baseSelector = FindFirstObjectByType<BaseSelector>();
     }
 
-    private void OnDisable()
+    private void OnDisable() => CancelToken();
+
+    protected override void React()
+    {
+        if (IsSelected)
+        {
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            WaitDelay(token).Forget();
+        }
+        else
+        {
+            CancelToken();
+        }
+    }
+
+    private async UniTaskVoid WaitDelay(CancellationToken token)
+    {
+        await UniTask.WaitForSeconds(_lookingTime, cancellationToken: token);
+        _baseSelector.SelectBase(gameObject.name);
+    }
+
+    private void CancelToken()
     {
         if (_cts != null)
         {
@@ -24,31 +48,5 @@ public sealed class DuringBaseSelector : SelectableObject
             _cts.Dispose();
             _cts = null;
         }
-    }
-
-    protected async override void React()
-    {
-        if (IsSelected)
-        {
-            _cts?.Cancel();
-            _cts = new CancellationTokenSource();
-            await SelectingTimer(_cts.Token);
-
-            _baseSelector.SelectBase(gameObject.name);
-        }
-        else
-        {
-            if (_cts != null)
-            {
-                _cts.Cancel();
-                _cts.Dispose();
-                _cts = null;
-            }
-        }
-    }
-
-    private async UniTask SelectingTimer(CancellationToken token)
-    {
-        await UniTask.WaitForSeconds(_lookingTime, cancellationToken: token);
     }
 }

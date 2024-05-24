@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5fa97f34043e240bf6e949e9d5077c, type: 3}
+  m_Script: {fileID: 11500000, guid: 71193e9986ee22a48802232520db1060, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  MaxSensitivity: 0.25
-  MaxVolume: 1
+  Settings:
+    FirstGameplayLevel: 1
+    MaxSensitivity: 0.2
+    MaxVolume: 0.5
+    DefaultSliderCoefficient: 0.5

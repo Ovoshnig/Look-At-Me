@@ -7,27 +7,26 @@ using Zenject;
 public sealed class ObjectCyclicRepainter : SelectableObject
 {
     [SerializeField] private float _repaintDelay;
-    [SerializeField] private Renderer _renderer;
     [SerializeField] private Material[] _materials;
     [SerializeField] private Material _correctMaterial;
 
-    [Inject] private readonly ObjectsInCorrectStatesCounter _counter;
-
+    private Renderer _renderer;
+    private ObjectsInCorrectStatesCounter _counter;
+    private CancellationTokenSource _cts;
     private int _index;
     private bool _isDecreaseAllowed = false;
-    private CancellationTokenSource _cts;
 
-    private void OnDisable()
+    [Inject]
+    private void Construct(ObjectsInCorrectStatesCounter counter) => _counter = counter;
+
+    private void OnDisable() => CancelToken();
+
+    private void Awake()
     {
-        if (_cts != null)
-        {
-            _cts.Cancel();
-            _cts.Dispose();
-            _cts = null;
-        }
-    }
+        _renderer = GetComponent<Renderer>();
 
-    private void Awake() => _counter.IncreaseObjectsCount();
+        _counter.IncreaseObjectsCount();
+    }
 
     private void Start()
     {
@@ -51,19 +50,12 @@ public sealed class ObjectCyclicRepainter : SelectableObject
         }
         else
         {
-            if (_cts != null)
-            {
-                _cts.Cancel();
-                _cts.Dispose();
-                _cts = null;
-            }
+            CancelToken();
         }
     }
 
     private async UniTaskVoid Repaint(CancellationToken token)
     {
-        int delayTime = (int)(1000 * _repaintDelay);
-
         while (IsSelected)
         {
             _renderer.material = _materials[_index];
@@ -78,7 +70,17 @@ public sealed class ObjectCyclicRepainter : SelectableObject
 
             _index = (_index + 1) % _materials.Length;
 
-            await UniTask.Delay(delayTime, cancellationToken: token);
+            await UniTask.WaitForSeconds(_repaintDelay, cancellationToken: token);
+        }
+    }
+
+    private void CancelToken()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
         }
     }
 }

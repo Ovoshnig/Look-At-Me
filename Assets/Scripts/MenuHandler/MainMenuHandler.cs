@@ -1,24 +1,34 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class MainMenuHandler : MenuHandler
 {
+    [SerializeField] private Button _continueGameButton;
+    [SerializeField] private Button _startNewGameButton;
+    [SerializeField] private Button _quitGameButton;
+    [SerializeField] private Button _resetProgressButton;
+
     protected override void InitializeSettings()
     {
-        _optionsPanel.SetActive(false);
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    public void Continue() => LevelSwitch.LoadAchievedLevel();
+    protected override void AddButtonListeners()
+    {
+        base.AddButtonListeners();
 
-    public void StartNewGame() => LevelSwitch.LoadFirstLevel();
+        _continueGameButton.onClick.AddListener(ContinueGame);
+        _startNewGameButton.onClick.AddListener(StartNewGame);
+        _quitGameButton.onClick.AddListener(QuitGame);
+        _resetProgressButton.onClick.AddListener(ResetProgress);
+    }
 
-    public void OpenSettings() => _optionsPanel.SetActive(true);
+    private void ContinueGame() => LevelSwitch.LoadAchievedLevel();
 
-    public void Resume() => _optionsPanel.SetActive(false);
+    private void StartNewGame() => LevelSwitch.LoadFirstLevel();
 
-    public void ResetProgress() => LevelSwitch.ResetProgress();
+    private void QuitGame() => Application.Quit();
 
-    public void QuitGame() => Application.Quit();
+    private void ResetProgress() => LevelSwitch.ResetProgress();
 }

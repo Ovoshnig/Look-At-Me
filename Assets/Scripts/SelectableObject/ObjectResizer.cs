@@ -15,7 +15,6 @@ public sealed class ObjectResizer : SelectableObject
     [SerializeField] private AudioClip _downSoundClip;
 
     private Vector3 _initialScale;
-    private Vector3 _initialPosition;
     private AudioSource _audioSource;
     private OneSoundAtTimeProvider _oneSoundAtTimeProvider;
     private CancellationTokenSource _cts = new();
@@ -32,21 +31,12 @@ public sealed class ObjectResizer : SelectableObject
             _direction = 1;
     }
 
-    private void OnDisable()
-    {
-        if (_cts != null)
-        {
-            _cts.Cancel();
-            _cts.Dispose();
-            _cts = null;
-        }
-    }
+    private void OnDisable() => CancelToken();
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
         _initialScale = transform.localScale;
-        _initialPosition = transform.localPosition;
     }
 
     protected override void React()
@@ -90,5 +80,15 @@ public sealed class ObjectResizer : SelectableObject
         Vector3 position = transform.localPosition;
         position[_axis] += positionChange;
         transform.localPosition = position;
+    }
+
+    private void CancelToken()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
     }
 }

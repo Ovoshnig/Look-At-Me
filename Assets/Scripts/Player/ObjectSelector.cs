@@ -27,7 +27,7 @@ public class ObjectSelector : MonoBehaviour
 
     private void Awake()
     {
-        var selectables = FindObjectsOfType<SelectableObject>();
+        var selectables = FindObjectsByType<SelectableObject>(FindObjectsSortMode.None);
 
         foreach (var selectableComponent in selectables)
             if (selectableComponent is MonoBehaviour monoBehaviour)

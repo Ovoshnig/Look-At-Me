@@ -2,26 +2,24 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public abstract class DataKeeper<T> : IDisposable where T : new()
+public class DataKeeper<T> : IDisposable
 {
-    [SerializeField] protected T ValueField;
+    [SerializeField] public T Value;
 
-    protected string DataKey;
-    protected T DefaultValue;
+    private readonly string _dataKey;
+    private readonly T _defaultValue;
 
-    public abstract T Value { get; set; }
-
-    protected virtual string GetFilePath() => Path.Combine(Application.persistentDataPath, $"{DataKey}.json");
-
-    public void Dispose() => SaveData();
-
-    protected void SaveData()
+    public DataKeeper(string dataKey, T defaultValue)
     {
-        string json = JsonUtility.ToJson(this);
-        File.WriteAllText(GetFilePath(), json);
+        _dataKey = dataKey;
+        _defaultValue = defaultValue;
+
+        LoadData();
     }
 
-    protected void LoadData()
+    private string GetFilePath() => Path.Combine(Application.persistentDataPath, $"{_dataKey}.json");
+
+    private void LoadData()
     {
         string filePath = GetFilePath();
         if (File.Exists(filePath))
@@ -31,7 +29,15 @@ public abstract class DataKeeper<T> : IDisposable where T : new()
         }
         else
         {
-            ValueField = DefaultValue;
+            Value = _defaultValue;
         }
     }
+
+    private void SaveData()
+    {
+        string json = JsonUtility.ToJson(this);
+        File.WriteAllText(GetFilePath(), json);
+    }
+
+    public void Dispose() => SaveData();
 }

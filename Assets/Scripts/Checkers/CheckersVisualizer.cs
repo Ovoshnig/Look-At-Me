@@ -1,4 +1,4 @@
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,25 +18,15 @@ public class CheckersVisualizer : MonoBehaviour
     [SerializeField] private float _jumpDuration;
     [SerializeField] private float _jumpHeigh;
 
+    private const float ÑellSize = 2.5f;
+
     private readonly GameObject[] _playerFigures = new GameObject[2];
     private readonly Transform[,] _figureTransforms = new Transform[8, 8];
-    private const float _cellSize = 2.5f;
     private Transform figureTransform;
     private Vector3 startPosition;
     private Vector3 endPosition;
-    private bool _isMovementFinish = false;
 
-    public bool IsMovementFinish 
-    { 
-        get => _isMovementFinish; 
-        set => _isMovementFinish = value; 
-    }
-
-    private void OnValidate()
-    {
-        if (_audioSource == null)
-            _audioSource = GetComponent<AudioSource>();
-    }
+    private void Awake() => _audioSource = GetComponent<AudioSource>();
 
     public void ChooseFigure(string playerFigureName)
     {
@@ -55,8 +45,8 @@ public class CheckersVisualizer : MonoBehaviour
         iFloat -= 4f;
         jFloat -= 4f;
 
-        iFloat *= _cellSize;
-        jFloat *= _cellSize;
+        iFloat *= ÑellSize;
+        jFloat *= ÑellSize;
 
         Vector3 position = new(iFloat, 0f, jFloat);
         return position;
@@ -74,7 +64,7 @@ public class CheckersVisualizer : MonoBehaviour
         _audioSource.Play();
     }
 
-    public IEnumerator MakeFigureMove(List<int> turnIndex) 
+    public async UniTask MakeFigureMove(List<int> turnIndex) 
     {
         var (i, j, iDelta, jDelta) = (turnIndex[0], turnIndex[1], turnIndex[2], turnIndex[3]);
 
@@ -85,24 +75,21 @@ public class CheckersVisualizer : MonoBehaviour
         float distance = Vector3.Distance(startPosition, endPosition);
         float moveDuration = distance / _moveSpeed;
 
-        StartCoroutine(MoveFigure(startPosition, endPosition, moveDuration));
-        yield return new WaitForSeconds(moveDuration);
+        await MoveFigure(startPosition, endPosition, moveDuration);
 
         _figureTransforms[i + iDelta, j + jDelta] = figureTransform;
         _figureTransforms[i, j] = null;
-
-        _isMovementFinish = true;
     }
 
-    public void ChopFigure(int rivalI, int rivalJ)
+    public async UniTask ChopFigure(int rivalI, int rivalJ)
     {
         Vector3 rivalPosition = IndexesToPosition(rivalI, rivalJ);
         float distance = Vector3.Distance(startPosition, rivalPosition);
         float removeDuration = distance / _moveSpeed;
-        StartCoroutine(RemoveFigure(_figureTransforms[rivalI, rivalJ], removeDuration));
+        await RemoveFigure(_figureTransforms[rivalI, rivalJ], removeDuration);
     }
 
-    public IEnumerator MoveFigure(Vector3 startPosition, Vector3 endPosition, float moveDuration)
+    public async UniTask MoveFigure(Vector3 startPosition, Vector3 endPosition, float moveDuration)
     {
         int index = Random.Range(0, _dragClips.Length);
         _audioSource.clip = _dragClips[index];
@@ -118,20 +105,20 @@ public class CheckersVisualizer : MonoBehaviour
 
             elapsedTime += Time.deltaTime;
 
-            yield return null;
+            await UniTask.Yield();
         }
 
         figureTransform.position = endPosition;
     }
 
-    public IEnumerator RemoveFigure(Transform figureTransform, float duration)
+    public async UniTask RemoveFigure(Transform figureTransform, float duration)
     {
-        yield return new WaitForSeconds(duration);
+        await UniTask.WaitForSeconds(duration);
 
         Destroy(figureTransform.gameObject);
     }
 
-    public void CreateDam()
+    public async UniTask CreateDam()
     {
         Transform childFigureTransform = figureTransform.GetChild(0);
         Vector3 figurePosition = figureTransform.position;
@@ -139,7 +126,9 @@ public class CheckersVisualizer : MonoBehaviour
         Bounds bounds = renderer.bounds;
         Vector3 crownPosition = figurePosition + new Vector3(0, bounds.center.y * 0.6f + bounds.extents.y, 0);
 
-        GameObject crown = Instantiate(_crownPrefab, crownPosition, Quaternion.Euler(-90, 0, 0));
+        var instantiateTask = InstantiateAsync(_crownPrefab, crownPosition, Quaternion.Euler(-90, 0, 0));
+        await instantiateTask;
+        GameObject crown = instantiateTask.Result[0];
         crown.transform.parent = childFigureTransform;
     }
 
@@ -149,29 +138,28 @@ public class CheckersVisualizer : MonoBehaviour
         _audioSource.Play();
     }
 
-    public IEnumerator PlayFigureAnimation(int i, int j, float startDelay)
+    public async UniTask PlayFigureAnimation(int i, int j, float startDelay)
     {
-        yield return new WaitForSeconds(startDelay);
+        await UniTask.WaitForSeconds(startDelay);
 
         Transform figureTransform = _figureTransforms[i, j];
-        Vector3 figurePosition = figureTransform.position;
 
-        float expiredTime = 0;
-
-        while (expiredTime < _jumpDuration)
+        if (figureTransform != null)
         {
-            float progress = expiredTime / _jumpDuration;
-            float currentY = _jumpHeigh * _jumpCurve.Evaluate(progress);
-            figureTransform.position = new Vector3(figurePosition.x, currentY, figurePosition.z);
-            expiredTime += Time.deltaTime;
+            Vector3 figurePosition = figureTransform.position;
 
-            yield return null;
+            float expiredTime = 0;
+
+            while (expiredTime < _jumpDuration)
+            {
+                float progress = expiredTime / _jumpDuration;
+                float currentY = _jumpHeigh * _jumpCurve.Evaluate(progress);
+                figureTransform.position = new Vector3(figurePosition.x, currentY, figurePosition.z);
+                expiredTime += Time.deltaTime;
+
+                await UniTask.Yield();
+            }
+            figureTransform.position = figurePosition;
         }
-        figureTransform.position = figurePosition;
-    }
-
-    private void OnDisable()
-    {
-        StopAllCoroutines();
     }
 }
