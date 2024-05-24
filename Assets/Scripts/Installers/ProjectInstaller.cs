@@ -1,31 +1,22 @@
-using UnityEngine;
 using Zenject;
 
 public class ProjectInstaller : MonoInstaller
 {
-    [SerializeField] private Settings _settings;
-
     public override void InstallBindings()
     {
+        BindGameState();
         BindSettings();
-        BindKeepers();
-        BindLevelSwitch();
     }
 
-    private void BindKeepers()
+    private void BindGameState()
     {
-        Container.BindInterfacesAndSelfTo<AchievedLevelKeeper>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<SensitivityKeeper>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<VolumeKeeper>().AsSingle().NonLazy();
-    }
-
-    private void BindLevelSwitch()
-    {
-        Container.BindInterfacesAndSelfTo<LevelSwitch>().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<GameState>().FromNew().AsSingle().NonLazy();
     }
 
     private void BindSettings()
     {
-        Container.BindInstance(_settings).AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<LevelSwitch>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<LookSettings>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<AudioSettings>().FromNew().AsSingle().NonLazy();
     }
 }

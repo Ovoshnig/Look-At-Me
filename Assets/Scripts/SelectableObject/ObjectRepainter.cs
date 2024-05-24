@@ -6,7 +6,10 @@ public sealed class ObjectRepainter : SelectableObject
     [SerializeField] private Material _paintMaterial;
     [SerializeField] private Renderer _renderer;
     
-    [Inject] private readonly ObjectsInCorrectStatesCounter _counter;
+    private ObjectsInCorrectStatesCounter _counter;
+
+    [Inject]
+    private void Construct(ObjectsInCorrectStatesCounter counter) => _counter = counter;
 
     private void Start() => _counter.IncreaseObjectsCount();
     

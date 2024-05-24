@@ -26,7 +26,7 @@ public class BaseSelector : MonoBehaviour
     public void SelectBase(string chosenBaseName)
     {
         _visualizer.ChooseFigure(chosenBaseName);
-        StartCoroutine(_checkersLogic.StartPlacement());
+        _checkersLogic.StartPlacement().Forget();
 
         _canvas.SetActive(false);
         _basesStartSet.SetActive(false);

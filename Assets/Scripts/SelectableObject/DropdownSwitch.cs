@@ -10,13 +10,20 @@ public sealed class DropdownSwitch : SelectableObject
     [SerializeField] TMP_Dropdown _dropdown;
     [SerializeField] private int _correctIndex;
 
-    [Inject] private readonly ObjectsInCorrectStatesCounter _counter;
-
+    private ObjectsInCorrectStatesCounter _counter;
+    private CancellationTokenSource _cts;
     private int _index = 0;
     private bool _isDecreaseAllowed = false;
-    private CancellationTokenSource _cts;
 
-    private void OnDisable()
+    [Inject]
+    private void Construct(ObjectsInCorrectStatesCounter counter)
+    {
+        _counter = counter;
+    }
+
+    private void OnDisable() => CancelToken();
+
+    private void CancelToken()
     {
         if (_cts != null)
         {
@@ -47,22 +54,15 @@ public sealed class DropdownSwitch : SelectableObject
         }
         else
         {
-            if (_cts != null)
-            {
-                _cts.Cancel();
-                _cts.Dispose();
-                _cts = null;
-            }
+            CancelToken();
         }
     }
 
     private async UniTaskVoid SwitchDropdown(CancellationToken token)
     {
-        int delayTime = (int)(1000 * _switchDelay);
-
         while (IsSelected)
         {
-            await UniTask.Delay(delayTime, cancellationToken: token);
+            await UniTask.WaitForSeconds(_switchDelay, cancellationToken: token);
 
             _index = (_index + 1) % _dropdown.options.Count;
             _dropdown.value = _index;

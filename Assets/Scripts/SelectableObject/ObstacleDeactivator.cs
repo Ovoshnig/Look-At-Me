@@ -10,25 +10,16 @@ public sealed class ObstacleDeactivator : SelectableObject
     [SerializeField] private Collider _collider;
     [SerializeField] private AudioSource _audioSource;
 
-    private void OnValidate()
+    private void Awake()
     {
-        if (_renderer == null)
-        {
-            _renderer = GetComponent<Renderer>();
-        }
-        if (_collider == null)
-        {
-            _collider = GetComponent<Collider>();
-        }
-        if (_audioSource == null)
-        {
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.playOnAwake = false;
-            _audioSource.clip = _popClip;
-        }
-    }
+        _renderer = GetComponent<Renderer>();
+        _collider = GetComponent<Collider>();
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.playOnAwake = false;
+        _audioSource.clip = _popClip;
 
-    private void Awake() => _renderer.enabled = true;
+        _renderer.enabled = true;
+    }
 
     protected override void React() => DeactivateObstacle();
 

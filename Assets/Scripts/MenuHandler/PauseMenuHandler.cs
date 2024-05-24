@@ -1,75 +1,61 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Zenject;
 
 public sealed class PauseMenuHandler : MenuHandler
 {
-    [SerializeField] private Image _playerPoint;
+    [SerializeField] private GameObject _playerPoint;
+    [SerializeField] private Button _resumeButton;
+    [SerializeField] private Button _resetLevelButton;
+    [SerializeField] private Button _loadNextLevelButton;
+    [SerializeField] private Button _loadPreviousLevelButton;
+    [SerializeField] private Button _loadMainMenuButton;
 
-    private FPSController _fpsController;
-    private PlayerInput _playerInput;
-    private bool _isGamePaused;
+    private GameState _gameState;
+
+    protected override void InitializeSettings() => Resume();
+
+    protected override void AddButtonListeners()
+    {
+        base.AddButtonListeners();
+
+        _gameState.GamePaused += Pause;
+        _gameState.GameUnpaused += Resume;
+
+        _resumeButton.onClick.AddListener(_gameState.Unpause);
+        _resetLevelButton.onClick.AddListener(ResetLevel);
+        _loadNextLevelButton.onClick.AddListener(LoadNextLevel);
+        _loadPreviousLevelButton.onClick.AddListener(LoadPreviousLevel);
+        _loadMainMenuButton.onClick.AddListener(LoadMainMenu);
+    }
+
+    private void OnDisable()
+    {
+        _gameState.GamePaused -= Pause;
+        _gameState.GameUnpaused -= Resume;
+    }
 
     [Inject]
-    private void Construct(FPSController fPSController)
-    {
-        _fpsController = fPSController;
+    private void Construct(GameState gameState) => _gameState = gameState;
 
-        _playerInput = new PlayerInput();
-        _playerInput.PauseMenu.PauseOrResume.performed += PauseOrResume;
+    private void ResetLevel() => LevelSwitch.LoadCurrentLevel();
+
+    private void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
+
+    private void LoadNextLevel() => LevelSwitch.LoadNextLevel();
+
+    private void LoadMainMenu() => LevelSwitch.LoadLevel(0).Forget();
+
+    private void Pause()
+    {
+        MenuPanel.SetActive(true);
+        _playerPoint.SetActive(false);
     }
 
-    private void OnEnable() => _playerInput.Enable();
-
-    private void OnDisable() => _playerInput.Disable();
-
-    protected override void InitializeSettings()
+    private void Resume()
     {
-        _fpsController.RotationSpeed = SensitivityKeeper.Value;
-
-        Resume();
-        _isGamePaused = false;
+        MenuPanel.SetActive(false);
+        SettingsPanel.SetActive(false);
+        _playerPoint.SetActive(true);
     }
-
-    private void PauseOrResume(InputAction.CallbackContext context)
-    {
-        if (_isGamePaused)
-            Resume();
-        else
-            Pause();
-    }
-
-    public void Pause()
-    {
-        ChangePauseState(shouldBePaused: true);
-        _isGamePaused = true;
-    }
-
-    public void Resume()
-    {
-        ChangePauseState(shouldBePaused: false);
-        _isGamePaused = false;
-
-        _fpsController.RotationSpeed = SensitivityKeeper.Value;
-    }
-
-    private void ChangePauseState(bool shouldBePaused)
-    {
-        Cursor.lockState = shouldBePaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = shouldBePaused;
-
-        _optionsPanel.SetActive(shouldBePaused);
-        _playerPoint.enabled = !shouldBePaused;
-
-        _fpsController.CanMove = !shouldBePaused;
-    }
-
-    public void ResetLevel() => LevelSwitch.LoadCurrentLevel();
-
-    public void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
-
-    public void LoadNextLevel() => LevelSwitch.LoadNextLevel();
-
-    public void LoadMainMenu() => LevelSwitch.LoadLevel(0);
 }

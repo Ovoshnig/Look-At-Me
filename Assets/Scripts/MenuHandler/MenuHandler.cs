@@ -4,22 +4,27 @@ using Zenject;
 
 public abstract class MenuHandler : MonoBehaviour
 {
-    [SerializeField] protected GameObject _optionsPanel;
-    [SerializeField] protected Slider _sensitivitySlider;
-    [SerializeField] protected Slider _volumeSlider;
+    [SerializeField] protected GameObject MenuPanel;
+    [SerializeField] protected GameObject SettingsPanel;
+
+    [SerializeField] private Button _openSettingsPanelButton;
+    [SerializeField] private Button _closeSettingsPanelButton;
+    [SerializeField] private Slider _sensitivitySlider;
+    [SerializeField] private Slider _soundsVolumeSlider;
+    [SerializeField] private Slider _musicVolumeSlider;
 
     protected LevelSwitch LevelSwitch;
-    protected SensitivityKeeper SensitivityKeeper;
-    protected VolumeKeeper VolumeKeeper;
-    protected Settings Settings;
+    protected LookSettings LookSettings;
+    protected AudioSettings AudioSettings;
+    protected GameSettingsInstaller.GameSettings Settings;
 
     [Inject]
-    protected void Construct(LevelSwitch levelSwitch, SensitivityKeeper sensitivityKeeper, 
-        VolumeKeeper volumeKeeper, Settings settings)
+    protected void Construct(LevelSwitch levelSwitch, LookSettings lookSettings, 
+                             AudioSettings audioSettings, GameSettingsInstaller.GameSettings settings)
     {
         LevelSwitch = levelSwitch;
-        SensitivityKeeper = sensitivityKeeper;
-        VolumeKeeper = volumeKeeper;
+        LookSettings = lookSettings;
+        AudioSettings = audioSettings;
         Settings = settings;
     }
 
@@ -33,25 +38,50 @@ public abstract class MenuHandler : MonoBehaviour
 
     protected void InitializeSliders()
     {
-        float sensitivity = SensitivityKeeper.Value;
-        _sensitivitySlider.value = sensitivity;
+        _sensitivitySlider.value = LookSettings.Sensitivity;
         _sensitivitySlider.maxValue = Settings.MaxSensitivity;
 
-        float volume = VolumeKeeper.Value;
-        _volumeSlider.value = volume;
-        _volumeSlider.maxValue = Settings.MaxVolume;
+        _soundsVolumeSlider.value = AudioSettings.SoundsVolume;
+        _soundsVolumeSlider.maxValue = Settings.MaxVolume;
+
+        _musicVolumeSlider.value = AudioSettings.MusicVolume;
+        _musicVolumeSlider.maxValue = Settings.MaxVolume;
     }
 
-    public void SetSensitivity()
+    protected void OnEnable()
     {
-        float sensitivity = _sensitivitySlider.value;
-        SensitivityKeeper.Value = sensitivity;
+        AddButtonListeners();
+        AddSliderListeners();
     }
 
-    public void SetVolume()
+    protected virtual void AddButtonListeners()
     {
-        float volume = _volumeSlider.value;
-        VolumeKeeper.Value = volume;
-        AudioListener.volume = volume;
+        _openSettingsPanelButton.onClick.AddListener(OpenSettingsPanel);
+        _closeSettingsPanelButton.onClick.AddListener(CloseSettingsPanel);
     }
+
+    protected void AddSliderListeners()
+    {
+        _sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        _soundsVolumeSlider.onValueChanged.AddListener(SetSoundsVolume);
+        _musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+    }
+
+    protected void OpenSettingsPanel()
+    {
+        MenuPanel.SetActive(false);
+        SettingsPanel.SetActive(true);
+    }
+
+    protected void CloseSettingsPanel()
+    {
+        MenuPanel.SetActive(true);
+        SettingsPanel.SetActive(false);
+    }
+
+    protected void SetSensitivity(float value) => LookSettings.Sensitivity = value;
+
+    protected void SetSoundsVolume(float value) => AudioSettings.SoundsVolume = value;
+
+    protected void SetMusicVolume(float value) => AudioSettings.MusicVolume = value;
 }
