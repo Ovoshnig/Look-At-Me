@@ -6,29 +6,31 @@ public class LookSettings : IDisposable
 {
     private const string SensitivityKey = "Sensitivity";
 
+    private readonly DataSaver _dataSaver;
     private readonly GameSettingsInstaller.GameSettings _settings;
-    private readonly DataKeeper<float> _sensitivityKeeper;
+    private float _sensitivity;
 
     [Inject]
-    public LookSettings(GameSettingsInstaller.GameSettings settings)
+    public LookSettings(DataSaver dataSaver, GameSettingsInstaller.GameSettings settings)
     {
+        _dataSaver = dataSaver;
         _settings = settings;
-        _sensitivityKeeper = new DataKeeper<float>(SensitivityKey, _settings.MaxSensitivity * _settings.DefaultSliderCoefficient);
-        Sensitivity = _sensitivityKeeper.Value;
+        _sensitivity = _dataSaver.LoadData(SensitivityKey, _settings.MaxSensitivity * _settings.DefaultSliderCoefficient);
+        Sensitivity = _sensitivity;
     }
 
     public float Sensitivity
     {
         get
         {
-            return _sensitivityKeeper.Value;
+            return _sensitivity;
         }
         set
         {
             if (value >= 0 && value <= _settings.MaxSensitivity)
-                _sensitivityKeeper.Value = value;
+                _sensitivity = value;
         }
     }
 
-    public void Dispose() => _sensitivityKeeper.Dispose();
+    public void Dispose() => _dataSaver.SaveData(SensitivityKey, _sensitivity);
 }
