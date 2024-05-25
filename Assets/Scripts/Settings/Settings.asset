@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Settings:
     FirstGameplayLevel: 1
+    GameplayLevelsCount: 9
+    LevelTransitionDuration: 2
     MaxSensitivity: 0.2
     MaxVolume: 0.5
     DefaultSliderCoefficient: 0.5

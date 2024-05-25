@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,9 +25,9 @@ public sealed class MainMenuHandler : MenuHandler
         _resetProgressButton.onClick.AddListener(ResetProgress);
     }
 
-    private void ContinueGame() => LevelSwitch.LoadAchievedLevel();
+    private void ContinueGame() => LevelSwitch.LoadAchievedLevel().Forget();
 
-    private void StartNewGame() => LevelSwitch.LoadFirstLevel();
+    private void StartNewGame() => LevelSwitch.LoadFirstLevel().Forget();
 
     private void QuitGame() => Application.Quit();
 

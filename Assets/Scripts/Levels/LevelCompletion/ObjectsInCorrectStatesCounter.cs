@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Zenject;
 
 public class ObjectsInCorrectStatesCounter
@@ -26,6 +27,6 @@ public class ObjectsInCorrectStatesCounter
     private void CheckIsComplete() 
     {
         if (_correctObjectsCount == _objectsCount)
-            _levelSwitch.TryLoadNextLevelFirstTime();
+            _levelSwitch.TryLoadNextLevelFirstTime().Forget();
     }
 }

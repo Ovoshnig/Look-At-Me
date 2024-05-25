@@ -11,9 +11,13 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     public class GameSettings
     {
         public uint FirstGameplayLevel;
+        public uint GameplayLevelsCount;
+        public float LevelTransitionDuration;
         public float MaxSensitivity;
         public float MaxVolume;
         public float DefaultSliderCoefficient;
+
+        public uint LastGameplayLevel => FirstGameplayLevel + GameplayLevelsCount - 1;
     }
 
     public override void InstallBindings()
