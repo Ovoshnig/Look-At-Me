@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -14,6 +15,6 @@ public class TouchTriggerCompletist : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<FPSController>(out _))
-            _levelSwitch.TryLoadNextLevelFirstTime();
+            _levelSwitch.TryLoadNextLevelFirstTime().Forget();
     }
 }

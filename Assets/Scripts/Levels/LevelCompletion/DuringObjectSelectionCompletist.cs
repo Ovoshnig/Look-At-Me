@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -23,7 +24,7 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
     {
         if (selector == _correctSelector)
         {
-            _levelSwitch.TryLoadNextLevelFirstTime();
+            _levelSwitch.TryLoadNextLevelFirstTime().Forget();
         }
         else if (selector == _potopSelector)
         {

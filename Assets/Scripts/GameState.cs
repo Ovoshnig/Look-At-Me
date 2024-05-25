@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,6 +9,7 @@ public class GameState : IDisposable
     private readonly PlayerInput _playerInput;
     private readonly LevelSwitch _levelSwitch;
     private bool _isGamePaused = false;
+    private bool _reversePauseStateAllowed = true;
 
     public event Action GamePaused;
     public event Action GameUnpaused;
@@ -16,7 +18,8 @@ public class GameState : IDisposable
     public GameState(LevelSwitch levelSwitch)
     {
         _levelSwitch = levelSwitch;
-        _levelSwitch.LevelLoaded += Unpause;
+        _levelSwitch.LevelLoading += OnLevelLoading;
+        _levelSwitch.LevelLoaded += OnLevelLoaded;
 
         _playerInput = new PlayerInput();
         _playerInput.GameState.ReversePauseState.performed += ReversePauseState;
@@ -27,8 +30,8 @@ public class GameState : IDisposable
 
     public void Dispose()
     {
-        _levelSwitch.LevelLoaded -= Unpause;
-
+        _levelSwitch.LevelLoading -= OnLevelLoading;
+        _levelSwitch.LevelLoaded -= OnLevelLoaded;
         _playerInput.Disable();
     }
 
@@ -38,11 +41,19 @@ public class GameState : IDisposable
         GamePaused?.Invoke();
     }
 
-    public void Unpause() 
+    public void Unpause()
     {
         SetPauseState(pause: false);
         GameUnpaused?.Invoke();
     }
+
+    private void OnLevelLoading()
+    {
+        Unpause();
+        _reversePauseStateAllowed = false;
+    }
+
+    private void OnLevelLoaded() => _reversePauseStateAllowed = true;
 
     private void SetPauseState(bool pause)
     {
@@ -52,9 +63,12 @@ public class GameState : IDisposable
 
     private void ReversePauseState(InputAction.CallbackContext context)
     {
-        if (_isGamePaused)
-            Unpause();
-        else
-            Pause();
+        if (_reversePauseStateAllowed)
+        {
+            if (_isGamePaused)
+                Unpause();
+            else
+                Pause();
+        }
     }
 }

@@ -402,6 +402,6 @@ public class CheckersLogic : MonoBehaviour
 
         await UniTask.WhenAll(tasks);
 
-        _levelSwitch.TryLoadNextLevelFirstTime();
+        _levelSwitch.TryLoadNextLevelFirstTime().Forget();
     }
 }

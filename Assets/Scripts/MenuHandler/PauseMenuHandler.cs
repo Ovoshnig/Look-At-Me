@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -40,9 +41,9 @@ public sealed class PauseMenuHandler : MenuHandler
 
     private void ResetLevel() => LevelSwitch.LoadCurrentLevel();
 
-    private void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
+    private void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel().Forget();
 
-    private void LoadNextLevel() => LevelSwitch.LoadNextLevel();
+    private void LoadNextLevel() => LevelSwitch.LoadNextLevel().Forget();
 
     private void LoadMainMenu() => LevelSwitch.LoadLevel(0).Forget();
 
