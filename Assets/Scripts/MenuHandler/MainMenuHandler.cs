@@ -25,6 +25,16 @@ public sealed class MainMenuHandler : MenuHandler
         _resetProgressButton.onClick.AddListener(ResetProgress);
     }
 
+    protected override void RemoveButtonListeners()
+    {
+        base.RemoveButtonListeners();
+
+        _continueGameButton.onClick.RemoveListener(ContinueGame);
+        _startNewGameButton.onClick.RemoveListener(StartNewGame);
+        _quitGameButton.onClick.RemoveListener(QuitGame);
+        _resetProgressButton.onClick.RemoveListener(ResetProgress);
+    }
+
     private void ContinueGame() => LevelSwitch.LoadAchievedLevel().Forget();
 
     private void StartNewGame() => LevelSwitch.LoadFirstLevel().Forget();

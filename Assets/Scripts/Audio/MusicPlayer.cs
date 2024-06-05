@@ -12,11 +12,7 @@ public class MusicPlayer : MonoBehaviour
     private List<AudioClip> _musicTracks;
     private Queue<AudioClip> _trackQueue;
 
-    private void Awake()
-    {
-        if (_musicSource == null)
-            _musicSource = GetComponent<AudioSource>();
-    }
+    private void Awake() => _musicSource = GetComponent<AudioSource>();
 
     private void Start()
     {

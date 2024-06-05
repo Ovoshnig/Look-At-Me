@@ -4,7 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - _settings: {fileID: 11400000, guid: 53aaa429665a3174eb1cba5036f45b2b, type: 2}
+  - _audioMixerGroup: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -16,12 +16,17 @@ public sealed class PauseMenuHandler : MenuHandler
 
     protected override void InitializeSettings() => Resume();
 
-    protected override void AddButtonListeners()
+    protected override void SubscribeToEvents()
     {
-        base.AddButtonListeners();
+        base.SubscribeToEvents();
 
         _gameState.GamePaused += Pause;
         _gameState.GameUnpaused += Resume;
+    }
+
+    protected override void AddButtonListeners()
+    {
+        base.AddButtonListeners();
 
         _resumeButton.onClick.AddListener(_gameState.Unpause);
         _resetLevelButton.onClick.AddListener(ResetLevel);
@@ -30,10 +35,23 @@ public sealed class PauseMenuHandler : MenuHandler
         _loadMainMenuButton.onClick.AddListener(LoadMainMenu);
     }
 
-    private void OnDisable()
+    protected override void UnsubscribeFromEvents()
     {
+        base.UnsubscribeFromEvents();
+
         _gameState.GamePaused -= Pause;
         _gameState.GameUnpaused -= Resume;
+    }
+
+    protected override void RemoveButtonListeners()
+    {
+        base.RemoveButtonListeners();
+
+        _resumeButton.onClick.RemoveListener(_gameState.Unpause);
+        _resetLevelButton.onClick.RemoveListener(ResetLevel);
+        _loadNextLevelButton.onClick.RemoveListener(LoadNextLevel);
+        _loadPreviousLevelButton.onClick.RemoveListener(LoadPreviousLevel);
+        _loadMainMenuButton.onClick.RemoveListener(LoadMainMenu);
     }
 
     [Inject]
