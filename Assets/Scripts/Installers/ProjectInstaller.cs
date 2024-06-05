@@ -1,11 +1,16 @@
+using UnityEngine;
+using UnityEngine.Audio;
 using Zenject;
 
 public class ProjectInstaller : MonoInstaller
 {
+    [SerializeField] private AudioMixerGroup _audioMixerGroup;
+
     public override void InstallBindings()
     {
         BindGameState();
         BindDataSaver();
+        BindAudioMixer();
         BindSettings();
     }
 
@@ -17,6 +22,11 @@ public class ProjectInstaller : MonoInstaller
     private void BindDataSaver()
     {
         Container.BindInterfacesAndSelfTo<DataSaver>().FromNew().AsSingle().NonLazy();
+    }
+
+    private void BindAudioMixer()
+    {
+        Container.Bind<AudioMixerGroup>().FromInstance(_audioMixerGroup).AsSingle().NonLazy();
     }
 
     private void BindSettings()

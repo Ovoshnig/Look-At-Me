@@ -17,5 +17,6 @@ MonoBehaviour:
     GameplayLevelsCount: 9
     LevelTransitionDuration: 2
     MaxSensitivity: 0.2
-    MaxVolume: 0.5
+    MaxVolume: 0
+    MinVolume: -80
     DefaultSliderCoefficient: 0.5

@@ -36,22 +36,37 @@ public abstract class MenuHandler : MonoBehaviour
 
     protected abstract void InitializeSettings();
 
-    protected void InitializeSliders()
+    private void InitializeSliders()
     {
-        _sensitivitySlider.value = LookSettings.Sensitivity;
         _sensitivitySlider.maxValue = Settings.MaxSensitivity;
+        _sensitivitySlider.value = LookSettings.Sensitivity;
 
-        _soundsVolumeSlider.value = AudioSettings.SoundsVolume;
+        _soundsVolumeSlider.minValue = Settings.MinVolume;
         _soundsVolumeSlider.maxValue = Settings.MaxVolume;
+        _soundsVolumeSlider.value = AudioSettings.SoundsVolume;
 
-        _musicVolumeSlider.value = AudioSettings.MusicVolume;
+        _musicVolumeSlider.minValue = Settings.MinVolume;
         _musicVolumeSlider.maxValue = Settings.MaxVolume;
+        _musicVolumeSlider.value = AudioSettings.MusicVolume;
     }
 
     protected void OnEnable()
     {
+        SubscribeToEvents();
         AddButtonListeners();
         AddSliderListeners();
+    }
+
+    protected void OnDisable()
+    {
+        UnsubscribeFromEvents();
+        RemoveButtonListeners();
+        RemoveSliderListeners();
+    }
+
+    protected virtual void SubscribeToEvents()
+    {
+
     }
 
     protected virtual void AddButtonListeners()
@@ -67,21 +82,39 @@ public abstract class MenuHandler : MonoBehaviour
         _musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
     }
 
-    protected void OpenSettingsPanel()
+    protected virtual void UnsubscribeFromEvents()
+    {
+
+    }
+
+    protected virtual void RemoveButtonListeners()
+    {
+        _openSettingsPanelButton.onClick.RemoveListener(OpenSettingsPanel);
+        _closeSettingsPanelButton.onClick.RemoveListener(CloseSettingsPanel);
+    }
+
+    protected void RemoveSliderListeners()
+    {
+        _sensitivitySlider.onValueChanged.RemoveListener(SetSensitivity);
+        _soundsVolumeSlider.onValueChanged.RemoveListener(SetSoundsVolume);
+        _musicVolumeSlider.onValueChanged.RemoveListener(SetMusicVolume);
+    }
+
+    private void OpenSettingsPanel()
     {
         MenuPanel.SetActive(false);
         SettingsPanel.SetActive(true);
     }
 
-    protected void CloseSettingsPanel()
+    private void CloseSettingsPanel()
     {
         MenuPanel.SetActive(true);
         SettingsPanel.SetActive(false);
     }
 
-    protected void SetSensitivity(float value) => LookSettings.Sensitivity = value;
+    private void SetSensitivity(float value) => LookSettings.Sensitivity = value;
 
-    protected void SetSoundsVolume(float value) => AudioSettings.SoundsVolume = value;
+    private void SetSoundsVolume(float value) => AudioSettings.SoundsVolume = value;
 
-    protected void SetMusicVolume(float value) => AudioSettings.MusicVolume = value;
+    private void SetMusicVolume(float value) => AudioSettings.MusicVolume = value;
 }

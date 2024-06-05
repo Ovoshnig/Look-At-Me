@@ -14,6 +14,7 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         public uint GameplayLevelsCount;
         public float LevelTransitionDuration;
         public float MaxSensitivity;
+        public float MinVolume;
         public float MaxVolume;
         public float DefaultSliderCoefficient;
 

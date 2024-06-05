@@ -61,7 +61,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 5b747d3c5b20a524ca0cf71f1a6eafe5, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 7b2119d764f3db043a09b68ac1d3df4a, type: 2}
     - target: {fileID: 919132149155446097, guid: 5b747d3c5b20a524ca0cf71f1a6eafe5, type: 3}
@@ -147,8 +147,9 @@ AudioSource:
   m_GameObject: {fileID: 7343456801232817821}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 3603743018088636739, guid: c905d77cece59d84bb73589e7c43e43e, type: 2}
   m_audioClip: {fileID: 8300000, guid: c0804b735bd298846bab216dab3f70e8, type: 3}
+  m_Resource: {fileID: 8300000, guid: c0804b735bd298846bab216dab3f70e8, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -246,4 +247,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b808147f91346f4aad4027dc07da957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _objectFallingSource: {fileID: 4270890630601293249}
+  _audioSource: {fileID: 4270890630601293249}

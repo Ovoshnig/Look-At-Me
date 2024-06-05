@@ -62,6 +62,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -145,8 +148,9 @@ AudioSource:
   m_GameObject: {fileID: 1143899155799624704}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 3603743018088636739, guid: c905d77cece59d84bb73589e7c43e43e, type: 2}
   m_audioClip: {fileID: 8300000, guid: 43bdd804eb9869a44b549fc6f3210f1d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 43bdd804eb9869a44b549fc6f3210f1d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -244,4 +248,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b808147f91346f4aad4027dc07da957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _objectFallingSource: {fileID: 1012449084407468686}
+  _audioSource: {fileID: 1012449084407468686}

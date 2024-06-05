@@ -12,7 +12,7 @@ public sealed class ObjectCyclicRepainter : SelectableObject
 
     private Renderer _renderer;
     private ObjectsInCorrectStatesCounter _counter;
-    private CancellationTokenSource _cts;
+    private CancellationTokenSource _cts = new();
     private int _index;
     private bool _isDecreaseAllowed = false;
 
@@ -44,20 +44,22 @@ public sealed class ObjectCyclicRepainter : SelectableObject
     {
         if (IsSelected)
         {
-            _cts?.Cancel();
-            _cts = new CancellationTokenSource();
-            Repaint(_cts.Token).Forget();
+            Repaint().Forget();
         }
         else
         {
             CancelToken();
+            _cts = new CancellationTokenSource();
         }
     }
 
-    private async UniTaskVoid Repaint(CancellationToken token)
+    private async UniTaskVoid Repaint()
     {
         while (IsSelected)
         {
+            await UniTask.WaitForSeconds(_repaintDelay, cancellationToken: _cts.Token);
+
+            _index = (_index + 1) % _materials.Length;
             _renderer.material = _materials[_index];
             bool isCorrectMaterial = _materials[_index] == _correctMaterial;
 
@@ -67,10 +69,6 @@ public sealed class ObjectCyclicRepainter : SelectableObject
                 _counter.DecreaseCorrectObjectsCount();
 
             _isDecreaseAllowed = isCorrectMaterial;
-
-            _index = (_index + 1) % _materials.Length;
-
-            await UniTask.WaitForSeconds(_repaintDelay, cancellationToken: token);
         }
     }
 
@@ -80,7 +78,6 @@ public sealed class ObjectCyclicRepainter : SelectableObject
         {
             _cts.Cancel();
             _cts.Dispose();
-            _cts = null;
         }
     }
 }
