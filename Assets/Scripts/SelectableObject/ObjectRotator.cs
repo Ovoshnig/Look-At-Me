@@ -12,8 +12,6 @@ public sealed class ObjectRotator : SelectableObject
     private Rigidbody _rigidbody;
     private AudioSource _audioSource;
 
-    private int _clipIndex;
-
     private void OnValidate()
     {
         if (_direction == 0)
@@ -24,13 +22,8 @@ public sealed class ObjectRotator : SelectableObject
     {
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
-    }
-
-    private void Start()
-    {
-        _clipIndex = Random.Range(0, _rotationClips.Length);
-        _audioSource.clip = _rotationClips[_clipIndex];
-        _audioSource.volume = 0.16f;
+        int clipIndex = Random.Range(0, _rotationClips.Length);
+        _audioSource.clip = _rotationClips[clipIndex];
         _audioSource.Play();
     }
 
