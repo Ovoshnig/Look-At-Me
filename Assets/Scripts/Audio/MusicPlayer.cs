@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -7,6 +8,7 @@ public class MusicPlayer : MonoBehaviour
 {
     private const string MusicClipsPath = "Audio/Music";
 
+    private readonly CancellationTokenSource _cts = new();
     private AudioSource _musicSource;
     private System.Random _random;
     private List<AudioClip> _musicTracks;
@@ -22,12 +24,19 @@ public class MusicPlayer : MonoBehaviour
         PlayNextTrack().Forget();
     }
 
+    private void OnDestroy()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+        }
+    }
+
     private AudioClip GetNextTrack()
     {
         if (_trackQueue.Count == 0)
-        {
             ShuffleAndQueueTracks();
-        }
 
         return _trackQueue.Dequeue();
     }
@@ -42,7 +51,7 @@ public class MusicPlayer : MonoBehaviour
 
     private void ShuffleAndQueueTracks()
     {
-        var tracks = new List<AudioClip>(_musicTracks);
+        List<AudioClip> tracks = new(_musicTracks);
         _trackQueue = new Queue<AudioClip>();
 
         while (tracks.Count > 0)
@@ -57,10 +66,10 @@ public class MusicPlayer : MonoBehaviour
     {
         while (true)
         {
-            var clip = GetNextTrack();
+            AudioClip clip = GetNextTrack();
             _musicSource.clip = clip;
             _musicSource.Play();
-            await UniTask.WaitForSeconds(clip.length);
+            await UniTask.WaitWhile(() => _musicSource.isPlaying, cancellationToken: _cts.Token);
         }
     }
 }
