@@ -17,6 +17,7 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         public float MinVolume;
         public float MaxVolume;
         public float DefaultSliderCoefficient;
+        public float MusicTransitionDuration;
 
         public uint LastGameplayLevel => FirstGameplayLevel + GameplayLevelsCount - 1;
     }

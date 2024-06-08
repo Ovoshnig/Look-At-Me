@@ -102,9 +102,7 @@ public class CheckersVisualizer : MonoBehaviour
         {
             t = elapsedTime / moveDuration;
             figureTransform.position = Vector3.Lerp(startPosition, endPosition, t);
-
             elapsedTime += Time.deltaTime;
-
             await UniTask.Yield();
         }
 
