@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -13,6 +14,8 @@ public class MusicPlayer : MonoBehaviour
     private System.Random _random;
     private List<AudioClip> _musicTracks;
     private Queue<AudioClip> _trackQueue;
+
+    public event Action MusicTrackChanged;
 
     private void Awake() => _musicSource = GetComponent<AudioSource>();
 
@@ -62,13 +65,14 @@ public class MusicPlayer : MonoBehaviour
         }
     }
 
-    private async UniTaskVoid PlayNextTrack()
+    private async UniTask PlayNextTrack()
     {
         while (true)
         {
             AudioClip clip = GetNextTrack();
             _musicSource.clip = clip;
             _musicSource.Play();
+            MusicTrackChanged?.Invoke();
             await UniTask.WaitWhile(() => _musicSource.isPlaying, cancellationToken: _cts.Token);
         }
     }
