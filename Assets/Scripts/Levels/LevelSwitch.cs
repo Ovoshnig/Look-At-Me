@@ -10,7 +10,7 @@ public class LevelSwitch : IDisposable
     private const string TransitionSceneName = "TransitionScene";
 
     private readonly DataSaver _dataKeeper;
-    private readonly GameSettingsInstaller.GameSettings _settings;
+    private readonly GameSettingsInstaller.LevelSettings _levelSettings;
     private uint _achievedLevel;
     private uint _currentLevel;
     private bool _isLevelLoading = false;
@@ -19,14 +19,14 @@ public class LevelSwitch : IDisposable
     public event Action LevelLoaded;
 
     [Inject]
-    public LevelSwitch(DataSaver dataKeeper, GameSettingsInstaller.GameSettings settings)
+    public LevelSwitch(DataSaver dataKeeper, GameSettingsInstaller.LevelSettings levelSettings)
     {
         _dataKeeper = dataKeeper;
-        _settings = settings;
-        _achievedLevel = _dataKeeper.LoadData(AchievedLevelKey, _settings.FirstGameplayLevel);
+        _levelSettings = levelSettings;
+        _achievedLevel = _dataKeeper.LoadData(AchievedLevelKey, _levelSettings.FirstGameplayLevel);
         _currentLevel = (uint)SceneManager.GetActiveScene().buildIndex;
 
-        if (_currentLevel > _achievedLevel && _currentLevel <= _settings.LastGameplayLevel)
+        if (_currentLevel > _achievedLevel && _currentLevel <= _levelSettings.LastGameplayLevel)
             _achievedLevel = _currentLevel;
 
         WaitForFirstSceneLoad().Forget();
@@ -42,7 +42,7 @@ public class LevelSwitch : IDisposable
         await LoadAchievedLevel();
     }
 
-    public void ResetProgress() => _achievedLevel = _settings.FirstGameplayLevel;
+    public void ResetProgress() => _achievedLevel = _levelSettings.FirstGameplayLevel;
 
     public async UniTask LoadNextLevel()
     {
@@ -59,7 +59,7 @@ public class LevelSwitch : IDisposable
 
         if (isAchievedNextLevel)
         {
-            if (_achievedLevel < _settings.LastGameplayLevel)
+            if (_achievedLevel < _levelSettings.LastGameplayLevel)
                 _achievedLevel++;
 
             await LoadLevel(_currentLevel + 1);
@@ -74,7 +74,7 @@ public class LevelSwitch : IDisposable
 
     public async UniTask LoadPreviousLevel()
     {
-        if (_currentLevel > _settings.FirstGameplayLevel)
+        if (_currentLevel > _levelSettings.FirstGameplayLevel)
             await LoadLevel(_currentLevel - 1);
     }
 
@@ -82,21 +82,21 @@ public class LevelSwitch : IDisposable
 
     public async UniTask LoadLevel(uint value)
     {
-        if (value < 0 || value > _settings.LastGameplayLevel + 1)
+        if (value < 0 || value > _levelSettings.LastGameplayLevel + 1)
             throw new InvalidOperationException("Invalid level");
 
         LevelLoading?.Invoke();
         _isLevelLoading = true;
 
-        if (value >= _settings.FirstGameplayLevel && value <= _settings.LastGameplayLevel)
+        if (value >= _levelSettings.FirstGameplayLevel && value <= _levelSettings.LastGameplayLevel)
         {
             await SceneManager.LoadSceneAsync(TransitionSceneName, LoadSceneMode.Additive);
-            await UniTask.WaitForSeconds(_settings.LevelTransitionDuration / 2);
+            await UniTask.WaitForSeconds(_levelSettings.LevelTransitionDuration / 2);
             await SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
             await SceneManager.LoadSceneAsync((int)value, LoadSceneMode.Additive);
 
-            await UniTask.WaitForSeconds(_settings.LevelTransitionDuration / 2);
+            await UniTask.WaitForSeconds(_levelSettings.LevelTransitionDuration / 2);
             await SceneManager.UnloadSceneAsync(TransitionSceneName);
         }
         else

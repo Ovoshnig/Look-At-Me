@@ -1,20 +1,21 @@
 using System;
 using Zenject;
 
-public class LookSettings : IDisposable
+public class LookTuner : IDisposable
 {
     private const string SensitivityKey = "Sensitivity";
 
     private readonly DataSaver _dataSaver;
-    private readonly GameSettingsInstaller.GameSettings _settings;
+    private readonly GameSettingsInstaller.ControlSettings _controlSettings;
     private float _sensitivity;
 
     [Inject]
-    public LookSettings(DataSaver dataSaver, GameSettingsInstaller.GameSettings settings)
+    public LookTuner(DataSaver dataSaver, GameSettingsInstaller.ControlSettings controlSettings, GameSettingsInstaller.Settings settings)
     {
         _dataSaver = dataSaver;
-        _settings = settings;
-        _sensitivity = _dataSaver.LoadData(SensitivityKey, _settings.MaxSensitivity * _settings.DefaultSliderCoefficient);
+        _controlSettings = controlSettings;
+        _sensitivity = _dataSaver.LoadData(SensitivityKey,
+            _controlSettings.MaxSensitivity * settings.DefaultCoefficient);
         Sensitivity = _sensitivity;
     }
 
@@ -26,7 +27,7 @@ public class LookSettings : IDisposable
         }
         set
         {
-            if (value >= 0 && value <= _settings.MaxSensitivity)
+            if (value >= 0 && value <= _controlSettings.MaxSensitivity)
                 _sensitivity = value;
         }
     }

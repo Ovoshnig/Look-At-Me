@@ -11,11 +11,11 @@ public class SceneTransitionAnimator : MonoBehaviour
     private const float FullOpacityValue = 1f;
     private const float ZeroOpacityValue = 0f;
 
-    private GameSettingsInstaller.GameSettings _settings;
+    private GameSettingsInstaller.LevelSettings _levelSettings;
     private CancellationTokenSource _cts = new();
 
     [Inject]
-    private void Construct(GameSettingsInstaller.GameSettings settings) => _settings = settings;
+    private void Construct(GameSettingsInstaller.LevelSettings levelSettings) => _levelSettings = levelSettings;
 
     private void Start() => LaunchAnimation().Forget();
 
@@ -43,7 +43,7 @@ public class SceneTransitionAnimator : MonoBehaviour
     private async UniTask PlayAnimation(float startOpacity, float endOpacity)
     {
         CancellationToken token = _cts.Token;
-        float duration = _settings.LevelTransitionDuration / 2;
+        float duration = _levelSettings.LevelTransitionDuration / 2;
         float elapsedTime = 0f;
         float t;
 
