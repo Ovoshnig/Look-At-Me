@@ -2,17 +2,17 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Rendering;
 using Zenject;
-using static UnityEngine.Rendering.DebugUI;
 
-public class AudioSettings : IDisposable
+public class AudioTuner : IDisposable
 {
     private const string SoundsVolumeKey = "SoundsVolume";
     private const string MusicVolumeKey = "MusicVolume";
 
     private readonly DataSaver _dataSaver;
-    private readonly GameSettingsInstaller.GameSettings _settings;
+    private readonly GameSettingsInstaller.Settings _settings;
+    private readonly GameSettingsInstaller.AudioSettings _audioSettings;
+
     private readonly GameState _gameState;
     private readonly AudioMixerGroup _audioMixerGroup;
     private readonly MusicPlayer _musicPlayer;
@@ -20,11 +20,12 @@ public class AudioSettings : IDisposable
     private float _musicVolume;
 
     [Inject]
-    public AudioSettings(DataSaver dataSaver, GameSettingsInstaller.GameSettings settings, 
+    public AudioTuner(DataSaver dataSaver, GameSettingsInstaller.Settings settings, GameSettingsInstaller.AudioSettings audioSettings,
                          GameState gameState, AudioMixerGroup audioMixerGroup, MusicPlayer musicPlayer)
     {
         _dataSaver = dataSaver;
         _settings = settings;
+        _audioSettings = audioSettings;
         _gameState = gameState;
         _audioMixerGroup = audioMixerGroup;
         _musicPlayer = musicPlayer;
@@ -41,7 +42,7 @@ public class AudioSettings : IDisposable
         }
         set
         {
-            if (value >= _settings.MinVolume && value <= _settings.MaxVolume)
+            if (value >= _audioSettings.MinVolume && value <= _audioSettings.MaxVolume)
                 _soundsVolume = value;
         }
     }
@@ -54,7 +55,7 @@ public class AudioSettings : IDisposable
         }
         set
         {
-            if (value >= _settings.MinVolume && value <= _settings.MaxVolume)
+            if (value >= _audioSettings.MinVolume && value <= _audioSettings.MaxVolume)
             {
                 _musicVolume = value;
                 _audioMixerGroup.audioMixer.SetFloat(MusicVolumeKey, value);
@@ -74,8 +75,8 @@ public class AudioSettings : IDisposable
 
     private void InitializeVolumeData()
     {
-        _soundsVolume = _dataSaver.LoadData(SoundsVolumeKey, _settings.MaxVolume * _settings.DefaultSliderCoefficient);
-        _musicVolume = _dataSaver.LoadData(MusicVolumeKey, _settings.MaxVolume * _settings.DefaultSliderCoefficient);
+        _soundsVolume = _dataSaver.LoadData(SoundsVolumeKey, _audioSettings.MaxVolume * _settings.DefaultCoefficient);
+        _musicVolume = _dataSaver.LoadData(MusicVolumeKey, _audioSettings.MaxVolume * _settings.DefaultCoefficient);
         SoundsVolume = _soundsVolume;
         MusicVolume = _musicVolume;
     }
@@ -103,21 +104,21 @@ public class AudioSettings : IDisposable
     private void SetSoundSourcesPauseState(bool pause)
     {
         if (pause)
-            _audioMixerGroup.audioMixer.SetFloat(SoundsVolumeKey, _settings.MinVolume);
+            _audioMixerGroup.audioMixer.SetFloat(SoundsVolumeKey, _audioSettings.MinVolume);
         else
             _audioMixerGroup.audioMixer.SetFloat(SoundsVolumeKey, _soundsVolume);
     }
 
     private async void FadeInMusicVolume()
     {
-        float duration = _settings.MusicTransitionDuration;
+        float duration = _audioSettings.MusicFadeInDuration;
         float elapsedTime = 0f;
         float t;
 
         while (elapsedTime < duration)
         {
             t = elapsedTime / duration;
-            float volume = Mathf.Lerp(_settings.MinVolume, MusicVolume, t);
+            float volume = Mathf.Lerp(_audioSettings.MinVolume, MusicVolume, t);
             _audioMixerGroup.audioMixer.SetFloat(MusicVolumeKey, volume);
             elapsedTime += Time.deltaTime;
             await UniTask.Yield();

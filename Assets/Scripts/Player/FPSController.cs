@@ -15,7 +15,7 @@ public class FPSController : MonoBehaviour
     [SerializeField] private Transform _cameraTransform;
 
     private GameState _gameState;
-    private LookSettings _lookSettings;
+    private LookTuner _lookTuner;
     private CharacterController _characterController;
     private PlayerInput _playerInput;
     private Vector2 _movementInput;
@@ -29,10 +29,10 @@ public class FPSController : MonoBehaviour
     private float _movementDirectionY;
 
     [Inject]
-    private void Construct(GameState gameState, LookSettings lookSettings)
+    private void Construct(GameState gameState, LookTuner lookSettings)
     {
         _gameState = gameState;
-        _lookSettings = lookSettings;
+        _lookTuner = lookSettings;
     }
 
     private void Awake()
@@ -57,7 +57,7 @@ public class FPSController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        _rotationSpeed = _lookSettings.Sensitivity;
+        _rotationSpeed = _lookTuner.Sensitivity;
     }
 
     private void OnEnable()
@@ -110,7 +110,7 @@ public class FPSController : MonoBehaviour
     {
         _canMove = true;
         SetPauseState(pause: false);
-        _rotationSpeed = _lookSettings.Sensitivity;
+        _rotationSpeed = _lookTuner.Sensitivity;
     }
 
     private void SetPauseState(bool pause)

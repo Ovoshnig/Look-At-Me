@@ -17,7 +17,7 @@ public class ProjectInstaller : MonoInstaller
     private void BindSettings()
     {
         Container.BindInterfacesAndSelfTo<LevelSwitch>().FromNew().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<LookSettings>().FromNew().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<AudioSettings>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<LookTuner>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<AudioTuner>().FromNew().AsSingle().NonLazy();
     }
 }
