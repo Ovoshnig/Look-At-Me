@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -14,21 +13,21 @@ public abstract class MenuHandler : MonoBehaviour
     [SerializeField] private Slider _soundsVolumeSlider;
     [SerializeField] private Slider _musicVolumeSlider;
 
-    protected LevelSwitch LevelSwitch;
-    protected LookTuner LookTuner;
-    protected AudioTuner AudioTuner;
+    protected SceneSwitch SceneSwitch;
 
+    private LookTuner _lookTuner;
+    private AudioTuner _audioTuner;
     private GameSettingsInstaller.ControlSettings _controlSettings;
     private GameSettingsInstaller.AudioSettings _audioSettings;
 
     [Inject]
-    protected void Construct(LevelSwitch levelSwitch, LookTuner lookTuner, 
+    protected void Construct(SceneSwitch sceneSwitch, LookTuner lookTuner, 
                              AudioTuner audioTuner, GameSettingsInstaller.ControlSettings controlSettings, 
                              GameSettingsInstaller.AudioSettings audioSettings)
     {
-        LevelSwitch = levelSwitch;
-        LookTuner = lookTuner;
-        AudioTuner = audioTuner;
+        SceneSwitch = sceneSwitch;
+        _lookTuner = lookTuner;
+        _audioTuner = audioTuner;
         _controlSettings = controlSettings;
         _audioSettings = audioSettings;
     }
@@ -44,15 +43,15 @@ public abstract class MenuHandler : MonoBehaviour
     private void InitializeSliders()
     {
         _sensitivitySlider.maxValue = _controlSettings.MaxSensitivity;
-        _sensitivitySlider.value = LookTuner.Sensitivity;
+        _sensitivitySlider.value = _lookTuner.Sensitivity;
 
         _soundsVolumeSlider.minValue = _audioSettings.MinVolume;
         _soundsVolumeSlider.maxValue = _audioSettings.MaxVolume;
-        _soundsVolumeSlider.value = AudioTuner.SoundsVolume;
+        _soundsVolumeSlider.value = _audioTuner.SoundsVolume;
 
         _musicVolumeSlider.minValue = _audioSettings.MinVolume;
         _musicVolumeSlider.maxValue = _audioSettings.MaxVolume;
-        _musicVolumeSlider.value = AudioTuner.MusicVolume;
+        _musicVolumeSlider.value = _audioTuner.MusicVolume;
     }
 
     protected void OnEnable()
@@ -117,9 +116,9 @@ public abstract class MenuHandler : MonoBehaviour
         SettingsPanel.SetActive(false);
     }
 
-    private void SetSensitivity(float value) => LookTuner.Sensitivity = value;
+    private void SetSensitivity(float value) => _lookTuner.Sensitivity = value;
 
-    private void SetSoundsVolume(float value) => AudioTuner.SoundsVolume = value;
+    private void SetSoundsVolume(float value) => _audioTuner.SoundsVolume = value;
 
-    private void SetMusicVolume(float value) => AudioTuner.MusicVolume = value;
+    private void SetMusicVolume(float value) => _audioTuner.MusicVolume = value;
 }

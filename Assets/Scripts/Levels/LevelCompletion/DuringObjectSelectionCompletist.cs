@@ -10,10 +10,10 @@ public class DuringObjectSelectionCompletist : MonoBehaviour
     [SerializeField] private GameObject[] _anvils;
     [SerializeField] private GameObject _book;
 
-    private LevelSwitch _levelSwitch;
+    private SceneSwitch _levelSwitch;
 
     [Inject]
-    private void Construct(LevelSwitch levelSwitch)
+    private void Construct(SceneSwitch levelSwitch)
     {
         _levelSwitch = levelSwitch;
     }

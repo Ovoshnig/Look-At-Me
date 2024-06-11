@@ -38,6 +38,7 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         public float LevelTransitionDuration;
 
         public uint LastGameplayLevel => FirstGameplayLevel + GameplayLevelsCount - 1;
+        public uint CreditsScene => LastGameplayLevel + 1;
     }
 
     [Serializable]
