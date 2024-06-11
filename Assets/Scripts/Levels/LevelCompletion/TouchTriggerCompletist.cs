@@ -4,17 +4,17 @@ using Zenject;
 
 public class TouchTriggerCompletist : MonoBehaviour
 {
-    private LevelSwitch _levelSwitch;
+    private SceneSwitch _sceneSwitch;
 
     [Inject]
-    private void Construct(LevelSwitch levelSwitch)
+    private void Construct(SceneSwitch sceneSwitch)
     {
-        _levelSwitch = levelSwitch;
+        _sceneSwitch = sceneSwitch;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<FPSController>(out _))
-            _levelSwitch.TryLoadNextLevelFirstTime().Forget();
+            _sceneSwitch.TryLoadNextLevelFirstTime().Forget();
     }
 }

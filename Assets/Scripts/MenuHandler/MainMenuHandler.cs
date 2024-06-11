@@ -35,11 +35,11 @@ public sealed class MainMenuHandler : MenuHandler
         _resetProgressButton.onClick.RemoveListener(ResetProgress);
     }
 
-    private void ContinueGame() => LevelSwitch.LoadAchievedLevel().Forget();
+    private void ContinueGame() => SceneSwitch.LoadAchievedLevel().Forget();
 
-    private void StartNewGame() => LevelSwitch.LoadFirstLevel().Forget();
+    private void StartNewGame() => SceneSwitch.LoadFirstLevel().Forget();
 
     private void QuitGame() => Application.Quit();
 
-    private void ResetProgress() => LevelSwitch.ResetProgress();
+    private void ResetProgress() => SceneSwitch.ResetProgress();
 }

@@ -3,31 +3,76 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using Zenject;
 
-[RequireComponent(typeof(AudioSource))]
-public class MusicPlayer : MonoBehaviour
+public class MusicPlayer : IDisposable
 {
     private const string MusicClipsPath = "Audio/Music";
+    private const string MainMenu = nameof(MainMenu);
+    private const string GameLevels = nameof(GameLevels);
+    private const string Credits = nameof(Credits);
 
-    private readonly CancellationTokenSource _cts = new();
-    private AudioSource _musicSource;
-    private System.Random _random;
-    private List<AudioClip> _musicTracks;
+    private readonly System.Random _random = new();
+    private readonly SceneSwitch _sceneSwitch;
+    private readonly AudioSource _musicSource;
+    private List<AudioClip> _currentTracks;
+    private List<AudioClip> _mainMenuTracks;
+    private List<AudioClip> _gameLevelsTracks;
+    private List<AudioClip> _creditsTracks;
     private Queue<AudioClip> _trackQueue;
+    private CancellationTokenSource _cts = new();
+    private bool _isGameLevelMusicPlaying = false;
 
     public event Action MusicTrackChanged;
 
-    private void Awake() => _musicSource = GetComponent<AudioSource>();
-
-    private void Start()
+    [Inject]
+    public MusicPlayer([Inject(Id = "musicSource")] AudioSource musicSource, SceneSwitch sceneSwitch)
     {
-        _random = new System.Random();
+        _musicSource = musicSource;
+        _sceneSwitch = sceneSwitch;
+        _sceneSwitch.SceneLoaded += OnLevelLoaded;
+
         LoadMusicTracks();
-        ShuffleAndQueueTracks();
-        PlayNextTrack().Forget();
     }
 
-    private void OnDestroy()
+    public void Dispose()
+    {
+        _sceneSwitch.SceneLoaded -= OnLevelLoaded;
+        CancelToken();
+    }
+
+    private void OnLevelLoaded(SceneSwitch.Scene scene)
+    {
+        if (scene == SceneSwitch.Scene.MainMenu)
+        {
+            _currentTracks = _mainMenuTracks;
+            _isGameLevelMusicPlaying = false;
+        }
+        else if (scene == SceneSwitch.Scene.GameLevel)
+        {
+            if (_isGameLevelMusicPlaying)
+                return;
+
+            _currentTracks = _gameLevelsTracks;
+            _isGameLevelMusicPlaying = true;
+        }
+        else
+        {
+            _currentTracks = _creditsTracks;
+            _isGameLevelMusicPlaying = false;
+        }
+
+        CancelToken();
+        _cts = new CancellationTokenSource();
+
+        if (_currentTracks.Count > 0)
+        {
+            ShuffleAndQueueTracks();
+            PlayNextTrack().Forget();
+        }
+    } 
+
+    private void CancelToken()
     {
         if (_cts != null)
         {
@@ -46,15 +91,21 @@ public class MusicPlayer : MonoBehaviour
 
     private void LoadMusicTracks()
     {
-        _musicTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>(MusicClipsPath));
+        _mainMenuTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{MainMenu}"));
+        _gameLevelsTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{GameLevels}"));
+        _creditsTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{Credits}"));
 
-        if (_musicTracks.Count == 0)
-            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}.");
+        if (_mainMenuTracks.Count == 0)
+            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{MainMenu}.");
+        if (_gameLevelsTracks.Count == 0)
+            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{GameLevels}.");
+        if (_creditsTracks.Count == 0)
+            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{Credits}.");
     }
 
     private void ShuffleAndQueueTracks()
     {
-        List<AudioClip> tracks = new(_musicTracks);
+        List<AudioClip> tracks = new(_currentTracks);
         _trackQueue = new Queue<AudioClip>();
 
         while (tracks.Count > 0)

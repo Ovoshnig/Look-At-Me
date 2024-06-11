@@ -3,12 +3,12 @@ using Zenject;
 
 public class ObjectsInCorrectStatesCounter
 {
-    private LevelSwitch _levelSwitch;
+    private SceneSwitch _sceneSwitch;
 
     [Inject]
-    private ObjectsInCorrectStatesCounter(LevelSwitch levelSwitch)
+    private ObjectsInCorrectStatesCounter(SceneSwitch sceneSwitch)
     {
-        _levelSwitch = levelSwitch;
+        _sceneSwitch = sceneSwitch;
     }
 
     private uint _objectsCount = 0;
@@ -27,6 +27,6 @@ public class ObjectsInCorrectStatesCounter
     private void CheckIsComplete() 
     {
         if (_correctObjectsCount == _objectsCount)
-            _levelSwitch.TryLoadNextLevelFirstTime().Forget();
+            _sceneSwitch.TryLoadNextLevelFirstTime().Forget();
     }
 }
