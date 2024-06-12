@@ -10,7 +10,6 @@ public class AudioTuner : IDisposable
     private const string MusicVolumeKey = "MusicVolume";
 
     private readonly DataSaver _dataSaver;
-    private readonly GameSettingsInstaller.Settings _settings;
     private readonly GameSettingsInstaller.AudioSettings _audioSettings;
 
     private readonly GameState _gameState;
@@ -20,11 +19,10 @@ public class AudioTuner : IDisposable
     private float _musicVolume;
 
     [Inject]
-    public AudioTuner(DataSaver dataSaver, GameSettingsInstaller.Settings settings, GameSettingsInstaller.AudioSettings audioSettings,
+    public AudioTuner(DataSaver dataSaver, GameSettingsInstaller.AudioSettings audioSettings,
                          GameState gameState, AudioMixerGroup audioMixerGroup, MusicPlayer musicPlayer)
     {
         _dataSaver = dataSaver;
-        _settings = settings;
         _audioSettings = audioSettings;
         _gameState = gameState;
         _audioMixerGroup = audioMixerGroup;
@@ -75,8 +73,8 @@ public class AudioTuner : IDisposable
 
     private void InitializeVolumeData()
     {
-        _soundsVolume = _dataSaver.LoadData(SoundsVolumeKey, _audioSettings.MaxVolume * _settings.DefaultCoefficient);
-        _musicVolume = _dataSaver.LoadData(MusicVolumeKey, _audioSettings.MaxVolume * _settings.DefaultCoefficient);
+        _soundsVolume = _dataSaver.LoadData(SoundsVolumeKey, _audioSettings.DefaultVolume);
+        _musicVolume = _dataSaver.LoadData(MusicVolumeKey, _audioSettings.DefaultVolume);
         SoundsVolume = _soundsVolume;
         MusicVolume = _musicVolume;
     }
