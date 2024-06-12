@@ -9,7 +9,7 @@ public class DataSaver : IDisposable
     private const string SaveFileName = "playerData.json";
 
     private readonly string _filePath;
-    private Dictionary<string, string> _dataStore;
+    private Dictionary<string, object> _dataStore;
 
     public DataSaver()
     {
@@ -21,27 +21,36 @@ public class DataSaver : IDisposable
 
     public T LoadData<T>(string key, T defaultValue = default)
     {
-        if (_dataStore.TryGetValue(key, out string storedValue))
-            return JsonConvert.DeserializeObject<T>(storedValue);
+        if (_dataStore.TryGetValue(key, out object storedValue))
+        {
+            try
+            {
+                if (typeof(T) == typeof(float) && storedValue is double doubleValue)
+                    return (T)(object)(float)doubleValue;
+
+                return JsonConvert.DeserializeObject<T>(storedValue.ToString());
+            }
+            catch (JsonException)
+            {
+                Debug.LogWarning($"Failed to deserialize value for key {key}");
+                return defaultValue;
+            }
+        }
         return defaultValue;
     }
 
-    public void SaveData<T>(string key, T value)
-    {
-        string serializedValue = JsonConvert.SerializeObject(value);
-        _dataStore[key] = serializedValue;
-    }
+    public void SaveData<T>(string key, T value) => _dataStore[key] = value;
 
     private void LoadDataStore()
     {
         if (File.Exists(_filePath))
         {
             string json = File.ReadAllText(_filePath);
-            _dataStore = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            _dataStore = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
         }
         else
         {
-            _dataStore = new Dictionary<string, string>();
+            _dataStore = new Dictionary<string, object>();
         }
     }
 

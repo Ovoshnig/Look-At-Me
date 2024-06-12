@@ -10,12 +10,11 @@ public class LookTuner : IDisposable
     private float _sensitivity;
 
     [Inject]
-    public LookTuner(DataSaver dataSaver, GameSettingsInstaller.ControlSettings controlSettings, GameSettingsInstaller.Settings settings)
+    public LookTuner(DataSaver dataSaver, GameSettingsInstaller.ControlSettings controlSettings)
     {
         _dataSaver = dataSaver;
         _controlSettings = controlSettings;
-        _sensitivity = _dataSaver.LoadData(SensitivityKey,
-            _controlSettings.MaxSensitivity * settings.DefaultCoefficient);
+        _sensitivity = _dataSaver.LoadData(SensitivityKey, _controlSettings.DefaultSensitivity);
         Sensitivity = _sensitivity;
     }
 

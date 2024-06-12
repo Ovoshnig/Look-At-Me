@@ -5,29 +5,23 @@ using Zenject;
 [CreateAssetMenu(fileName = "Settings", menuName = "ScriptableObjects/Settings")]
 public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInstaller>
 {
-    [SerializeField] private Settings _settings;
     [SerializeField] private ControlSettings _controlSettings;
     [SerializeField] private LevelSettings _levelSettings;
     [SerializeField] private AudioSettings _audioSettings;
 
     public override void InstallBindings()
     {
-        Container.BindInstance(_settings);
         Container.BindInstance(_controlSettings);
         Container.BindInstance(_levelSettings);
         Container.BindInstance(_audioSettings);
     }
 
     [Serializable]
-    public class Settings
-    {
-        public float DefaultCoefficient;
-    }
-
-    [Serializable]
     public class ControlSettings
     {
         public float MaxSensitivity;
+
+        public float DefaultSensitivity => MaxSensitivity / 2f;
     }
 
     [Serializable]
@@ -47,5 +41,7 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         public float MinVolume;
         public float MaxVolume;
         public float MusicFadeInDuration;
+
+        public float DefaultVolume => (MinVolume + MaxVolume) / 2f;
     }
 }

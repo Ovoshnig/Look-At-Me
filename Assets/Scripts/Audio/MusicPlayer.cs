@@ -23,7 +23,6 @@ public class MusicPlayer : IDisposable
     private readonly Dictionary<MusicCategory, List<AudioClip>> _musicTracks;
     private Queue<AudioClip> _trackQueue;
     private CancellationTokenSource _cts = new();
-    private bool _isGameLevelMusicPlaying = false;
 
     public event Action MusicTrackChanged;
 
