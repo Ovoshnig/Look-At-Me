@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -13,6 +14,8 @@ public sealed class PauseMenuHandler : MenuHandler
     [SerializeField] private Button _loadMainMenuButton;
 
     private GameState _gameState;
+
+    public event Action OnResumeClicked;
         
     protected override void InitializeSettings() => Resume();
 
@@ -36,6 +39,7 @@ public sealed class PauseMenuHandler : MenuHandler
     {
         base.AddButtonListeners();
 
+        _resumeButton.onClick.AddListener(() => OnResumeClicked?.Invoke());
         _resetLevelButton.onClick.AddListener(ResetLevel);
         _loadNextLevelButton.onClick.AddListener(LoadNextLevel);
         _loadPreviousLevelButton.onClick.AddListener(LoadPreviousLevel);
@@ -46,6 +50,7 @@ public sealed class PauseMenuHandler : MenuHandler
     {
         base.RemoveButtonListeners();
 
+        _resumeButton.onClick.RemoveListener(() => OnResumeClicked?.Invoke());
         _resetLevelButton.onClick.RemoveListener(ResetLevel);
         _loadNextLevelButton.onClick.RemoveListener(LoadNextLevel);
         _loadPreviousLevelButton.onClick.RemoveListener(LoadPreviousLevel);
@@ -53,10 +58,7 @@ public sealed class PauseMenuHandler : MenuHandler
     }
 
     [Inject]
-    private void Construct(GameState gameState)
-    {
-        _gameState = gameState;
-    }
+    private void Construct(GameState gameState) => _gameState = gameState;
 
     private void ResetLevel() => SceneSwitch.LoadCurrentLevel();
 

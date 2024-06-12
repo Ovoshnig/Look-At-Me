@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using Zenject;
 
 public class GameState : IDisposable
@@ -57,12 +56,10 @@ public class GameState : IDisposable
     {
         _reversePauseStateAllowed = true;
 
-        Button resumeButton = null;
+        PauseMenuHandler pauseMenuHandler = UnityEngine.Object.FindFirstObjectByType<PauseMenuHandler>();
 
-        if (resumeButton != null)
-        {
-            resumeButton.onClick.AddListener(Unpause);
-        }
+        if (pauseMenuHandler != null)
+            pauseMenuHandler.OnResumeClicked += Unpause;
     }
 
     private void SetPauseState(bool pause)
