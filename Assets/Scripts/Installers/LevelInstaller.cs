@@ -8,8 +8,6 @@ public class LevelInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        //Container.DeclareSignal<ResumeSignal>();
-        //Container.BindSignal<ResumeSignal>().ToMethod<GameState>(x => x.Unpause).FromResolve();
         Container.Bind<PauseMenuHandler>().FromComponentInHierarchy().AsSingle();
     }   
 }
