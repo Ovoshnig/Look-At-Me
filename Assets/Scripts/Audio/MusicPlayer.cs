@@ -7,18 +7,20 @@ using Zenject;
 
 public class MusicPlayer : IDisposable
 {
+    private enum MusicCategory
+    {
+        MainMenu,
+        GameLevels,
+        Credits
+    }
+
     private const string MusicClipsPath = "Audio/Music";
-    private const string MainMenu = nameof(MainMenu);
-    private const string GameLevels = nameof(GameLevels);
-    private const string Credits = nameof(Credits);
 
     private readonly System.Random _random = new();
     private readonly SceneSwitch _sceneSwitch;
     private readonly AudioSource _musicSource;
     private List<AudioClip> _currentTracks;
-    private List<AudioClip> _mainMenuTracks;
-    private List<AudioClip> _gameLevelsTracks;
-    private List<AudioClip> _creditsTracks;
+    private readonly Dictionary<MusicCategory, List<AudioClip>> _musicTracks;
     private Queue<AudioClip> _trackQueue;
     private CancellationTokenSource _cts = new();
     private bool _isGameLevelMusicPlaying = false;
@@ -32,6 +34,7 @@ public class MusicPlayer : IDisposable
         _sceneSwitch = sceneSwitch;
         _sceneSwitch.SceneLoaded += OnLevelLoaded;
 
+        _musicTracks = new Dictionary<MusicCategory, List<AudioClip>>();
         LoadMusicTracks();
     }
 
@@ -43,24 +46,20 @@ public class MusicPlayer : IDisposable
 
     private void OnLevelLoaded(SceneSwitch.Scene scene)
     {
-        if (scene == SceneSwitch.Scene.MainMenu)
+        Dictionary<SceneSwitch.Scene, MusicCategory> sceneToMusicCategory = new()
         {
-            _currentTracks = _mainMenuTracks;
-            _isGameLevelMusicPlaying = false;
-        }
-        else if (scene == SceneSwitch.Scene.GameLevel)
-        {
-            if (_isGameLevelMusicPlaying)
-                return;
+            { SceneSwitch.Scene.MainMenu, MusicCategory.MainMenu },
+            { SceneSwitch.Scene.GameLevel, MusicCategory.GameLevels },
+            { SceneSwitch.Scene.Credits, MusicCategory.Credits }
+        };
 
-            _currentTracks = _gameLevelsTracks;
-            _isGameLevelMusicPlaying = true;
-        }
+        if (scene == SceneSwitch.Scene.GameLevel && _currentTracks == _musicTracks[MusicCategory.GameLevels])
+            return;
+
+        if (sceneToMusicCategory.TryGetValue(scene, out MusicCategory category))
+            SetCurrentTracks(category);
         else
-        {
-            _currentTracks = _creditsTracks;
-            _isGameLevelMusicPlaying = false;
-        }
+            SetCurrentTracks(MusicCategory.MainMenu);
 
         CancelToken();
         _cts = new CancellationTokenSource();
@@ -70,7 +69,7 @@ public class MusicPlayer : IDisposable
             ShuffleAndQueueTracks();
             PlayNextTrack().Forget();
         }
-    } 
+    }
 
     private void CancelToken()
     {
@@ -91,16 +90,19 @@ public class MusicPlayer : IDisposable
 
     private void LoadMusicTracks()
     {
-        _mainMenuTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{MainMenu}"));
-        _gameLevelsTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{GameLevels}"));
-        _creditsTracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{Credits}"));
+        foreach (MusicCategory category in Enum.GetValues(typeof(MusicCategory)))
+        {
+            var tracks = new List<AudioClip>(Resources.LoadAll<AudioClip>($"{MusicClipsPath}/{category}"));
+            _musicTracks[category] = tracks;
 
-        if (_mainMenuTracks.Count == 0)
-            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{MainMenu}.");
-        if (_gameLevelsTracks.Count == 0)
-            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{GameLevels}.");
-        if (_creditsTracks.Count == 0)
-            Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{Credits}.");
+            if (tracks.Count == 0)
+                Debug.LogWarning($"No music tracks found in Resources/{MusicClipsPath}/{category}.");
+        }
+    }
+
+    private void SetCurrentTracks(MusicCategory category)
+    {
+        _currentTracks = _musicTracks[category];
     }
 
     private void ShuffleAndQueueTracks()
