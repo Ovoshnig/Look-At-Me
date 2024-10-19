@@ -24,16 +24,16 @@ public class CreditsScroller : MonoBehaviour
     private string[] _lines;
     private CancellationTokenSource _cts = new();
     private GameState _gameState;
-    private LevelSwitch _levelSwitch;
+    private SceneSwitch _sceneSwitch;
     private PlayerInput _playerInput;
     private bool _isPaused;
     private bool _isSpeeded;
 
     [Inject]
-    private void Construct(GameState gameState, LevelSwitch levelSwitch)
+    private void Construct(GameState gameState, SceneSwitch sceneSwitch)
     {
         _gameState = gameState;
-        _levelSwitch = levelSwitch;
+        _sceneSwitch = sceneSwitch;
 
         _playerInput = new PlayerInput();
         _playerInput.Credits.SpeedUp.performed += ScrollSpeedUpPerform;
@@ -119,7 +119,7 @@ public class CreditsScroller : MonoBehaviour
         }
 
         await UniTask.WaitForSeconds(_endDelay, cancellationToken: token);
-        _levelSwitch.LoadLevel(0).Forget();
+        _sceneSwitch.LoadLevel(0).Forget();
     }
 
     private void ScrollSpeedUpPerform(InputAction.CallbackContext _) => _isSpeeded = true;

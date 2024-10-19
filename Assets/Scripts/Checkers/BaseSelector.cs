@@ -9,12 +9,10 @@ public class BaseSelector : MonoBehaviour
     [SerializeField] private CheckersLogic _checkersLogic;
     [SerializeField] private CheckersVisualizer _visualizer;
 
-    private void OnValidate()
+    private void Awake()
     {
-        if (_checkersLogic == null)
-            _checkersLogic = GetComponent<CheckersLogic>();
-        if (_visualizer == null)
-            _visualizer = GetComponent<CheckersVisualizer>();
+        _checkersLogic = GetComponent<CheckersLogic>();
+        _visualizer = GetComponent<CheckersVisualizer>();
     }
 
     private void Start()

@@ -38,4 +38,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: 0b50ac5cbee5d3543a5286d68f669c69
+  - enabled: 1
+    path: Assets/Scenes/TransitionScene.unity
+    guid: 7beaa05cd8554f24e892625390623dfa
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
