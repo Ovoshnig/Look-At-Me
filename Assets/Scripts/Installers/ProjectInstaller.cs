@@ -1,22 +1,32 @@
+using UnityEngine;
+using UnityEngine.Audio;
 using Zenject;
 
 public class ProjectInstaller : MonoInstaller
 {
+    [SerializeField] private AudioMixerGroup _audioMixerGroup;
+    [SerializeField] private AudioSource _musicSource;
+
     public override void InstallBindings()
     {
-        BindGameState();
-        BindSettings();
-    }
-
-    private void BindGameState()
-    {
+        Container.BindInterfacesAndSelfTo<SplashScreenPasser>().FromNew().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<GameState>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<DataSaver>().FromNew().AsSingle().NonLazy();
+        Container.Bind<AudioMixerGroup>().FromInstance(_audioMixerGroup).AsSingle().NonLazy();
+        BindSettings();
+        BindMusicPlayer();
     }
 
     private void BindSettings()
     {
-        Container.BindInterfacesAndSelfTo<LevelSwitch>().FromNew().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<LookSettings>().FromNew().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<AudioSettings>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<SceneSwitch>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<LookTuner>().FromNew().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<AudioTuner>().FromNew().AsSingle().NonLazy();
+    }
+
+    private void BindMusicPlayer()
+    {
+        Container.Bind<AudioSource>().WithId("musicSource").FromInstance(_musicSource).AsTransient().NonLazy();
+        Container.BindInterfacesAndSelfTo<MusicPlayer>().FromNew().AsSingle().NonLazy();
     }
 }

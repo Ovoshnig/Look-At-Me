@@ -12,8 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71193e9986ee22a48802232520db1060, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  Settings:
-    FirstGameplayLevel: 1
+  _settings:
+    DefaultCoefficient: 0.5
+  _controlSettings:
     MaxSensitivity: 0.2
-    MaxVolume: 0.5
-    DefaultSliderCoefficient: 0.5
+  _levelSettings:
+    FirstGameplayLevel: 1
+    GameplayLevelsCount: 9
+    LevelTransitionDuration: 2
+  _audioSettings:
+    MinVolume: -80
+    MaxVolume: 0
+    MusicFadeInDuration: 5

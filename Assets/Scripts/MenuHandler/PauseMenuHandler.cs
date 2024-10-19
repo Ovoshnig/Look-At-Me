@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -13,38 +15,58 @@ public sealed class PauseMenuHandler : MenuHandler
 
     private GameState _gameState;
 
+    public event Action OnResumeClicked;
+        
     protected override void InitializeSettings() => Resume();
+
+    protected override void SubscribeToEvents()
+    {
+        base.SubscribeToEvents();
+
+        _gameState.GamePaused += Pause;
+        _gameState.GameUnpaused += Resume;
+    }
+
+    protected override void UnsubscribeFromEvents()
+    {
+        base.UnsubscribeFromEvents();
+
+        _gameState.GamePaused -= Pause;
+        _gameState.GameUnpaused -= Resume;
+    }
 
     protected override void AddButtonListeners()
     {
         base.AddButtonListeners();
 
-        _gameState.GamePaused += Pause;
-        _gameState.GameUnpaused += Resume;
-
-        _resumeButton.onClick.AddListener(_gameState.Unpause);
+        _resumeButton.onClick.AddListener(() => OnResumeClicked?.Invoke());
         _resetLevelButton.onClick.AddListener(ResetLevel);
         _loadNextLevelButton.onClick.AddListener(LoadNextLevel);
         _loadPreviousLevelButton.onClick.AddListener(LoadPreviousLevel);
         _loadMainMenuButton.onClick.AddListener(LoadMainMenu);
     }
 
-    private void OnDisable()
+    protected override void RemoveButtonListeners()
     {
-        _gameState.GamePaused -= Pause;
-        _gameState.GameUnpaused -= Resume;
+        base.RemoveButtonListeners();
+
+        _resumeButton.onClick.RemoveListener(() => OnResumeClicked?.Invoke());
+        _resetLevelButton.onClick.RemoveListener(ResetLevel);
+        _loadNextLevelButton.onClick.RemoveListener(LoadNextLevel);
+        _loadPreviousLevelButton.onClick.RemoveListener(LoadPreviousLevel);
+        _loadMainMenuButton.onClick.RemoveListener(LoadMainMenu);
     }
 
     [Inject]
     private void Construct(GameState gameState) => _gameState = gameState;
 
-    private void ResetLevel() => LevelSwitch.LoadCurrentLevel();
+    private void ResetLevel() => SceneSwitch.LoadCurrentLevel();
 
-    private void LoadPreviousLevel() => LevelSwitch.LoadPreviousLevel();
+    private void LoadPreviousLevel() => SceneSwitch.LoadPreviousLevel().Forget();
 
-    private void LoadNextLevel() => LevelSwitch.LoadNextLevel();
+    private void LoadNextLevel() => SceneSwitch.LoadNextLevel().Forget();
 
-    private void LoadMainMenu() => LevelSwitch.LoadLevel(0).Forget();
+    private void LoadMainMenu() => SceneSwitch.LoadLevel(0).Forget();
 
     private void Pause()
     {

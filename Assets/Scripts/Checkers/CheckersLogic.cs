@@ -10,7 +10,7 @@ public class CheckersLogic : MonoBehaviour
     [SerializeField] private float _finishDelay;
     [SerializeField] private CheckersVisualizer _visualizer;
 
-    private LevelSwitch _levelSwitch;
+    private SceneSwitch _sceneSwitch;
 
     private readonly int[,] _board = new int[8, 8];
     private uint _player1Count = 12;
@@ -18,7 +18,7 @@ public class CheckersLogic : MonoBehaviour
     private int _turn = 1;
 
     [Inject]
-    private void Construct(LevelSwitch levelSwitch) => _levelSwitch = levelSwitch;
+    private void Construct(SceneSwitch sceneSwitch) => _sceneSwitch = sceneSwitch;
 
     private void Awake() => _visualizer = GetComponent<CheckersVisualizer>();
 
@@ -402,6 +402,6 @@ public class CheckersLogic : MonoBehaviour
 
         await UniTask.WhenAll(tasks);
 
-        _levelSwitch.TryLoadNextLevelFirstTime();
+        _sceneSwitch.TryLoadNextLevelFirstTime().Forget();
     }
 }
